@@ -1,0 +1,47 @@
+{
+  "name": "@stanko/ctrls",
+  "version": "0.1.1",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "build-css": "sass ./src/scss/index.scss ./dist/ctrls.css",
+    "build-lib": "rm -rf ./dist && tsc -p ./tsconfig-lib.json && npm run build-css",
+    "preview": "vite preview",
+    "prepare": "cp ./pre-commit ./.git/hooks/pre-commit && chmod +x ./.git/hooks/pre-commit"
+  },
+  "types": "./dist/ctrls/index.d.ts",
+  "main": "./dist/ctrls/index.js",
+  "files": [
+    "./dist",
+    "./public"
+  ],
+  "devDependencies": {
+    "highlight.js": "^11.11.1",
+    "marked": "^16.2.1",
+    "marked-highlight": "^2.2.2",
+    "sass": "^1.92.1",
+    "simplex-noise": "^4.0.3",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.5"
+  },
+  "dependencies": {
+    "@stanko/dual-range-input": "^1.0.1",
+    "bezier-easing": "^2.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Stanko/ctrls.git"
+  },
+  "keywords": [
+    "controls",
+    "knobs",
+    "generative art",
+    "algorithmic art"
+  ],
+  "author": "Stanko",
+  "bugs": {
+    "url": "https://github.com/Stanko/ctrls/issues"
+  },
+  "homepage": "https://muffinman.io/ctrls"
+}

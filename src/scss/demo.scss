@@ -1,0 +1,366 @@
+@use "syntax";
+@use "breakpoints";
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  --bg: #fdfeff;
+  --text: #505155;
+  --text-dark: #202125;
+  --text-light: #707175;
+  --text-footer: #a0a1a5;
+  --headers: var(--text-dark);
+  --link-color: oklch(0.65 0.25 var(--h));
+  --border-color: #eee;
+  --shadow: rgba(0 0 0 / 0.05);
+
+  // Hero
+  --hero-border-oklch: 0.9 0.09 var(--h);
+  --hero-border: oklch(var(--hero-border-oklch));
+  --hero-bg: oklch(0.99 0.01 var(--h));
+  --hero-fill: oklch(0.9 0.1 var(--h));
+
+  // Syntax highlighting
+  --code-background: #f7f8fb;
+  --code-base-color: #4c4f69;
+  --code-key: #1e2685;
+
+  @media (prefers-color-scheme: dark) {
+    --bg: #101115;
+    --text: #bdbebf;
+    --text-dark: #f3f4f5;
+    --text-light: #adaeaf;
+    --text-footer: #707175;
+    --headers: var(--text-dark);
+    --link-color: oklch(0.6 0.25 var(--h));
+    --border-color: #222222;
+    --shadow: rgba(255 255 255 / 0.1);
+
+    // Hero
+    --hero-border-oklch: 0.3 0.2 var(--h);
+    --hero-bg: oklch(0.1 0.1 var(--h));
+    --hero-fill: oklch(0.35 0.1 var(--h));
+
+    // Syntax highlighting
+    --code-background: #16171b;
+    --code-base-color: #cdd6f4;
+    --code-key: #aab4ea;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    ui-rounded, "Hiragino Maru Gothic ProN", Quicksand, Comfortaa, Manjari,
+    "Arial Rounded MT", "Arial Rounded MT Bold", Calibri, source-sans-pro,
+    sans-serif;
+  line-height: 1.5;
+  padding: 0 0 2rem;
+
+  @include breakpoints.md {
+    padding: 2rem;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  line-height: 1.2;
+  color: var(--headers);
+}
+
+h2,
+h3,
+h4,
+h5 {
+  padding-top: 1.5em;
+}
+
+h1 {
+  font-size: 2rem;
+
+  @include breakpoints.lg {
+    font-size: 2.5rem;
+  }
+}
+
+h2 {
+  font-size: 1.75rem;
+
+  @include breakpoints.lg {
+    font-size: 2rem;
+  }
+}
+
+a {
+  --link-text-color: var(--text-dark);
+
+  color: var(--link-text-color);
+  text-decoration-color: var(--link-color);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: var(--link-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+    text-decoration: none;
+  }
+}
+
+p {
+  max-width: 36em;
+}
+
+p code,
+li code {
+  color: var(--code-key);
+  padding: 0.125rem 0.25rem;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  background-color: var(--code-background);
+}
+
+ul,
+ol {
+  padding-left: 1.25em;
+}
+
+li + li {
+  margin-top: 0.125rem;
+}
+
+pre {
+  max-width: 100%;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+  color: var(--code-base-color);
+
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: var(--code-background);
+  border: 1px solid var(--border-color);
+}
+
+// ----- Layout ----- //
+
+.app {
+  max-width: 50rem;
+  margin: 0 auto;
+  display: grid;
+
+  @include breakpoints.lg {
+    max-width: 60rem;
+    grid-template-columns: 10rem 1fr;
+    grid-template-areas: "nav header" "nav content" "nav footer";
+    gap: 0 2rem;
+  }
+}
+
+// ----- Header ----- //
+
+.nav {
+  display: flex;
+  padding: 0 1.5rem;
+  margin-top: 1.5rem;
+  gap: 0.25rem 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  @include breakpoints.md {
+    gap: 0;
+    order: -1;
+    width: fit-content;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 1.5rem;
+    margin: -0.5rem auto 0.5rem;
+    position: sticky;
+    top: 0.5rem;
+    z-index: 10;
+    backdrop-filter: blur(20px);
+  }
+
+  @include breakpoints.lg {
+    top: 2rem;
+    flex-direction: column;
+  }
+}
+
+.nav__link {
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--text-light);
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  @include breakpoints.md {
+    padding: 0.125rem 0;
+  }
+
+  &:hover {
+    color: var(--link-color);
+  }
+}
+
+.nav__link--top {
+  color: var(--headers);
+
+  @include breakpoints.lg {
+    font-size: 1.5rem;
+  }
+}
+
+.nav__link--light {
+  display: none;
+  font-weight: normal;
+  padding-left: 0.75rem;
+  opacity: 0.75;
+
+  @include breakpoints.lg {
+    display: block;
+  }
+}
+
+// ----- Hero ----- //
+
+.hero {
+  position: relative;
+  border-bottom: 1px solid var(--hero-border);
+  padding: 1.5rem;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+
+  @include breakpoints.md {
+    border-radius: 16px;
+    border: 1px solid var(--hero-border);
+    padding: 2rem;
+  }
+
+  @include breakpoints.lg {
+    padding: 3rem;
+  }
+}
+
+.hero__content {
+  width: 100%;
+  max-width: 45rem;
+  display: grid;
+  gap: 1rem;
+
+  @include breakpoints.md {
+    grid-template-columns: 1fr 20rem;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  h1 {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.hero__text {
+  max-width: 22rem;
+
+  > * {
+    display: inline-block;
+    padding: 1rem;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    border: 1px solid oklch(var(--hero-border-oklch) / 0.5);
+  }
+}
+
+.hero .ctrls {
+  box-shadow: 2px 2px 4px var(--shadow);
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-color: var(--hero-bg);
+}
+
+.grid__hex {
+  fill: var(--hero-fill);
+}
+
+// ----- Content ----- //
+
+.content {
+  display: grid;
+  gap: 1rem;
+  padding: 0 1.5rem;
+
+  @include breakpoints.md {
+    padding: 0;
+  }
+
+  @include breakpoints.lg {
+    grid-area: content;
+  }
+}
+
+// ----- Examples ----- //
+
+.example {
+  padding: 1rem;
+  border-radius: 8px;
+  display: grid;
+  gap: 1rem;
+  background-color: var(--code-background);
+  border: 1px solid var(--border-color);
+
+  @include breakpoints.md {
+    grid-template-columns: 1fr 20rem;
+    gap: 2rem;
+    align-items: center;
+  }
+}
+
+.example .ctrls {
+  --ctrls-h: var(--h);
+}
+
+.example pre {
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
+
+// ----- Footer ----- //
+
+.footer {
+  color: var(--text-footer);
+  padding: 0 1.5rem;
+  margin-top: 4rem;
+
+  a {
+    --link-text-color: var(--text-light);
+  }
+
+  @include breakpoints.md {
+    padding: 0;
+    margin-top: 6rem;
+  }
+
+  @include breakpoints.lg {
+    grid-area: footer;
+  }
+}
