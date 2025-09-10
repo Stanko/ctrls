@@ -375,9 +375,9 @@ Thank you for stopping by! If you end up using Ctrls, please let me know, I woul
 * [ ] Prefix input names' with `ctrl_${id}_${name}` to avoid collisions
 * [ ] Allow users to pass a custom PRNG lib
 * [ ] Hash storage - check if there is an instance using hash storage already
-* [ ] Demo - stop animation when not in viewport
 * [ ] Add title which collapses the controls
 * [ ] Storage - local storage
+* [x] Demo - stop animation when not in viewport
 * [x] Demo - favicon and metadata
 * [x] Readme - screenshots
 * [x] Use web safe / system fonts by default

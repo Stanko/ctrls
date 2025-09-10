@@ -96,6 +96,8 @@ heroControls.appendChild(options.element);
 
 const grid = new Grid(hero.clientWidth, hero.clientHeight);
 hero.appendChild(grid.svg);
+// Update the grid after it is rendered
+grid.handleScroll();
 
 let svgTimeout: NodeJS.Timeout | number = 0;
 

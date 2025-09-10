@@ -66,6 +66,7 @@ export class Grid {
   animationTime: number = 0;
   lastUpdate: number = performance.now();
   resizing: boolean = false;
+  isInViewport: boolean = true;
 
   constructor(width: number, height: number) {
     const grid = generateHexGrid(width, height);
@@ -84,7 +85,23 @@ export class Grid {
 
     this.updateOpacity();
     this.drawFrame();
+
+    window.addEventListener("scroll", this.handleScroll);
   }
+
+  handleScroll = () => {
+    const rect = this.svg.getBoundingClientRect();
+    const isInViewport = rect.height > 0 && rect.bottom > -100;
+
+    if (isInViewport !== this.isInViewport) {
+      this.isInViewport = isInViewport;
+
+      // Resume the animation
+      if (this.isInViewport && options.getValues().animate) {
+        this.animate();
+      }
+    }
+  };
 
   resize(width: number, height: number) {
     const grid = generateHexGrid(width, height);
@@ -151,7 +168,7 @@ export class Grid {
       hexagon.setAttribute("d", `M ${points.join(" L ")} Z`);
     });
 
-    if (options.getValues().animate && !this.resizing) {
+    if (options.getValues().animate && !this.resizing && this.isInViewport) {
       const now = performance.now();
       const delta = now - this.lastUpdate;
       this.animationTime += (delta * values.speed) / 5000;
