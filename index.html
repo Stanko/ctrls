@@ -71,43 +71,18 @@
 
       <main class="content">
         <!--MARKDOWN--->
-        <h2 id="made-for-algorithmic-art">Made for algorithmic art</h2>
-        <p>
-          I built Ctrls for my
-          <a href="https://muffinman.io/art/">algorithmic art projects</a>. By
-          default, the state is saved in the URL, which lets you navigate
-          history and share links easily. Along with standard components like
-          checkboxes and ranges, it includes two especially useful for
-          generative work: RNG seed and easing. These not only let you adjust
-          parameters but also expose functions (rng and easing) you can call
-          directly.
-        </p>
-        <p>
-          Play with the live example above or check the older version in my
-          <a href="https://muffinman.io/invaders/">Space Invaders generator</a
-          >..
-        </p>
-        <h2 id="features">Features</h2>
-        <ul>
-          <li>Minimal API</li>
-          <li>
-            Six components : RNG seed, easing, boolean, radio, range and dual
-            range
-          </li>
-          <li>
-            Fully typed, including dynamic typings for controlled properties
-          </li>
-          <li>Light and dark themes included, theming via CSS variables</li>
-        </ul>
-        <h2 id="quick-start">Quick start</h2>
-        <p>Install the library:</p>
-        <pre><code class="hljs language-bash">npm install @stanko/ctrls
-</code></pre>
-        <p>
-          Define controls as an array, then instantiate the
-          <code>Ctrls</code> class:
-        </p>
-        <pre><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Ctrls</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@stanko/ctrls&quot;</span>;
+<h2 id="made-for-algorithmic-art">Made for algorithmic art</h2><p>I built Ctrls for my <a href="https://muffinman.io/art/">algorithmic art projects</a>. By default, the state is saved in the URL, which lets you navigate history and share links easily. Along with standard components like checkboxes and ranges, it includes two especially useful for generative work: RNG seed and easing. These not only let you adjust parameters but also expose functions (rng and easing) you can call directly.</p>
+<p>Play with the live example above or check the older version in my <a href="https://muffinman.io/invaders/">Space Invaders generator</a>.</p>
+<h2 id="features">Features</h2><ul>
+<li>Minimal API</li>
+<li>Six components : RNG seed, easing, boolean, radio, range and dual range</li>
+<li>Fully typed, including dynamic typings for controlled properties</li>
+<li>Light and dark themes included, theming via CSS variables</li>
+</ul>
+<h2 id="quick-start">Quick start</h2><p>Install the library:</p>
+<pre><code class="hljs language-bash">npm install @stanko/ctrls
+</code></pre><p>Define controls as an array, then instantiate the <code>Ctrls</code> class:</p>
+<pre><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Ctrls</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@stanko/ctrls&quot;</span>;
 <span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">TypedControlConfig</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@stanko/ctrls&quot;</span>;
 
 <span class="hljs-comment">// Import CSS</span>
@@ -149,12 +124,8 @@
 
 <span class="hljs-comment">// If you need to pass values you can export a type for them for convenience</span>
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">Options</span> = <span class="hljs-title class_">ReturnValue</span>&lt;options.<span class="hljs-title function_">getValues</span>()&gt;;
-</code></pre>
-        <p>
-          Add <code>onChange</code> or <code>onInput</code> handlers. If you
-          need to get the current values, use <code>.getValues()</code>.
-        </p>
-        <pre><code class="hljs language-ts">options.<span class="hljs-property">onChange</span> = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-attr">updatedValues</span>: <span class="hljs-title class_">Partial</span>&lt;<span class="hljs-title class_">Options</span>&gt;</span>) =&gt;</span> {
+</code></pre><p>Add <code>onChange</code> or <code>onInput</code> handlers. If you need to get the current values, use <code>.getValues()</code>.</p>
+<pre><code class="hljs language-ts">options.<span class="hljs-property">onChange</span> = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-attr">updatedValues</span>: <span class="hljs-title class_">Partial</span>&lt;<span class="hljs-title class_">Options</span>&gt;</span>) =&gt;</span> {
   <span class="hljs-comment">// Example: re-render your drawing</span>
   <span class="hljs-title function_">render</span>(options.<span class="hljs-title function_">getValues</span>()); <span class="hljs-comment">// Get all values and pass it to the render method</span>
 };
@@ -165,23 +136,16 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
     <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">style</span>.<span class="hljs-title function_">setProperty</span>(<span class="hljs-string">&quot;--hue&quot;</span>, updatedValues.<span class="hljs-property">hue</span>);
   }
 };
-</code></pre>
-        <h2 id="api">API</h2>
-        <p>
-          Constructor accepts two parameters - an array of control config object
-          (see below for details) and an options object.
-        </p>
-        <pre><code class="hljs language-ts"><span class="hljs-title function_">constructor</span>(<span class="hljs-params"><span class="hljs-attr">controls</span>: <span class="hljs-title class_">Configs</span>, <span class="hljs-attr">options</span>?: <span class="hljs-title class_">ControlsOptions</span></span>)
-</code></pre>
-        <p>The available options are:</p>
-        <pre><code class="hljs language-ts"><span class="hljs-keyword">type</span> <span class="hljs-title class_">ControlsOptions</span> = {
+</code></pre><h2 id="api">API</h2><p>Constructor accepts two parameters - an array of control config object (see below for details) and an options object.</p>
+<pre><code class="hljs language-ts"><span class="hljs-title function_">constructor</span>(<span class="hljs-params"><span class="hljs-attr">controls</span>: <span class="hljs-title class_">Configs</span>, <span class="hljs-attr">options</span>?: <span class="hljs-title class_">ControlsOptions</span></span>)
+</code></pre><p>The available options are:</p>
+<pre><code class="hljs language-ts"><span class="hljs-keyword">type</span> <span class="hljs-title class_">ControlsOptions</span> = {
   <span class="hljs-attr">showRandomizeButton</span>?: <span class="hljs-built_in">boolean</span>; <span class="hljs-comment">// default: true</span>
   <span class="hljs-attr">storage</span>?: <span class="hljs-string">&quot;hash&quot;</span> | <span class="hljs-string">&quot;none&quot;</span>; <span class="hljs-comment">// default: &quot;hash&quot;</span>
   <span class="hljs-attr">theme</span>?: <span class="hljs-string">&quot;system&quot;</span> | <span class="hljs-string">&quot;light&quot;</span> | <span class="hljs-string">&quot;dark&quot;</span>; <span class="hljs-comment">// default: &quot;system&quot;</span>
 };
-</code></pre>
-        <p>Public API:</p>
-        <pre><code class="hljs language-ts"><span class="hljs-comment">// The main Ctrls element. You&#x27;ll have to add it to the page yourself:</span>
+</code></pre><p>Public API:</p>
+<pre><code class="hljs language-ts"><span class="hljs-comment">// The main Ctrls element. You&#x27;ll have to add it to the page yourself:</span>
 <span class="hljs-comment">// document.querySelector(&#x27;.my-controls&#x27;).appendChild(options.element);</span>
 .<span class="hljs-property">element</span>: <span class="hljs-title class_">HTMLDivElement</span>
 
@@ -199,10 +163,8 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 
 <span class="hljs-comment">// Randomizes values for all controls that don&#x27;t have randomization disabled.</span>
 .<span class="hljs-title function_">randomize</span>()
-</code></pre>
-        <h2 id="controls">Controls</h2>
-        <p>All controls share the following properties:</p>
-        <pre><code class="hljs language-ts">{
+</code></pre><h2 id="controls">Controls</h2><p>All controls share the following properties:</p>
+<pre><code class="hljs language-ts">{
   <span class="hljs-comment">// --- Mandatory --- //</span>
   <span class="hljs-attr">type</span>: <span class="hljs-title class_">CtrlType</span>; <span class="hljs-comment">// &quot;seed&quot; | &quot;easing&quot; | &quot;boolean&quot; | &quot;range&quot; | &quot;dual-range&quot; | &quot;radio&quot;</span>
   <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>;
@@ -212,58 +174,42 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
   <span class="hljs-attr">label</span>?: <span class="hljs-built_in">string</span>;
   <span class="hljs-comment">// Depends on the control type, the default value for the control</span>
   <span class="hljs-attr">defaultValue</span>?: T;
-  <span class="hljs-comment">// Should the value be randomized when randomize button is clicked</span>
+  <span class="hljs-comment">// Disabled the value randomization (via randomize method or button)</span>
   <span class="hljs-attr">isRandomizationDisabled</span>?: <span class="hljs-built_in">boolean</span>; <span class="hljs-comment">// default: false</span>
 }
-</code></pre>
-        <p>Some controls will have a few more properties explained below.</p>
-        <h3 id="boolean">Boolean</h3>
-        <p>Checkbox control for boolean parameters.</p>
-        <div class="example">
-          <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+</code></pre><p>Some controls will have a few more properties explained below.</p>
+<h3 id="boolean">Boolean</h3><p>Checkbox control for boolean parameters.</p>
+<div class="example">
+
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;boolean&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;debug&quot;</span>
 <span class="hljs-punctuation">}</span>
-</code></pre>
-        </div>
+</code></pre></div>
 
-        <h3 id="seed">Seed</h3>
-        <p>
-          Text input that generates a random text seed and creates a seeded
-          random number generator.
-        </p>
-        <div class="example">
-          <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+<h3 id="seed">Seed</h3><p>Text input that generates a random text seed and creates a seeded random number generator.</p>
+<div class="example">
+
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;seed&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mainSeed&quot;</span>
 <span class="hljs-punctuation">}</span>
-</code></pre>
-        </div>
+</code></pre></div>
 
-        <p>
-          A seeded RNG will be created and included in the values. For the
-          example above <code>.getValues()</code> returns:
-        </p>
-        <pre><code class="hljs language-ts">{
+<p>A seeded RNG will be created and included in the values. For the example above <code>.getValues()</code> returns:</p>
+<pre><code class="hljs language-ts">{
   <span class="hljs-attr">mainSeed</span>: <span class="hljs-string">&quot;a-random-seed-value&quot;</span>,
   <span class="hljs-attr">mainSeedRng</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">number</span>;
 }
-</code></pre>
-        <h3 id="easing">Easing</h3>
-        <p>
-          Cubic-bezier easing control that also generates an easing function.
-          Includes five presets (configurable via the
-          <code>presets</code> property). Pass an empty array to disable
-          presets.
-        </p>
-        <pre><code class="hljs language-ts">{
+</code></pre><h3 id="easing">Easing</h3><p>Cubic-bezier easing control that also generates an easing function. Includes five presets (configurable via the <code>presets</code> property). Pass an empty array to disable presets.</p>
+<pre><code class="hljs language-ts">{
   <span class="hljs-comment">// Optional</span>
   <span class="hljs-attr">presets</span>?: <span class="hljs-title class_">Record</span>&lt;<span class="hljs-built_in">string</span>, [<span class="hljs-built_in">number</span>, <span class="hljs-built_in">number</span>, <span class="hljs-built_in">number</span>, <span class="hljs-built_in">number</span>]&gt;; <span class="hljs-comment">// default: 1</span>
 }
-</code></pre>
-        <p>Example:</p>
-        <div class="example">
-          <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+</code></pre><p>Example:</p>
+<div class="example">
+
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;easing&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;distribution&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;defaultValue&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-number">0.8</span><span class="hljs-punctuation">,</span> <span class="hljs-number">0.1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">0.2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">0.9</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
@@ -273,28 +219,16 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
     <span class="hljs-attr">&quot;ease_in_out&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-number">0.42</span><span class="hljs-punctuation">,</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span> <span class="hljs-number">0.58</span><span class="hljs-punctuation">,</span> <span class="hljs-number">1</span><span class="hljs-punctuation">]</span>
   <span class="hljs-punctuation">}</span>
 <span class="hljs-punctuation">}</span>
-</code></pre>
-        </div>
+</code></pre></div>
 
-        <p>
-          Please note that the string <code>ease_</code> will be removed from
-          the preset labels.
-        </p>
-        <p>
-          An easing function will be created and included in the values. For the
-          example above <code>.getValues()</code> returns:
-        </p>
-        <pre><code class="hljs language-ts">{
+<p>Please note that the string <code>ease_</code> will be removed from the preset labels.</p>
+<p>An easing function will be created and included in the values. For the example above <code>.getValues()</code> returns:</p>
+<pre><code class="hljs language-ts">{
   <span class="hljs-attr">distribution</span>: [<span class="hljs-number">0.8</span>, <span class="hljs-number">0.1</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.9</span>],
   <span class="hljs-attr">distributionEasing</span>: <span class="hljs-function">(<span class="hljs-params"><span class="hljs-attr">t</span>: <span class="hljs-built_in">number</span></span>) =&gt;</span> <span class="hljs-built_in">number</span>;
 }
-</code></pre>
-        <h3 id="range">Range</h3>
-        <p>
-          Range slider that controls a number parameter. Accepts minimum,
-          maximum and step values. It includes a few additional properties:
-        </p>
-        <pre><code class="hljs language-ts">{
+</code></pre><h3 id="range">Range</h3><p>Range slider that controls a number parameter. Accepts minimum, maximum and step values. It includes a few additional properties:</p>
+<pre><code class="hljs language-ts">{
   <span class="hljs-comment">// Mandatory</span>
   <span class="hljs-attr">min</span>: <span class="hljs-built_in">number</span>;
   <span class="hljs-attr">max</span>: <span class="hljs-built_in">number</span>;
@@ -302,10 +236,10 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
   <span class="hljs-comment">// Optional</span>
   <span class="hljs-attr">step</span>?: <span class="hljs-built_in">number</span>; <span class="hljs-comment">// default: 1</span>
 }
-</code></pre>
-        <p>Example:</p>
-        <div class="example">
-          <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+</code></pre><p>Example:</p>
+<div class="example">
+
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;range&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;width&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;defaultValue&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span>
@@ -313,20 +247,10 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
   <span class="hljs-attr">&quot;max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;step&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span>
 <span class="hljs-punctuation">}</span>
-</code></pre>
-        </div>
+</code></pre></div>
 
-        <h3 id="dual-range">Dual range</h3>
-        <p>
-          Range input with two handles that control minimum and maximum values.
-          Includes the same additional properties as the range input. Uses my
-          own
-          <a href="https://github.com/stanko/dual-range-input"
-            >dual-range-input</a
-          >
-          library.
-        </p>
-        <pre><code class="hljs language-ts">{
+<h3 id="dual-range">Dual range</h3><p>Range input with two handles that control minimum and maximum values. Includes the same additional properties as the range input. Uses my own <a href="https://github.com/stanko/dual-range-input">dual-range-input</a> library.</p>
+<pre><code class="hljs language-ts">{
   <span class="hljs-comment">// Mandatory</span>
   <span class="hljs-attr">min</span>: <span class="hljs-built_in">number</span>;
   <span class="hljs-attr">max</span>: <span class="hljs-built_in">number</span>;
@@ -334,10 +258,10 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
   <span class="hljs-comment">// Optional</span>
   <span class="hljs-attr">step</span>?: <span class="hljs-built_in">number</span>; <span class="hljs-comment">// default: 1</span>
 }
-</code></pre>
-        <p>Example:</p>
-        <div class="example">
-          <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+</code></pre><p>Example:</p>
+<div class="example">
+
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;dual-range&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;size&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;defaultValue&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;min&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">7</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
@@ -345,25 +269,20 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
   <span class="hljs-attr">&quot;max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;step&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span>
 <span class="hljs-punctuation">}</span>
-</code></pre>
-        </div>
+</code></pre></div>
 
-        <h3 id="radio">Radio</h3>
-        <p>
-          Grid of radio buttons. Can be set to have between one and five
-          columns.
-        </p>
-        <pre><code class="hljs language-ts">{
+<h3 id="radio">Radio</h3><p>Grid of radio buttons. Can be set to have between one and five columns.</p>
+<pre><code class="hljs language-ts">{
   <span class="hljs-comment">// Mandatory</span>
   <span class="hljs-attr">items</span>: <span class="hljs-title class_">Record</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>&gt;; <span class="hljs-comment">// Map of radio items (key, value)</span>
 
   <span class="hljs-comment">// Optional</span>
   <span class="hljs-attr">columns</span>?: <span class="hljs-built_in">number</span>; <span class="hljs-comment">// default: 3</span>
 }
-</code></pre>
-        <p>Example:</p>
-        <div class="example">
-          <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+</code></pre><p>Example:</p>
+<div class="example">
+
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;radio&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;main shape&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;items&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
@@ -375,15 +294,10 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
   <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;columns&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2</span>
 <span class="hljs-punctuation">}</span>
-</code></pre>
-        </div>
+</code></pre></div>
 
-        <h2 id="theming">Theming</h2>
-        <p>
-          Ctrls uses CSS variables for theming. There are many you can adjust,
-          but I recommend starting with these four:
-        </p>
-        <pre><code class="hljs language-scss"><span class="hljs-selector-class">.ctrls</span> {
+<h2 id="theming">Theming</h2><p>Ctrls uses CSS variables for theming. There are many you can adjust, but I recommend starting with these four:</p>
+<pre><code class="hljs language-scss"><span class="hljs-selector-class">.ctrls</span> {
   <span class="hljs-comment">// Theme color&#x27;s hue, default is blue</span>
   <span class="hljs-attr">--ctrls-h</span>: <span class="hljs-number">245</span>;
 
@@ -394,53 +308,18 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
   <span class="hljs-attr">--ctrls-radius</span>: <span class="hljs-number">4px</span>;
   <span class="hljs-attr">--ctrls-range-thumb-radius</span>: <span class="hljs-number">4px</span>;
 }
-</code></pre>
-        <p>
-          Try tweaking these values live in this example. For convenience, the
-          range thumb radius is set to half the main radius.
-        </p>
-        <div class="theme-controls"></div>
+</code></pre><p>Try tweaking these values live in this example. For convenience, the range thumb radius is set to half the main radius.</p>
+<div class="theme-controls">
+</div>
 
-        <p>
-          Check
-          <a
-            href="https://github.com/Stanko/ctrls/blob/dev/src/scss/_ctrls.scss"
-            >the source file</a
-          >
-          to see all of the available variables.
-        </p>
-        <h2 id="why">Why?</h2>
-        <p>
-          You might ask why I made another library when
-          <a href="https://github.com/dataarts/dat.gui">dat.GUI</a> and
-          <a href="https://tweakpane.github.io/docs/">TweakPane</a> already
-          exist. Both target general use cases with extensive options and
-          elaborate APIs, while I wanted something smaller and easier to adapt
-          for <a href="https://muffinman.io/art/">my algorithmic drawings</a>.
-        </p>
-        <p>
-          I first hacked together a crude library with no plans to release it.
-          Over time I polished it, ported it to TypeScript, and realized it
-          could be useful to others. The code is solid, though I would love to
-          add a few more features.
-        </p>
-        <p>
-          Ctrls is opinionated and tailored to my likings. I&#39;m open to
-          suggestions, but they need to fit algorithmic art use-case and align
-          with my vision. It&#39;s not meant to be a general-purpose library -
-          others already cover that space well.
-        </p>
-        <p>
-          Finally, I should note that I really like Tweakpane, and Ctrls’
-          homepage is heavily inspired by it.
-        </p>
-        <h2 id="cheers">Cheers!</h2>
-        <p>
-          Thank you for stopping by! If you end up using Ctrls, please let me
-          know, I would love to see it.
-        </p>
+<p>Check <a href="https://github.com/Stanko/ctrls/blob/dev/src/scss/_ctrls.scss">the source file</a> to see all of the available variables.</p>
+<h2 id="why">Why?</h2><p>You might ask why I made another library when <a href="https://github.com/dataarts/dat.gui">dat.GUI</a> and <a href="https://tweakpane.github.io/docs/">TweakPane</a> already exist. Both target general use cases with extensive options and elaborate APIs, while I wanted something smaller and easier to adapt for <a href="https://muffinman.io/art/">my algorithmic drawings</a>.</p>
+<p>I first hacked together a crude library with no plans to release it. Over time I polished it, ported it to TypeScript, and realized it could be useful to others. The code is solid, though I would love to add a few more features.</p>
+<p>Ctrls is opinionated and tailored to my likings. I&#39;m open to suggestions, but they need to fit algorithmic art use-case and align with my vision. It&#39;s not meant to be a general-purpose library - others already cover that space well.</p>
+<p>Finally, I should note that I really like Tweakpane, and Ctrls’ homepage is heavily inspired by it.</p>
+<h2 id="cheers">Cheers!</h2><p>Thank you for stopping by! If you end up using Ctrls, please let me know, I would love to see it.</p>
 
-        <!--END_MARKDOWN--->
+<!--END_MARKDOWN--->
       </main>
       <footer class="footer">
         Made with ♡ by <a href="https://muffinman.io">Muffin Man</a>

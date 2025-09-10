@@ -8,7 +8,7 @@ Minimal library for controlling parameters, designed specifically for algorithmi
 
 I built Ctrls for my [algorithmic art projects](https://muffinman.io/art/). By default, the state is saved in the URL, which lets you navigate history and share links easily. Along with standard components like checkboxes and ranges, it includes two especially useful for generative work: RNG seed and easing. These not only let you adjust parameters but also expose functions (rng and easing) you can call directly.
 
-Play with the live example above or check the older version in my [Space Invaders generator](https://muffinman.io/invaders/)..
+Play with the live example above or check the older version in my [Space Invaders generator](https://muffinman.io/invaders/).
 
 ## Features
 
@@ -145,7 +145,7 @@ All controls share the following properties:
   label?: string;
   // Depends on the control type, the default value for the control
   defaultValue?: T;
-  // Should the value be randomized when randomize button is clicked
+  // Disabled the value randomization (via randomize method or button)
   isRandomizationDisabled?: boolean; // default: false
 }
 ```
@@ -372,14 +372,14 @@ Thank you for stopping by! If you end up using Ctrls, please let me know, I woul
 
 ## TODO
 
-* [ ] Demo - favicon and metadata
-* [ ] Readme - screenshots
 * [ ] Prefix input names' with `ctrl_${id}_${name}` to avoid collisions
 * [ ] Allow users to pass a custom PRNG lib
 * [ ] Hash storage - check if there is an instance using hash storage already
 * [ ] Demo - stop animation when not in viewport
 * [ ] Add title which collapses the controls
 * [ ] Storage - local storage
+* [x] Demo - favicon and metadata
+* [x] Readme - screenshots
 * [x] Use web safe / system fonts by default
 * [x] Experiment with chroma for light and dark shades of the main color
 * [x] On input event / handler

@@ -3,10 +3,11 @@
   "version": "0.1.1",
   "type": "module",
   "scripts": {
-    "start": "vite",
-    "build": "tsc && vite build",
+    "start": "npm run parse-markdown && vite",
+    "build": "npm run parse-markdown && tsc && rm -rf ./docs && vite build && touch ./docs/.nojekyll",
     "build-css": "sass ./src/scss/index.scss ./dist/ctrls.css",
     "build-lib": "rm -rf ./dist && tsc -p ./tsconfig-lib.json && npm run build-css",
+    "parse-markdown": "node ./parse-markdown.js",
     "preview": "vite preview",
     "prepare": "cp ./pre-commit ./.git/hooks/pre-commit && chmod +x ./.git/hooks/pre-commit"
   },

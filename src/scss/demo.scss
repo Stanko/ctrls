@@ -61,6 +61,7 @@ body {
     sans-serif;
   line-height: 1.5;
   padding: 0 0 2rem;
+  -webkit-font-smoothing: antialiased;
 
   @include breakpoints.md {
     padding: 2rem;
@@ -179,7 +180,6 @@ pre {
   justify-content: center;
 
   @include breakpoints.md {
-    gap: 0;
     order: -1;
     width: fit-content;
     border-radius: 100px;
@@ -194,6 +194,7 @@ pre {
   }
 
   @include breakpoints.lg {
+    gap: 0;
     top: 2rem;
     flex-direction: column;
   }

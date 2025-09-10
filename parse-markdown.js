@@ -39,8 +39,6 @@ const getHTML = () => {
 
   const html = parsed.slice(start, end);
 
-  console.log(html);
-
   return html;
 };
 
