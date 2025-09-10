@@ -1,6 +1,8 @@
 import random from "../utils/random";
 
 import type { Ctrl, CtrlChangeHandler, CtrlType, CtrlTypeRegistry } from ".";
+import { toKebabCase } from "../utils/string-utils";
+import { getRandomString } from "../utils/get-random-string";
 
 type Option = {
   label: string;
@@ -22,6 +24,7 @@ export class RadioCtrl implements Ctrl<string> {
   items: Option[];
   element: HTMLElement;
   columns: 1 | 2 | 3 | 4 | 5;
+  id: string;
 
   constructor(
     config: CtrlTypeRegistry["radio"]["config"],
@@ -39,6 +42,7 @@ export class RadioCtrl implements Ctrl<string> {
 
     this.name = config.name;
     this.label = config.label || config.name;
+    this.id = `ctrls-${getRandomString()}-${toKebabCase(this.name)}`;
 
     const defaultValue = this.items.find(
       (item) => item.value === config.defaultValue,
@@ -76,7 +80,7 @@ export class RadioCtrl implements Ctrl<string> {
     const inputs = items.map((item) => {
       const input = document.createElement("input");
       input.setAttribute("type", "radio");
-      input.setAttribute("name", this.name);
+      input.setAttribute("name", this.id);
       input.setAttribute("value", item.value);
       input.checked = item.value === value;
 
