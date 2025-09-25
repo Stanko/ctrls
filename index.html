@@ -143,7 +143,8 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
   <span class="hljs-attr">showRandomizeButton</span>?: <span class="hljs-built_in">boolean</span>; <span class="hljs-comment">// default: true</span>
   <span class="hljs-attr">storage</span>?: <span class="hljs-string">&quot;hash&quot;</span> | <span class="hljs-string">&quot;none&quot;</span>; <span class="hljs-comment">// default: &quot;hash&quot;</span>
   <span class="hljs-attr">theme</span>?: <span class="hljs-string">&quot;system&quot;</span> | <span class="hljs-string">&quot;light&quot;</span> | <span class="hljs-string">&quot;dark&quot;</span>; <span class="hljs-comment">// default: &quot;system&quot;</span>
-  <span class="hljs-attr">parent</span>?: <span class="hljs-title class_">Element</span>; <span class="hljs-comment">// if passed, the Ctrls element will be appended to this HTML element</span>
+  <span class="hljs-attr">parent</span>?: <span class="hljs-title class_">Element</span>; <span class="hljs-comment">// element to append Ctrls&#x27; element to</span>
+  <span class="hljs-attr">title</span>?: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// it will be rendered as a button which toggles the controls visibility</span>
 };
 </code></pre><p>Public API:</p>
 <pre><code class="hljs language-ts"><span class="hljs-comment">// The main Ctrls element</span>

@@ -55,6 +55,7 @@ export const config = [
 export const options = new Ctrls(config, {
   // storage: "hash",
   // theme: "dark",
+  title: "Ctrls",
 });
 
 const hero = document.querySelector(".hero") as HTMLElement;
@@ -99,11 +100,8 @@ hero.appendChild(grid.svg);
 // Update the grid after it is rendered
 grid.handleScroll();
 
-let svgTimeout: NodeJS.Timeout | number = 0;
-
-window.addEventListener("resize", () => {
-  clearTimeout(svgTimeout);
-  svgTimeout = setTimeout(() => {
-    grid.resize(hero.clientWidth, hero.clientHeight);
-  }, 100);
+// Resize observer
+const resizeObserver = new ResizeObserver(() => {
+  grid.resize(hero.clientWidth, hero.clientHeight);
 });
+resizeObserver.observe(hero);

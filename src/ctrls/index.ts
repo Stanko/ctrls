@@ -138,6 +138,7 @@ type ControlsOptions = {
   storage?: "hash" | "none";
   theme?: "system" | "light" | "dark";
   parent?: Element;
+  title?: string;
 };
 
 export class Ctrls<Configs extends readonly TypedControlConfig[]> {
@@ -224,8 +225,11 @@ export class Ctrls<Configs extends readonly TypedControlConfig[]> {
     element.classList.add("ctrls");
     element.classList.add(`ctrls--${this.options.theme}-theme`);
 
+    const controlsContainer = document.createElement("div");
+    controlsContainer.classList.add("ctrls__controls");
+
     this.controls.forEach((control) => {
-      element.appendChild(control.element);
+      controlsContainer.appendChild(control.element);
     });
 
     if (this.options.showRandomizeButton) {
@@ -237,10 +241,25 @@ export class Ctrls<Configs extends readonly TypedControlConfig[]> {
       );
       randomizeButton.innerHTML = `Randomize ${diceIcon}`;
       randomizeButton.addEventListener("click", this.randomize);
-      element.appendChild(randomizeButton);
+      controlsContainer.appendChild(randomizeButton);
     }
 
+    if (this.options.title) {
+      const titleButton = document.createElement("button");
+      titleButton.classList.add("ctrls__title");
+      titleButton.innerText = this.options.title;
+      titleButton.addEventListener("click", this.toggleVisibility);
+
+      element.appendChild(titleButton);
+    }
+
+    element.appendChild(controlsContainer);
+
     return element;
+  };
+
+  toggleVisibility = () => {
+    this.element.classList.toggle("ctrls--hidden");
   };
 
   addHashListeners = () => {

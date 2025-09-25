@@ -103,7 +103,8 @@ type ControlsOptions = {
   showRandomizeButton?: boolean; // default: true
   storage?: "hash" | "none"; // default: "hash"
   theme?: "system" | "light" | "dark"; // default: "system"
-  parent?: Element; // if passed, the Ctrls element will be appended to this HTML element
+  parent?: Element; // element to append Ctrls' element to
+  title?: string; // it will be rendered as a button which toggles the controls visibility
 };
 ```
 
@@ -374,7 +375,7 @@ Thank you for stopping by! If you end up using Ctrls, please let me know, I woul
 
 * [ ] Allow users to pass a custom PRNG lib
 * [ ] Hash storage - check if there is an instance using hash storage already
-* [ ] Add title which collapses the controls
+* [x] Add title which collapses the controls
 * [ ] Storage - local storage
 * [x] Prefix input names' with `ctrl_${id}_${name}` to avoid collisions
 * [x] Demo - stop animation when not in viewport
