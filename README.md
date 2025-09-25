@@ -103,14 +103,14 @@ type ControlsOptions = {
   showRandomizeButton?: boolean; // default: true
   storage?: "hash" | "none"; // default: "hash"
   theme?: "system" | "light" | "dark"; // default: "system"
+  parent?: Element; // if passed, the Ctrls element will be appended to this HTML element
 };
 ```
 
 Public API:
 
 ```ts
-// The main Ctrls element. You'll have to add it to the page yourself:
-// document.querySelector('.my-controls').appendChild(options.element);
+// The main Ctrls element
 .element: HTMLDivElement
 
 // Change handler called whenever any of the values is changed.

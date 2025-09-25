@@ -137,6 +137,7 @@ type ControlsOptions = {
   showRandomizeButton?: boolean;
   storage?: "hash" | "none";
   theme?: "system" | "light" | "dark";
+  parent?: Element;
 };
 
 export class Ctrls<Configs extends readonly TypedControlConfig[]> {
@@ -211,6 +212,10 @@ export class Ctrls<Configs extends readonly TypedControlConfig[]> {
 
     if (this.options.storage === "hash") {
       this.addHashListeners();
+    }
+
+    if (this.options.parent) {
+      this.options.parent.appendChild(this.element);
     }
   }
 

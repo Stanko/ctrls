@@ -12,12 +12,11 @@ export const initExamples = () => {
       const config = JSON.parse(json);
       // configElement.innerHTML = highlightJSON(json);
 
-      const controls = new Ctrls([config], {
+      new Ctrls([config], {
         showRandomizeButton: false,
         storage: "none",
+        parent: example,
       });
-
-      example.appendChild(controls.element);
     } catch (error) {
       console.error("Error parsing JSON:", error);
     }
