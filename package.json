@@ -1,6 +1,6 @@
 {
   "name": "@stanko/ctrls",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "scripts": {
     "start": "npm run parse-markdown && vite",
