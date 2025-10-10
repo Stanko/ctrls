@@ -285,6 +285,14 @@ pre {
   }
 }
 
+.hero__controls {
+  @include breakpoints.md {
+    display: grid;
+    align-items: center;
+    height: 19rem;
+  }
+}
+
 .hero .ctrls {
   box-shadow: 2px 2px 4px var(--shadow);
 }
