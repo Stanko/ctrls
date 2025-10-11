@@ -8,6 +8,7 @@
   --ctrls-label-width: 5rem;
   --ctrls-width: 22rem;
   --ctrls-font-size: 0.75rem;
+  --ctrls-value-font-size: 0.6875rem;
 
   // Theme colors
   --ctrls-c: 0.25;
@@ -287,6 +288,11 @@
   font-weight: 700;
   hyphens: auto;
   padding-right: 0.25rem;
+}
+
+.ctrls__control-value {
+  font-weight: 400;
+  font-size: var(--ctrls-value-font-size);
 }
 
 .ctrls__control-right {

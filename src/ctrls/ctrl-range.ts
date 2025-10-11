@@ -3,8 +3,6 @@ import { roundToStep } from "../utils/round-to-step";
 
 import type { Ctrl, CtrlChangeHandler, CtrlType, CtrlTypeRegistry } from ".";
 
-// TODO
-// Add a span with the current value
 export class RangeCtrl implements Ctrl<number> {
   type: CtrlType = "range";
   name: string;
@@ -18,6 +16,7 @@ export class RangeCtrl implements Ctrl<number> {
   step: number;
   element: HTMLElement;
   input: HTMLInputElement;
+  valueSpan: HTMLSpanElement;
 
   constructor(
     config: CtrlTypeRegistry["range"]["config"],
@@ -37,8 +36,9 @@ export class RangeCtrl implements Ctrl<number> {
         ? this.getDefaultValue()
         : config.defaultValue;
 
-    const { input, element } = this.buildUI();
+    const { input, element, valueSpan } = this.buildUI();
     this.input = input;
+    this.valueSpan = valueSpan;
     this.element = element;
 
     this.update(this.value);
@@ -81,6 +81,7 @@ export class RangeCtrl implements Ctrl<number> {
 
     input.addEventListener("change", () => {
       this.value = this.parse(input.value);
+      this.update(this.value);
       this.onChange(this.name, this.value);
     });
 
@@ -101,6 +102,10 @@ export class RangeCtrl implements Ctrl<number> {
     label.textContent = this.label;
     label.classList.add("ctrls__control-label");
 
+    const valueSpan = document.createElement("span");
+    valueSpan.classList.add("ctrls__control-value");
+    label.appendChild(valueSpan);
+
     const element = document.createElement("label");
     element.classList.add("ctrls__control", "ctrls__control--range");
     element.appendChild(label);
@@ -109,6 +114,7 @@ export class RangeCtrl implements Ctrl<number> {
     return {
       element,
       input,
+      valueSpan,
     };
   };
 
@@ -117,6 +123,8 @@ export class RangeCtrl implements Ctrl<number> {
     this.value = value;
 
     this.input.value = value.toString();
+    this.valueSpan.textContent = ` (${value})`;
+
     const percentage = ((this.value - min) / (max - min)) * 100;
     this.element.style.setProperty(
       "--gradient-position",

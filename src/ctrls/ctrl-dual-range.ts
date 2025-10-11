@@ -15,8 +15,6 @@ export type DualRangeValue = {
   max: number;
 };
 
-// TODO
-// Add a span with the current value
 export class DualRangeCtrl implements Ctrl<DualRangeValue> {
   type: CtrlType = "dual-range";
   name: string;
@@ -32,6 +30,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
   minInput: HTMLInputElement;
   maxInput: HTMLInputElement;
   dualRange: DualRangeInput;
+  valueSpan: HTMLSpanElement;
 
   constructor(
     config: CtrlTypeRegistry["dual-range"]["config"],
@@ -51,10 +50,11 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
     this.onChange = onChange;
     this.onInput = onInput;
 
-    const { minInput, maxInput, element } = this.buildUI();
+    const { minInput, maxInput, element, valueSpan } = this.buildUI();
     this.minInput = minInput;
     this.maxInput = maxInput;
     this.element = element;
+    this.valueSpan = valueSpan;
 
     this.dualRange = new DualRangeInput(this.minInput, this.maxInput);
   }
@@ -110,6 +110,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
         min: parseFloat(minInput.value),
         max: parseFloat(maxInput.value),
       };
+      this.update(this.value);
       this.onChange(this.name, this.value);
     });
 
@@ -124,6 +125,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
         min: parseFloat(minInput.value),
         max: parseFloat(maxInput.value),
       };
+      this.update(this.value);
       this.onChange(this.name, this.value);
     });
 
@@ -140,6 +142,10 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
     label.textContent = this.label;
     label.classList.add("ctrls__control-label");
 
+    const valueSpan = document.createElement("span");
+    valueSpan.classList.add("ctrls__control-value");
+    label.appendChild(valueSpan);
+
     const element = document.createElement("div");
     element.classList.add("ctrls__control", "ctrls__control--dual-range");
     element.appendChild(label);
@@ -147,6 +153,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
 
     return {
       element,
+      valueSpan,
       minInput,
       maxInput,
     };
@@ -158,6 +165,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
 
     this.minInput.setAttribute("max", max.toString());
     this.maxInput.setAttribute("min", min.toString());
+    this.valueSpan.textContent = ` (${min}, ${max})`;
 
     this.minInput.value = value.min.toString();
     this.maxInput.value = value.max.toString();

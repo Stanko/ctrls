@@ -289,7 +289,7 @@ pre {
   @include breakpoints.md {
     display: grid;
     align-items: center;
-    height: 19rem;
+    min-height: 19rem;
   }
 }
 
