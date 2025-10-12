@@ -178,9 +178,10 @@
 .ctrls__title {
   background: none;
   border: none;
+  display: block;
+  width: 100%;
   font-weight: bold;
   letter-spacing: -0.025em;
-  width: 100%;
   padding: 0.375rem 0.5rem;
   cursor: pointer;
   transition:
@@ -201,10 +202,6 @@
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--ctrls-scrollbar-thumb-bg) transparent;
-}
-
-.ctrls__title + .ctrls__controls {
-  border-top: 1px solid var(--ctrls-border);
 }
 
 .ctrls--hidden .ctrls__controls {

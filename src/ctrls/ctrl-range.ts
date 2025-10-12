@@ -76,6 +76,7 @@ export class RangeCtrl implements Ctrl<number> {
 
     input.addEventListener("input", () => {
       this.value = this.parse(input.value);
+      this.update(this.value);
       this.onInput(this.name, this.value);
     });
 

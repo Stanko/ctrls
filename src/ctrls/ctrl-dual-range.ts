@@ -57,6 +57,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
     this.valueSpan = valueSpan;
 
     this.dualRange = new DualRangeInput(this.minInput, this.maxInput);
+    this.update(this.value);
   }
 
   parse = (string: string) => {
@@ -90,29 +91,34 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
   buildUI = () => {
     const { min, max, step, value } = this;
 
-    const minInput = document.createElement("input");
-    minInput.setAttribute("type", "range");
-    minInput.setAttribute("min", min.toString());
-    minInput.setAttribute("max", max.toString());
-    minInput.setAttribute("step", step.toString());
-    minInput.setAttribute("value", value.min.toString());
-
-    minInput.addEventListener("input", () => {
-      this.value = {
-        min: parseFloat(minInput.value),
-        max: parseFloat(maxInput.value),
-      };
-      this.onInput(this.name, this.value);
-    });
-
-    minInput.addEventListener("change", () => {
+    const changeHandler = () => {
       this.value = {
         min: parseFloat(minInput.value),
         max: parseFloat(maxInput.value),
       };
       this.update(this.value);
       this.onChange(this.name, this.value);
-    });
+    };
+
+    const inputHandler = () => {
+      this.value = {
+        min: parseFloat(minInput.value),
+        max: parseFloat(maxInput.value),
+      };
+      this.update(this.value);
+      this.onInput(this.name, this.value);
+    };
+
+    const minInput = document.createElement("input");
+
+    minInput.setAttribute("type", "range");
+    minInput.setAttribute("min", min.toString());
+    minInput.setAttribute("max", max.toString());
+    minInput.setAttribute("step", step.toString());
+    minInput.setAttribute("value", value.min.toString());
+
+    minInput.addEventListener("input", inputHandler);
+    minInput.addEventListener("change", changeHandler);
 
     const maxInput = document.createElement("input");
     maxInput.setAttribute("type", "range");
@@ -120,14 +126,9 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
     maxInput.setAttribute("max", max.toString());
     maxInput.setAttribute("step", step.toString());
     maxInput.setAttribute("value", value.max.toString());
-    maxInput.addEventListener("change", () => {
-      this.value = {
-        min: parseFloat(minInput.value),
-        max: parseFloat(maxInput.value),
-      };
-      this.update(this.value);
-      this.onChange(this.name, this.value);
-    });
+
+    maxInput.addEventListener("input", inputHandler);
+    maxInput.addEventListener("change", changeHandler);
 
     const inputWrapper = document.createElement("div");
     inputWrapper.classList.add("dual-range-input");

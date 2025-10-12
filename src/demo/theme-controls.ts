@@ -40,6 +40,7 @@ export const config = [
 
 export const themeControls = new Ctrls(config, {
   storage: "none",
+  title: "Theme Controls",
   // theme: "dark",
 });
 
