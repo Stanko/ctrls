@@ -42,7 +42,7 @@ export class RadioCtrl implements Ctrl<string> {
 
     this.name = config.name;
     this.label = config.label || config.name;
-    this.id = `ctrls-${getRandomString()}-${toKebabCase(this.name)}`;
+    this.id = `ctrls__${toKebabCase(config.name)}-${getRandomString()}`;
 
     const defaultValue = this.items.find(
       (item) => item.value === config.defaultValue,
@@ -81,6 +81,7 @@ export class RadioCtrl implements Ctrl<string> {
       const input = document.createElement("input");
       input.setAttribute("type", "radio");
       input.setAttribute("name", this.id);
+      input.setAttribute("id", `${this.id}-${toKebabCase(item.value)}`);
       input.setAttribute("value", item.value);
       input.checked = item.value === value;
 

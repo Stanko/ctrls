@@ -1,5 +1,6 @@
 import { checkIcon } from "../utils/icons";
 import type { Ctrl, CtrlType, CtrlChangeHandler, CtrlConfig } from ".";
+import { toHtmlId } from "../utils/string-utils";
 
 export class BooleanCtrl implements Ctrl<boolean> {
   type: CtrlType = "boolean";
@@ -50,9 +51,12 @@ export class BooleanCtrl implements Ctrl<boolean> {
   };
 
   buildUI = () => {
+    const id = toHtmlId(this.name);
     const input = document.createElement("input");
     input.classList.add("ctrls__boolean-input");
     input.setAttribute("type", "checkbox");
+    input.setAttribute("id", id);
+    input.setAttribute("name", id);
     input.checked = this.value;
     input.addEventListener("change", () => {
       this.value = input.checked;

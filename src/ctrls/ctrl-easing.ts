@@ -2,6 +2,7 @@ import random from "../utils/random";
 import BezierEasing from "bezier-easing";
 
 import type { Ctrl, CtrlChangeHandler, CtrlType, CtrlTypeRegistry } from ".";
+import { toHtmlId } from "../utils/string-utils";
 
 export type Easing = [number, number, number, number];
 
@@ -108,6 +109,7 @@ export class EasingCtrl implements Ctrl<Easing> {
 
   buildUI = () => {
     const { value } = this;
+    const id = toHtmlId(this.name);
 
     const line1 = document.createElementNS(
       "http://www.w3.org/2000/svg",
@@ -337,6 +339,7 @@ export class EasingCtrl implements Ctrl<Easing> {
     controlWrapper.classList.add("ctrls__easing-wrapper");
     controlWrapper.appendChild(ticks);
     controlWrapper.appendChild(control);
+    controlWrapper.setAttribute("id", id);
 
     const right = document.createElement("div");
     right.classList.add("ctrls__control-right");

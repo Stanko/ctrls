@@ -292,10 +292,6 @@
   font-size: var(--ctrls-value-font-size);
 }
 
-.ctrls__control-right {
-  flex: auto 1 1;
-}
-
 .ctrls button:focus-visible {
   outline: 2px solid var(--ctrls-theme);
   outline-offset: 2px;

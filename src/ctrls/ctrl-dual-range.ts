@@ -3,6 +3,7 @@ import DualRangeInput from "@stanko/dual-range-input";
 
 import type { Ctrl, CtrlChangeHandler, CtrlType, CtrlTypeRegistry } from ".";
 import { roundToStep } from "../utils/round-to-step";
+import { toHtmlId } from "../utils/string-utils";
 
 export type DualRangeControlOptions = {
   min: number;
@@ -90,6 +91,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
 
   buildUI = () => {
     const { min, max, step, value } = this;
+    const id = toHtmlId(this.name);
 
     const changeHandler = () => {
       this.value = {
@@ -112,6 +114,8 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
     const minInput = document.createElement("input");
 
     minInput.setAttribute("type", "range");
+    minInput.setAttribute("name", `${id}-min`);
+    minInput.setAttribute("id", `${id}-min`);
     minInput.setAttribute("min", min.toString());
     minInput.setAttribute("max", max.toString());
     minInput.setAttribute("step", step.toString());
@@ -122,6 +126,8 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
 
     const maxInput = document.createElement("input");
     maxInput.setAttribute("type", "range");
+    maxInput.setAttribute("name", `${id}-max`);
+    maxInput.setAttribute("id", `${id}-max`);
     maxInput.setAttribute("min", min.toString());
     maxInput.setAttribute("max", max.toString());
     maxInput.setAttribute("step", step.toString());

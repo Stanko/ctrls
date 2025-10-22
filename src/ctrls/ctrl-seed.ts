@@ -2,6 +2,7 @@ import generateSeed from "../utils/generate-seed";
 import { refreshIcon } from "../utils/icons";
 
 import type { Ctrl, CtrlChangeHandler, CtrlConfig, CtrlType } from ".";
+import { toHtmlId } from "../utils/string-utils";
 
 export class SeedCtrl implements Ctrl<string> {
   type: CtrlType = "seed";
@@ -56,13 +57,14 @@ export class SeedCtrl implements Ctrl<string> {
   buildUI = () => {
     const { value } = this;
 
-    const id = `control-${this.name}`;
+    const id = toHtmlId(this.name);
 
     const input = document.createElement("input");
     input.classList.add("ctrls__seed-input");
     input.setAttribute("type", "text");
     input.setAttribute("value", value.toString());
     input.setAttribute("id", id);
+    input.setAttribute("name", id);
 
     input.addEventListener("change", () => {
       this.value = this.parse(input.value);

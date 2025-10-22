@@ -94,7 +94,7 @@ export interface CtrlTypeRegistry {
   };
   easing: {
     config: CtrlConfig<Easing> & {
-      presets: Record<string, Easing>;
+      presets?: Record<string, Easing>;
     };
     instance: EasingCtrl;
     value: Easing;

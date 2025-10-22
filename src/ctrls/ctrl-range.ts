@@ -2,6 +2,7 @@ import random from "../utils/random";
 import { roundToStep } from "../utils/round-to-step";
 
 import type { Ctrl, CtrlChangeHandler, CtrlType, CtrlTypeRegistry } from ".";
+import { toHtmlId } from "../utils/string-utils";
 
 export class RangeCtrl implements Ctrl<number> {
   type: CtrlType = "range";
@@ -65,10 +66,13 @@ export class RangeCtrl implements Ctrl<number> {
 
   buildUI = () => {
     const { min, max, step, value } = this;
+    const id = toHtmlId(this.name);
 
     const input = document.createElement("input");
     input.classList.add("ctrls__range-input");
     input.setAttribute("type", "range");
+    input.setAttribute("id", id);
+    input.setAttribute("name", id);
     input.setAttribute("min", min.toString());
     input.setAttribute("max", max.toString());
     input.setAttribute("step", step.toString());

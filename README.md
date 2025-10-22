@@ -373,9 +373,12 @@ Thank you for stopping by! If you end up using Ctrls, please let me know, I woul
 
 ## TODO
 
+* [ ] Add `add/removeEventListener` instead of direct update of `onInput` and `onChange`
 * [ ] Allow users to pass a custom PRNG lib
 * [ ] Hash storage - check if there is an instance using hash storage already
 * [ ] Storage - local storage
+* [x] Add `name` and `id` to inputs
+* [x] TypeDef bug - easing presets should be optional
 * [x] Add title which collapses the controls
 * [x] Prefix input names' with `ctrl_${id}_${name}` to avoid collisions
 * [x] Demo - stop animation when not in viewport
