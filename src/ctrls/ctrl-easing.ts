@@ -1,7 +1,7 @@
 import random from "../utils/random";
 import BezierEasing from "bezier-easing";
 
-import type { Ctrl, CtrlChangeHandler, CtrlType, CtrlTypeRegistry } from ".";
+import type { Ctrl, CtrlChangeHandler, CtrlType, ConfigFor } from ".";
 import { toHtmlId } from "../utils/string-utils";
 
 export type Easing = [number, number, number, number];
@@ -38,7 +38,7 @@ export class EasingCtrl implements Ctrl<Easing> {
   presets: Record<string, Easing>;
 
   constructor(
-    config: CtrlTypeRegistry["easing"]["config"],
+    config: ConfigFor<"easing">,
     onChange: CtrlChangeHandler<Easing>,
     onInput: CtrlChangeHandler<Easing>,
   ) {

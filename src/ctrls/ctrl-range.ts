@@ -1,7 +1,7 @@
 import random from "../utils/random";
 import { roundToStep } from "../utils/round-to-step";
 
-import type { Ctrl, CtrlChangeHandler, CtrlType, CtrlTypeRegistry } from ".";
+import type { Ctrl, CtrlChangeHandler, CtrlType, ConfigFor } from ".";
 import { toHtmlId } from "../utils/string-utils";
 
 export class RangeCtrl implements Ctrl<number> {
@@ -20,7 +20,7 @@ export class RangeCtrl implements Ctrl<number> {
   valueSpan: HTMLSpanElement;
 
   constructor(
-    config: CtrlTypeRegistry["range"]["config"],
+    config: ConfigFor<"range">,
     onChange: CtrlChangeHandler<number>,
     onInput: CtrlChangeHandler<number>,
   ) {

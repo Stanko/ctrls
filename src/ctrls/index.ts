@@ -13,6 +13,8 @@ export interface PRNG {
   (): number;
 }
 
+type HashItem = { name: string; value: unknown };
+
 export type CtrlType =
   | "boolean"
   | "range"
@@ -46,14 +48,88 @@ export interface Ctrl<T> {
   element: HTMLElement;
 }
 
-export type CtrlComponent =
+// Control registry - focus on config -> value mapping
+export interface CtrlTypeMap {
+  boolean: {
+    value: boolean;
+  };
+  range: {
+    value: number;
+    min: number;
+    max: number;
+    step?: number;
+  };
+  radio: {
+    value: string;
+    items: Record<string, string>;
+    columns?: 1 | 2 | 3 | 4 | 5;
+  };
+  seed: {
+    value: string;
+  };
+  easing: {
+    value: Easing;
+    presets?: Record<string, Easing>;
+  };
+  "dual-range": {
+    value: DualRangeValue;
+    min: number;
+    max: number;
+    step?: number;
+  };
+}
+
+export type TypedControlConfig = {
+  [K in CtrlType]: {
+    type: K;
+    name: string;
+    label?: string;
+    defaultValue?: CtrlTypeMap[K]["value"];
+    isRandomizationDisabled?: boolean;
+  } & Omit<CtrlTypeMap[K], "value">;
+}[CtrlType];
+
+export type ConfigFor<T extends CtrlType> = Extract<
+  TypedControlConfig,
+  { type: T }
+>;
+
+// Value extraction
+type ExtractValues<Configs extends readonly TypedControlConfig[]> = {
+  [C in Configs[number] as C["name"]]: CtrlTypeMap[C["type"]]["value"];
+};
+
+// Add "rng" and "easing" functions types
+type DerivedProps<Configs extends readonly TypedControlConfig[]> = {
+  [C in Extract<
+    Configs[number],
+    { type: "easing" }
+  > as `${C["name"]}Easing`]: ReturnType<typeof BezierEasing>;
+} & {
+  [C in Extract<Configs[number], { type: "seed" }> as `${C["name"]}Rng`]: PRNG;
+};
+
+// Combined type
+type OptionsMap<Configs extends readonly TypedControlConfig[]> =
+  ExtractValues<Configs> & DerivedProps<Configs>;
+
+type ControlsOptions = {
+  showRandomizeButton?: boolean;
+  storage?: "hash" | "none";
+  theme?: "system" | "light" | "dark";
+  parent?: Element;
+  title?: string;
+};
+
+type CtrlComponent =
   | BooleanCtrl
   | RangeCtrl
   | RadioCtrl
   | SeedCtrl
   | EasingCtrl
   | DualRangeCtrl;
-export type ControlConstructor<T> = new (...args: any[]) => T;
+
+type ControlConstructor<T> = new (...args: any[]) => T;
 
 const controlMap: Record<CtrlType, ControlConstructor<CtrlComponent>> = {
   boolean: BooleanCtrl,
@@ -64,90 +140,11 @@ const controlMap: Record<CtrlType, ControlConstructor<CtrlComponent>> = {
   "dual-range": DualRangeCtrl,
 };
 
-export interface CtrlTypeRegistry {
-  boolean: {
-    config: CtrlConfig<boolean>;
-    instance: BooleanCtrl;
-    value: boolean;
-  };
-  range: {
-    config: CtrlConfig<number> & {
-      min: number;
-      max: number;
-      step?: number;
-    };
-    instance: RangeCtrl;
-    value: number;
-  };
-  radio: {
-    config: CtrlConfig<string> & {
-      items: Record<string, string>;
-      columns?: 1 | 2 | 3 | 4 | 5;
-    };
-    instance: RadioCtrl;
-    value: string;
-  };
-  seed: {
-    config: CtrlConfig<string>;
-    instance: SeedCtrl;
-    value: string;
-  };
-  easing: {
-    config: CtrlConfig<Easing> & {
-      presets?: Record<string, Easing>;
-    };
-    instance: EasingCtrl;
-    value: Easing;
-  };
-  "dual-range": {
-    config: CtrlConfig<DualRangeValue> & {
-      min: number;
-      max: number;
-      step?: number;
-    };
-    instance: DualRangeCtrl;
-    value: DualRangeValue;
-  };
-}
-
-export type TypedControlConfig =
-  CtrlTypeRegistry[keyof CtrlTypeRegistry]["config"];
-
-type OptionsMap<Configs extends readonly TypedControlConfig[]> =
-  // Base mapping: control name → value
-  {
-    [C in Configs[number] as C["name"]]: CtrlTypeRegistry[C["type"]]["value"];
-  } & {
-    // Extra mapping: easing → nameEasing
-    [C in Extract<
-      Configs[number],
-      { type: "easing" }
-    > as `${C["name"]}Easing`]: ReturnType<typeof BezierEasing>;
-  } & {
-    // Extra mapping: seed → nameRng
-    [C in Extract<
-      Configs[number],
-      { type: "seed" }
-    > as `${C["name"]}Rng`]: PRNG;
-  };
-
-type HashItem = { name: string; value: unknown };
-
-type ControlsOptions = {
-  showRandomizeButton?: boolean;
-  storage?: "hash" | "none";
-  theme?: "system" | "light" | "dark";
-  parent?: Element;
-  title?: string;
-};
-
 export class Ctrls<Configs extends readonly TypedControlConfig[]> {
   options: ControlsOptions;
-  controls: CtrlTypeRegistry[keyof CtrlTypeRegistry]["instance"][];
-  controlsMap: Record<
-    string,
-    CtrlTypeRegistry[keyof CtrlTypeRegistry]["instance"]
-  > = {};
+  controls: CtrlComponent[];
+  controlsMap: Record<string, CtrlComponent> = {};
+
   element: HTMLDivElement;
 
   onChange?: (
