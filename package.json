@@ -20,13 +20,13 @@
   ],
   "devDependencies": {
     "highlight.js": "^11.11.1",
-    "marked": "^16.2.1",
-    "marked-highlight": "^2.2.2",
-    "sass": "^1.92.1",
+    "marked": "^17.0.0",
+    "marked-highlight": "^2.2.3",
+    "sass": "^1.94.0",
     "simplex-noise": "^4.0.3",
-    "typescript": "~5.9.2",
-    "vite": "^7.1.5",
-    "vitest": "^4.0.9"
+    "typescript": "~5.9.3",
+    "vite": "^7.2.2",
+    "vitest": "^4.0.10"
   },
   "dependencies": {
     "@stanko/dual-range-input": "^1.0.1",

@@ -423,7 +423,7 @@ Thank you for stopping by! If you end up using Ctrls, please let me know, I woul
 * [x] On input event / handler
 * [x] Revisit naming `controls` vs `options` vs `values`
 * [x] Remove lucide as a dependency, swap with local SVGs
-* [x] Add Aleas PRNG instead of seedrandom
+* [x] Add Alea PRNG instead of seedrandom
 * [x] Storage options - none
 * [x] Fix get random value float point error in dual range (modulo with floats)
 * [x] Easing - fix handles jumping to previous positions after selecting preset (no storage)

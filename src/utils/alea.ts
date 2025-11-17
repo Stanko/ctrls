@@ -2,32 +2,40 @@
 // Slim TypeScript version of this implementation:
 // https://github.com/coverslide/node-alea
 
-const getMash = () => {
-  let n = 0xefc8249d;
+const Alea = (...seeds: string[]): (() => number) => {
+  const getMash = () => {
+    let n = 0xefc8249d;
 
-  const mash = (seed: string): number => {
-    for (let i = 0; i < seed.length; i++) {
-      n += seed.charCodeAt(i);
-      let h = 0.02519603282416938 * n;
-      n = h >>> 0;
-      h -= n;
-      h *= n;
-      n = h >>> 0;
-      h -= n;
-      n += h * 0x100000000; // 2^32
-    }
-    return (n >>> 0) * 2.3283064365386963e-10; // 2^-32
+    const mash = (seed: string): number => {
+      for (let i = 0; i < seed.length; i++) {
+        n += seed.charCodeAt(i);
+        let h = 0.02519603282416938 * n;
+        n = h >>> 0;
+        h -= n;
+        h *= n;
+        n = h >>> 0;
+        h -= n;
+        n += h * 0x100000000; // 2^32
+      }
+      return (n >>> 0) * 2.3283064365386963e-10; // 2^-32
+    };
+
+    return mash;
   };
 
-  return mash;
-};
+  const getRandomSeeds = () => {
+    return [
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+    ];
+  };
 
-const Alea = (...seeds: string[]): (() => number) => {
   const mash = getMash();
   const s = [mash(" "), mash(" "), mash(" ")];
   let c = 1;
 
-  seeds.forEach((seed) => {
+  (seeds || getRandomSeeds()).forEach((seed) => {
     s.forEach((_, i) => {
       s[i] -= mash(seed);
 
