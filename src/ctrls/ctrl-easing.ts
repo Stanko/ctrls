@@ -23,6 +23,8 @@ const getPath = (x1: number, y1: number, x2: number, y2: number) => {
 
 export class EasingCtrl implements Ctrl<Easing> {
   type: CtrlType = "easing";
+  id: string;
+  group?: string;
   name: string;
   label: string;
   value: Easing;
@@ -43,6 +45,8 @@ export class EasingCtrl implements Ctrl<Easing> {
     onInput: CtrlChangeHandler<Easing>,
   ) {
     this.name = config.name;
+    this.id = config.id || config.name;
+    this.group = config.group || "";
     this.label = config.label || config.name;
     this.value =
       config.defaultValue === undefined

@@ -15,6 +15,9 @@ export type RadioControlOptions = {
 
 export class RadioCtrl implements Ctrl<string> {
   type: CtrlType = "radio";
+  htmlId: string;
+  id: string;
+  group?: string;
   name: string;
   label: string;
   value: string;
@@ -24,7 +27,6 @@ export class RadioCtrl implements Ctrl<string> {
   items: Option[];
   element: HTMLElement;
   columns: 1 | 2 | 3 | 4 | 5;
-  id: string;
 
   constructor(
     config: ConfigFor<"radio">,
@@ -41,8 +43,10 @@ export class RadioCtrl implements Ctrl<string> {
     this.columns = config.columns || 3;
 
     this.name = config.name;
+    this.id = config.id || config.name;
+    this.group = config.group || "";
     this.label = config.label || config.name;
-    this.id = `ctrls__${toKebabCase(config.name)}-${getRandomString()}`;
+    this.htmlId = `ctrls__${toKebabCase(config.name)}-${getRandomString()}`;
 
     const defaultValue = this.items.find(
       (item) => item.value === config.defaultValue,
@@ -80,8 +84,8 @@ export class RadioCtrl implements Ctrl<string> {
     const inputs = items.map((item) => {
       const input = document.createElement("input");
       input.setAttribute("type", "radio");
-      input.setAttribute("name", this.id);
-      input.setAttribute("id", `${this.id}-${toKebabCase(item.value)}`);
+      input.setAttribute("name", this.htmlId);
+      input.setAttribute("id", `${this.htmlId}-${toKebabCase(item.value)}`);
       input.setAttribute("value", item.value);
       input.checked = item.value === value;
 

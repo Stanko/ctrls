@@ -21,19 +21,24 @@ export type CtrlType =
   | "radio"
   | "seed"
   | "easing"
-  | "dual-range";
+  | "dual-range"
+  | "group";
 
 export type CtrlChangeHandler<T> = (name: string, value: T) => void;
 
 export type CtrlConfig<T = unknown> = {
   type: CtrlType;
+  id?: string;
   name: string;
+  group?: string;
   label?: string;
   defaultValue?: T;
   isRandomizationDisabled?: boolean;
 };
 
 export interface Ctrl<T> {
+  id: string;
+  group?: string;
   name: string;
   label: string;
   type: CtrlType;
@@ -77,40 +82,73 @@ export interface CtrlTypeMap {
     max: number;
     step?: number;
   };
+  group: {
+    value: Record<string, unknown>; // Placeholder, real type is recursive
+    controls: readonly ConfigItem[];
+    isRandomizationDisabled?: boolean;
+  };
 }
 
 export type TypedControlConfig = {
+  // Exclude group from leaf types
   [K in CtrlType]: {
     type: K;
+    id?: string;
     name: string;
+    group?: string;
     label?: string;
     defaultValue?: CtrlTypeMap[K]["value"];
     isRandomizationDisabled?: boolean;
   } & Omit<CtrlTypeMap[K], "value">;
 }[CtrlType];
 
+export type GroupConfig = {
+  type: "group";
+  name: string;
+  label?: string;
+  controls: readonly TypedControlConfig[];
+  isRandomizationDisabled?: boolean;
+};
+
+export type ConfigItem = TypedControlConfig | GroupConfig;
+
 export type ConfigFor<T extends CtrlType> = Extract<
   TypedControlConfig,
   { type: T }
 >;
 
-// Value extraction
-type ExtractValues<Configs extends readonly TypedControlConfig[]> = {
-  [C in Configs[number] as C["name"]]: CtrlTypeMap[C["type"]]["value"];
+type ExtractValues<Configs extends readonly ConfigItem[]> = {
+  // Handle non-group controls
+  [C in Extract<
+    Configs[number],
+    { type: Exclude<CtrlType, "group"> }
+  > as C["name"]]: CtrlTypeMap[C["type"]]["value"];
+} & {
+  // Handle group controls recursively
+  [C in Extract<Configs[number], { type: "group" }> as C["name"]]: OptionsMap<
+    C["controls"]
+  >;
 };
 
-// Add "rng" and "easing" functions types
-type DerivedProps<Configs extends readonly TypedControlConfig[]> = {
+// Add "rng" and "easing" functions types - Made recursive
+type DerivedProps<Configs extends readonly ConfigItem[]> = {
+  // Handle top-level easing
   [C in Extract<
     Configs[number],
     { type: "easing" }
   > as `${C["name"]}Easing`]: ReturnType<typeof BezierEasing>;
 } & {
+  // Handle top-level seed
   [C in Extract<Configs[number], { type: "seed" }> as `${C["name"]}Rng`]: PRNG;
+} & {
+  // Handle groups: recursively call DerivedProps on sub-controls
+  [C in Extract<Configs[number], { type: "group" }> as C["name"]]: DerivedProps<
+    C["controls"]
+  >;
 };
 
-// Combined type
-type OptionsMap<Configs extends readonly TypedControlConfig[]> =
+// Combined type - Updated generic constraint
+type OptionsMap<Configs extends readonly ConfigItem[]> =
   ExtractValues<Configs> & DerivedProps<Configs>;
 
 type ControlsOptions = {
@@ -131,7 +169,10 @@ type CtrlComponent =
 
 type ControlConstructor<T> = new (...args: any[]) => T;
 
-const controlMap: Record<CtrlType, ControlConstructor<CtrlComponent>> = {
+const controlMap: Record<
+  Exclude<CtrlType, "group">,
+  ControlConstructor<CtrlComponent>
+> = {
   boolean: BooleanCtrl,
   range: RangeCtrl,
   radio: RadioCtrl,
@@ -140,9 +181,9 @@ const controlMap: Record<CtrlType, ControlConstructor<CtrlComponent>> = {
   "dual-range": DualRangeCtrl,
 };
 
-export class Ctrls<Configs extends readonly TypedControlConfig[]> {
+export class Ctrls<Configs extends readonly ConfigItem[]> {
   options: ControlsOptions;
-  controls: CtrlComponent[];
+  controls: CtrlComponent[] = [];
   controlsMap: Record<string, CtrlComponent> = {};
 
   element: HTMLDivElement;
@@ -153,7 +194,7 @@ export class Ctrls<Configs extends readonly TypedControlConfig[]> {
 
   onInput?: (updatedValues: Partial<ReturnType<typeof this.getValues>>) => void;
 
-  constructor(controls: Configs, options?: ControlsOptions) {
+  constructor(configs: Configs, options?: ControlsOptions) {
     this.options = {
       showRandomizeButton: true,
       storage: "hash",
@@ -176,34 +217,23 @@ export class Ctrls<Configs extends readonly TypedControlConfig[]> {
       this.onInput?.({ [name]: value } as Partial<Values>);
     };
 
-    this.controls = controls.map((config) => {
-      // TODO
-      // Document this behaviour
-      // This might counter-intuitive for some people,
-      // but it is my personal preference to have properties named in camel case
-      // when using them in code
-      //
-      // However, they are going to be converted to kebab case when used in the hash,
-      // because it is nicer that URL be all lowercase
-      config.name = toCamelCase(config.name);
-
-      // TODO
-      // Again, document as it is my personal preference
-      if (!config.label) {
-        config.label = toSpaceCase(config.name);
+    configs.map((config) => {
+      if (config.type === "group") {
+        config.controls.forEach((groupConfig) => {
+          this.registerControl(
+            groupConfig,
+            onChangeControlHandler,
+            onInputControlHandler,
+            toCamelCase(config.name),
+          );
+        });
+      } else {
+        this.registerControl(
+          config,
+          onChangeControlHandler,
+          onInputControlHandler,
+        );
       }
-
-      const ControlComponent = controlMap[config.type];
-
-      const control = new ControlComponent(
-        config,
-        onChangeControlHandler,
-        onInputControlHandler,
-      );
-
-      this.controlsMap[control.name] = control;
-
-      return control;
     });
 
     this.element = this.buildUI();
@@ -217,6 +247,52 @@ export class Ctrls<Configs extends readonly TypedControlConfig[]> {
     }
   }
 
+  registerControl = (
+    config: TypedControlConfig,
+    onChangeControlHandler: (name: string, value: unknown) => void,
+    onInputControlHandler: (name: string, value: unknown) => void,
+    group: string = "",
+  ) => {
+    // To make typescript happy
+    if (config.type === "group") {
+      return;
+    }
+
+    // TODO
+    // Again, document as it is my personal preference
+    if (!config.label) {
+      config.label = toSpaceCase(config.name);
+    }
+
+    // TODO
+    // Document this behaviour
+    // This might counter-intuitive for some people,
+    // but it is my personal preference to have properties named in camel case
+    // when using them in code
+    //
+    // However, they are going to be converted to kebab case when used in the hash,
+    // because it is nicer that URL be all lowercase
+    config.name = toCamelCase(config.name);
+
+    if (group) {
+      config.id = toCamelCase(`${group}-${config.name}`);
+    }
+
+    const ControlComponent = controlMap[config.type];
+
+    const control = new ControlComponent(
+      config,
+      onChangeControlHandler,
+      onInputControlHandler,
+    );
+
+    control.group = group;
+
+    this.controlsMap[control.id] = control;
+
+    this.controls.push(control);
+  };
+
   buildUI = () => {
     const element = document.createElement("div");
     element.classList.add("ctrls");
@@ -225,8 +301,31 @@ export class Ctrls<Configs extends readonly TypedControlConfig[]> {
     const controlsContainer = document.createElement("div");
     controlsContainer.classList.add("ctrls__controls");
 
+    let group = "";
+    let groupElement: HTMLDivElement;
+
     this.controls.forEach((control) => {
-      controlsContainer.appendChild(control.element);
+      if (control.group) {
+        if (control.group !== group) {
+          group = control.group;
+          groupElement = document.createElement("div");
+          groupElement.classList.add("ctrls__group");
+
+          const groupTitle = document.createElement("button");
+          groupTitle.classList.add("ctrls__group-title");
+          groupTitle.innerText = control.group;
+          groupTitle.addEventListener("click", () => {
+            groupTitle.parentElement?.classList.toggle("ctrls__group--hidden");
+          });
+
+          groupElement.append(groupTitle);
+          controlsContainer.appendChild(groupElement);
+        }
+
+        groupElement.append(control.element);
+      } else {
+        controlsContainer.appendChild(control.element);
+      }
     });
 
     if (this.options.showRandomizeButton) {
@@ -272,7 +371,7 @@ export class Ctrls<Configs extends readonly TypedControlConfig[]> {
   getHash = () => {
     const values = this.controls
       .map((control) => {
-        return `${toKebabCase(control.name)}:${control.valueToString()}`;
+        return `${toKebabCase(control.id)}:${control.valueToString()}`;
       })
       .join("/");
 
@@ -323,20 +422,31 @@ export class Ctrls<Configs extends readonly TypedControlConfig[]> {
     }
   };
 
+  updateValuesObject(options: any, control: CtrlComponent) {
+    options[control.name] = control.value;
+
+    if (control.type === "easing") {
+      options[control.name + "Easing"] = BezierEasing(
+        ...(control as EasingCtrl).value,
+      );
+    } else if (control.type === "seed") {
+      options[control.name + "Rng"] = Alea(
+        ...(control as SeedCtrl).value.split("-"),
+      );
+    }
+  }
+
   getValues(): OptionsMap<Configs> {
     const options = {} as any;
 
     this.controls.forEach((control) => {
-      options[control.name] = control.value;
-
-      if (control.type === "easing") {
-        options[control.name + "Easing"] = BezierEasing(
-          ...(control as EasingCtrl).value,
-        );
-      } else if (control.type === "seed") {
-        options[control.name + "Rng"] = Alea(
-          ...(control as SeedCtrl).value.split("-"),
-        );
+      if (control.group) {
+        if (!options[control.group]) {
+          options[control.group] = {} as any;
+        }
+        this.updateValuesObject(options[control.group], control);
+      } else {
+        this.updateValuesObject(options, control);
       }
     });
 

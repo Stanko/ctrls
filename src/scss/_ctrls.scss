@@ -5,8 +5,8 @@
     ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
     "DejaVu Sans Mono", monospace;
   --ctrls-radius: 4px;
-  --ctrls-label-width: 5rem;
-  --ctrls-width: 22rem;
+  --ctrls-label-width: 7rem;
+  --ctrls-width: 24rem;
   --ctrls-font-size: 0.75rem;
   --ctrls-value-font-size: 0.6875rem;
 
@@ -175,6 +175,7 @@
   }
 }
 
+.ctrls__group-title,
 .ctrls__title {
   background: none;
   border: none;
@@ -195,17 +196,28 @@
   }
 }
 
+.ctrls__title {
+  border-block-end: 1px solid var(--ctrls-border);
+}
+
 .ctrls__controls {
   display: grid;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  padding-top: 0.5rem;
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--ctrls-scrollbar-thumb-bg) transparent;
 }
 
+.ctrls__controls > * {
+  margin-bottom: 0.5rem;
+}
+
 .ctrls--hidden .ctrls__controls {
   display: none;
+}
+
+.ctrls--hidden .ctrls__title {
+  border-block-end: none;
 }
 
 /* ----- Buttons ----- */
@@ -244,7 +256,8 @@
 
 // Large buttons - randomize
 .ctrls__btn--lg {
-  margin-left: var(--ctrls-label-width);
+  margin-inline-start: calc(var(--ctrls-label-width) + 0.5rem);
+  margin-inline-end: 0.5rem;
   padding: 0.5rem 1rem;
   background: var(--ctrls-btn-bg);
   border: 1px solid var(--ctrls-input-border);
@@ -271,9 +284,41 @@
   }
 }
 
-/* ----- General ----- */
+/* ----- Groups ----- */
+
+.ctrls__group {
+  display: grid;
+  gap: 0.5rem;
+  padding-block-end: 0.5rem;
+  border-block: 1px solid var(--ctrls-border);
+}
+
+.ctrls__group .ctrls__control {
+  padding-inline-start: 1rem;
+  grid-template-columns: calc(var(--ctrls-label-width) - 0.5rem) minmax(0, 1fr);
+}
+
+.ctrls__group:has(+ .ctrls__group) {
+  border-block-end: none;
+  margin-block-end: 0;
+}
+
+.ctrls__group-title {
+  text-align: left;
+}
+
+.ctrls__group--hidden {
+  padding-block-end: 0;
+}
+
+.ctrls__group--hidden .ctrls__control {
+  display: none;
+}
+
+/* ----- Controls ----- */
 
 .ctrls__control {
+  padding-inline: 0.5rem;
   display: grid;
   grid-template-columns: var(--ctrls-label-width) minmax(0, 1fr);
   align-items: center;

@@ -297,6 +297,30 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 <span class="hljs-punctuation">}</span>
 </code></pre></div>
 
+<h3 id="group">Group</h3><p>Collapsible group of controls. All values are going to be nested in an object using the group&#39;s name.</p>
+<pre><code class="hljs language-ts">{
+  <span class="hljs-comment">// Mandatory</span>
+  <span class="hljs-attr">controls</span>: <span class="hljs-title class_">ConfigItem</span>[]
+}
+</code></pre><p>Example:</p>
+<div class="example">
+
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;group&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;controls&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;boolean&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;monochrome&quot;</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;easing&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;distribution&quot;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+
 <h2 id="theming">Theming</h2><p>Ctrls uses CSS variables for theming. There are many you can adjust, but I recommend starting with these four:</p>
 <pre><code class="hljs language-scss"><span class="hljs-selector-class">.ctrls</span> {
   <span class="hljs-comment">// Theme color&#x27;s hue, default is blue</span>

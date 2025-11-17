@@ -10,6 +10,47 @@ export const config = [
     isRandomizationDisabled: true,
   },
   {
+    type: "group",
+    name: "group",
+    label: "Test Group",
+    controls: [
+      {
+        type: "boolean",
+        name: "debug",
+      },
+      {
+        type: "seed",
+        name: "seed",
+      },
+      {
+        type: "dual-range",
+        name: "size",
+        defaultValue: {
+          min: 0,
+          max: 1,
+        },
+        min: 0,
+        max: 1.2,
+        step: 0.1,
+      },
+      // other controls go here
+    ],
+  },
+  {
+    type: "group",
+    name: "test",
+    controls: [
+      {
+        type: "easing",
+        name: "debug",
+      },
+      {
+        type: "seed",
+        name: "seed",
+      },
+    ],
+  },
+  {
     type: "seed",
     name: "opacitySeed",
   },
@@ -58,6 +99,8 @@ export const options = new Ctrls(config, {
   title: "Ctrls",
 });
 
+console.log(options.getValues());
+
 const hero = document.querySelector(".hero") as HTMLElement;
 const heroControls = document.querySelector(".hero__controls") as HTMLElement;
 
@@ -70,6 +113,7 @@ const update = () => {
 
 options.onChange = (updatedValues) => {
   const values = options.getValues();
+
   if (updatedValues.animate) {
     grid.animate();
   } else if (!values.animate) {

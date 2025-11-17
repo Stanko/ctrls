@@ -332,6 +332,40 @@ Example:
 
 </div>
 
+### Group
+
+Collapsible group of controls. All values are going to be nested in an object using the group's name.
+
+```ts
+{
+  // Mandatory
+  controls: ConfigItem[]
+}
+```
+
+Example:
+
+<div class="example">
+
+```json
+{
+  "type": "group",
+  "name": "color",
+  "controls": [
+    {
+      "type": "boolean",
+      "name": "monochrome"
+    },
+    {
+      "type": "easing",
+      "name": "distribution"
+    }
+  ]
+}
+```
+
+</div>
+
 ## Theming
 
 Ctrls uses CSS variables for theming. There are many you can adjust, but I recommend starting with these four:

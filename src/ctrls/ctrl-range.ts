@@ -6,6 +6,8 @@ import { toHtmlId } from "../utils/string-utils";
 
 export class RangeCtrl implements Ctrl<number> {
   type: CtrlType = "range";
+  id: string;
+  group?: string;
   name: string;
   label: string;
   value: number;
@@ -25,6 +27,8 @@ export class RangeCtrl implements Ctrl<number> {
     onInput: CtrlChangeHandler<number>,
   ) {
     this.name = config.name;
+    this.id = config.id || config.name;
+    this.group = config.group || "";
     this.label = config.label || config.name;
     this.isRandomizationDisabled = config.isRandomizationDisabled || false;
     this.onChange = onChange;

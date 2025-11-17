@@ -6,6 +6,8 @@ import { toHtmlId } from "../utils/string-utils";
 
 export class SeedCtrl implements Ctrl<string> {
   type: CtrlType = "seed";
+  id: string;
+  group?: string;
   name: string;
   label: string;
   value: string;
@@ -21,6 +23,8 @@ export class SeedCtrl implements Ctrl<string> {
     onInput: CtrlChangeHandler<string>,
   ) {
     this.name = config.name;
+    this.id = config.id || config.name;
+    this.group = config.group || "";
     this.label = config.label || config.name;
     this.value =
       config.defaultValue === undefined

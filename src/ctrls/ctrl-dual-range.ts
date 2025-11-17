@@ -18,6 +18,8 @@ export type DualRangeValue = {
 
 export class DualRangeCtrl implements Ctrl<DualRangeValue> {
   type: CtrlType = "dual-range";
+  id: string;
+  group?: string;
   name: string;
   label: string;
   value: DualRangeValue;
@@ -39,6 +41,8 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
     onInput: CtrlChangeHandler<DualRangeValue>,
   ) {
     this.name = config.name;
+    this.id = config.id || config.name;
+    this.group = config.group || "";
     this.label = config.label || config.name;
     this.min = config.min;
     this.max = config.max;

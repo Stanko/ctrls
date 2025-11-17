@@ -4,6 +4,8 @@ import { toHtmlId } from "../utils/string-utils";
 
 export class BooleanCtrl implements Ctrl<boolean> {
   type: CtrlType = "boolean";
+  id: string;
+  group?: string;
   name: string;
   label: string;
   value: boolean;
@@ -20,6 +22,8 @@ export class BooleanCtrl implements Ctrl<boolean> {
   ) {
     this.type = "boolean";
     this.name = config.name;
+    this.id = config.id || config.name;
+    this.group = config.group || "";
     this.label = config.label || config.name;
     this.value =
       config.defaultValue === undefined

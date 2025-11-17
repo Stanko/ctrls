@@ -37,8 +37,8 @@
       href="https://muffinman.io/favicon/blue/manifest.webmanifest"
       rel="manifest"
     />
-    <script type="module" crossorigin src="./assets/index-Bhtz6vj5.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-c6Kln0iX.css">
+    <script type="module" crossorigin src="./assets/index-CbJ5xFnH.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BkYYrTug.css">
   </head>
 
   <body id="top">
@@ -296,6 +296,30 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
     <span class="hljs-attr">&quot;circle&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;32&quot;</span>
   <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;columns&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+
+<h3 id="group">Group</h3><p>Collapsible group of controls. All values are going to be nested in an object using the group&#39;s name.</p>
+<pre><code class="hljs language-ts">{
+  <span class="hljs-comment">// Mandatory</span>
+  <span class="hljs-attr">controls</span>: <span class="hljs-title class_">ConfigItem</span>[]
+}
+</code></pre><p>Example:</p>
+<div class="example">
+
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;group&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;color&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;controls&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;boolean&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;monochrome&quot;</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;easing&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;distribution&quot;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span>
 </code></pre></div>
 
