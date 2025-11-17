@@ -22,23 +22,24 @@ const getMash = () => {
   return mash;
 };
 
-const Alea = (seed: string = Date.now().toString()): (() => number) => {
-  let s = [0, 0, 0];
+const Alea = (...seeds: string[]): (() => number) => {
+  const mash = getMash();
+  const s = [mash(" "), mash(" "), mash(" ")];
   let c = 1;
 
-  let mash = getMash();
+  seeds.forEach((seed) => {
+    s.forEach((_, i) => {
+      s[i] -= mash(seed);
 
-  s.forEach((_, i) => {
-    s[i] = mash(" ") - mash(seed);
-
-    if (s[i] < 0) {
-      s[i] += 1;
-    }
+      if (s[i] < 0) {
+        s[i] += 1;
+      }
+    });
   });
 
   const random = () => {
     const t = 2091639 * s[0] + c * 2.3283064365386963e-10; // 2^-32
-    c = t | 0;
+    c = t | 0; // quicker floor
     s[0] = s[1];
     s[1] = s[2];
     s[2] = t - c;

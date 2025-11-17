@@ -334,7 +334,9 @@ export class Ctrls<Configs extends readonly TypedControlConfig[]> {
           ...(control as EasingCtrl).value,
         );
       } else if (control.type === "seed") {
-        options[control.name + "Rng"] = Alea((control as SeedCtrl).value);
+        options[control.name + "Rng"] = Alea(
+          ...(control as SeedCtrl).value.split("-"),
+        );
       }
     });
 
