@@ -24,8 +24,8 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
   label: string;
   value: DualRangeValue;
   isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler<DualRangeValue>;
-  onInput: CtrlChangeHandler<DualRangeValue>;
+  onChange: CtrlChangeHandler;
+  onInput: CtrlChangeHandler;
   min: number;
   max: number;
   step: number;
@@ -37,8 +37,8 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
 
   constructor(
     config: ConfigFor<"dual-range">,
-    onChange: CtrlChangeHandler<DualRangeValue>,
-    onInput: CtrlChangeHandler<DualRangeValue>,
+    onChange: CtrlChangeHandler,
+    onInput: CtrlChangeHandler,
   ) {
     this.name = config.name;
     this.id = config.id || config.name;
@@ -103,7 +103,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
         max: parseFloat(maxInput.value),
       };
       this.update(this.value);
-      this.onChange(this.name, this.value);
+      this.onChange(this);
     };
 
     const inputHandler = () => {
@@ -112,7 +112,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
         max: parseFloat(maxInput.value),
       };
       this.update(this.value);
-      this.onInput(this.name, this.value);
+      this.onInput(this);
     };
 
     const minInput = document.createElement("input");

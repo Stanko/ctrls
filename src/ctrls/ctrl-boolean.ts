@@ -10,15 +10,15 @@ export class BooleanCtrl implements Ctrl<boolean> {
   label: string;
   value: boolean;
   isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler<boolean>;
-  onInput: CtrlChangeHandler<boolean>;
+  onChange: CtrlChangeHandler;
+  onInput: CtrlChangeHandler;
   element: HTMLElement;
   input: HTMLInputElement;
 
   constructor(
     config: CtrlConfig<boolean>,
-    onChange: CtrlChangeHandler<boolean>,
-    onInput: CtrlChangeHandler<boolean>,
+    onChange: CtrlChangeHandler,
+    onInput: CtrlChangeHandler,
   ) {
     this.type = "boolean";
     this.name = config.name;
@@ -64,11 +64,11 @@ export class BooleanCtrl implements Ctrl<boolean> {
     input.checked = this.value;
     input.addEventListener("change", () => {
       this.value = input.checked;
-      this.onChange(this.name, this.value);
+      this.onChange(this);
     });
     input.addEventListener("input", () => {
       this.value = input.checked;
-      this.onInput(this.name, this.value);
+      this.onInput(this);
     });
 
     const checkmark = document.createElement("span");

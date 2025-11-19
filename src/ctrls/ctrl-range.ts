@@ -12,8 +12,8 @@ export class RangeCtrl implements Ctrl<number> {
   label: string;
   value: number;
   isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler<number>;
-  onInput: CtrlChangeHandler<number>;
+  onChange: CtrlChangeHandler;
+  onInput: CtrlChangeHandler;
   min: number;
   max: number;
   step: number;
@@ -23,8 +23,8 @@ export class RangeCtrl implements Ctrl<number> {
 
   constructor(
     config: ConfigFor<"range">,
-    onChange: CtrlChangeHandler<number>,
-    onInput: CtrlChangeHandler<number>,
+    onChange: CtrlChangeHandler,
+    onInput: CtrlChangeHandler,
   ) {
     this.name = config.name;
     this.id = config.id || config.name;
@@ -85,13 +85,13 @@ export class RangeCtrl implements Ctrl<number> {
     input.addEventListener("input", () => {
       this.value = this.parse(input.value);
       this.update(this.value);
-      this.onInput(this.name, this.value);
+      this.onInput(this);
     });
 
     input.addEventListener("change", () => {
       this.value = this.parse(input.value);
       this.update(this.value);
-      this.onChange(this.name, this.value);
+      this.onChange(this);
     });
 
     input.addEventListener("input", () => {

@@ -29,8 +29,8 @@ export class EasingCtrl implements Ctrl<Easing> {
   label: string;
   value: Easing;
   isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler<Easing>;
-  onInput: CtrlChangeHandler<Easing>;
+  onChange: CtrlChangeHandler;
+  onInput: CtrlChangeHandler;
   element: HTMLElement;
   ticks: SVGLineElement[];
   control: HTMLDivElement;
@@ -41,8 +41,8 @@ export class EasingCtrl implements Ctrl<Easing> {
 
   constructor(
     config: ConfigFor<"easing">,
-    onChange: CtrlChangeHandler<Easing>,
-    onInput: CtrlChangeHandler<Easing>,
+    onChange: CtrlChangeHandler,
+    onInput: CtrlChangeHandler,
   ) {
     this.name = config.name;
     this.id = config.id || config.name;
@@ -207,7 +207,7 @@ export class EasingCtrl implements Ctrl<Easing> {
           const newValue = getNewValue(e.clientX, e.clientY);
 
           this.value = newValue;
-          this.onChange(this.name, this.value);
+          this.onChange(this);
           this.update();
         }
       });
@@ -216,7 +216,7 @@ export class EasingCtrl implements Ctrl<Easing> {
         if (dragging) {
           const newValue = getNewValue(e.clientX, e.clientY);
 
-          this.onInput(this.name, this.value);
+          this.onInput(this);
           this.updateUI(newValue);
         }
       });
@@ -245,7 +245,7 @@ export class EasingCtrl implements Ctrl<Easing> {
             e.touches[0].clientY,
           );
 
-          this.onInput(this.name, this.value);
+          this.onInput(this);
           this.updateUI(newValue);
         }
       });
@@ -261,7 +261,7 @@ export class EasingCtrl implements Ctrl<Easing> {
           );
 
           this.value = newValue;
-          this.onChange(this.name, this.value);
+          this.onChange(this);
           this.update();
         }
       });
@@ -290,7 +290,7 @@ export class EasingCtrl implements Ctrl<Easing> {
           newValue[index] = Math.max(Math.min(newValue[index], 1), 0);
 
           this.value = newValue;
-          this.onChange(this.name, this.value);
+          this.onChange(this);
           this.update();
         }
       });
@@ -312,7 +312,7 @@ export class EasingCtrl implements Ctrl<Easing> {
 
         button.addEventListener("click", () => {
           this.value = this.presets[key];
-          this.onChange(this.name, this.value);
+          this.onChange(this);
           this.update();
         });
 

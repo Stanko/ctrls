@@ -12,15 +12,15 @@ export class SeedCtrl implements Ctrl<string> {
   label: string;
   value: string;
   isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler<string>;
-  onInput: CtrlChangeHandler<string>;
+  onChange: CtrlChangeHandler;
+  onInput: CtrlChangeHandler;
   element: HTMLElement;
   input: HTMLInputElement;
 
   constructor(
     config: CtrlConfig<string>,
-    onChange: CtrlChangeHandler<string>,
-    onInput: CtrlChangeHandler<string>,
+    onChange: CtrlChangeHandler,
+    onInput: CtrlChangeHandler,
   ) {
     this.name = config.name;
     this.id = config.id || config.name;
@@ -72,11 +72,11 @@ export class SeedCtrl implements Ctrl<string> {
 
     input.addEventListener("change", () => {
       this.value = this.parse(input.value);
-      this.onChange(this.name, this.value);
+      this.onChange(this);
     });
     input.addEventListener("input", () => {
       this.value = this.parse(input.value);
-      this.onInput(this.name, this.value);
+      this.onInput(this);
     });
 
     const reload = document.createElement("button");
@@ -85,7 +85,7 @@ export class SeedCtrl implements Ctrl<string> {
     reload.addEventListener("click", () => {
       this.value = this.getRandomValue();
       this.update();
-      this.onChange(this.name, this.getRandomValue());
+      this.onChange(this);
     });
 
     const right = document.createElement("div");

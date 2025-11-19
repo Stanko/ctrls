@@ -197,19 +197,15 @@
 }
 
 .ctrls__title {
-  border-block-end: 1px solid var(--ctrls-border);
 }
 
 .ctrls__controls {
   display: grid;
-  padding-top: 0.5rem;
+  padding-block: 0.5rem;
+  gap: 0.5rem;
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--ctrls-scrollbar-thumb-bg) transparent;
-}
-
-.ctrls__controls > * {
-  margin-bottom: 0.5rem;
 }
 
 .ctrls--hidden .ctrls__controls {
@@ -287,14 +283,15 @@
 /* ----- Groups ----- */
 
 .ctrls__group {
+  margin: 0 0.5rem;
   display: grid;
   gap: 0.5rem;
   padding-block-end: 0.5rem;
-  border-block: 1px solid var(--ctrls-border);
+  border: 1px solid var(--ctrls-border);
+  border-radius: var(--ctrls-radius);
 }
 
 .ctrls__group .ctrls__control {
-  padding-inline-start: 1rem;
   grid-template-columns: calc(var(--ctrls-label-width) - 0.5rem) minmax(0, 1fr);
 }
 

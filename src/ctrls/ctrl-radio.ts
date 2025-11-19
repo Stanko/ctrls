@@ -22,16 +22,16 @@ export class RadioCtrl implements Ctrl<string> {
   label: string;
   value: string;
   isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler<string>;
-  onInput: CtrlChangeHandler<string>;
+  onChange: CtrlChangeHandler;
+  onInput: CtrlChangeHandler;
   items: Option[];
   element: HTMLElement;
   columns: 1 | 2 | 3 | 4 | 5;
 
   constructor(
     config: ConfigFor<"radio">,
-    onChange: CtrlChangeHandler<string>,
-    onInput: CtrlChangeHandler<string>,
+    onChange: CtrlChangeHandler,
+    onInput: CtrlChangeHandler,
   ) {
     this.items = [];
     Object.keys(config.items).forEach((key) => {
@@ -91,11 +91,11 @@ export class RadioCtrl implements Ctrl<string> {
 
       input.addEventListener("change", () => {
         this.value = this.parse(input.value);
-        this.onChange(this.name, this.value);
+        this.onChange(this);
       });
       input.addEventListener("input", () => {
         this.value = this.parse(input.value);
-        this.onInput(this.name, this.value);
+        this.onInput(this);
       });
 
       const label = document.createElement("span");

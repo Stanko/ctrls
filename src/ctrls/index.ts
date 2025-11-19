@@ -13,7 +13,7 @@ export interface PRNG {
   (): number;
 }
 
-type HashItem = { name: string; value: unknown };
+type HashItem = { id: string; value: unknown };
 
 export type CtrlType =
   | "boolean"
@@ -24,7 +24,7 @@ export type CtrlType =
   | "dual-range"
   | "group";
 
-export type CtrlChangeHandler<T> = (name: string, value: T) => void;
+export type CtrlChangeHandler = (control: CtrlComponent) => void;
 
 export type CtrlConfig<T = unknown> = {
   type: CtrlType;
@@ -43,7 +43,7 @@ export interface Ctrl<T> {
   label: string;
   type: CtrlType;
   isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler<T>;
+  onChange: CtrlChangeHandler;
   parse: (value: string) => T;
   getRandomValue: () => T;
   getDefaultValue: () => T;
@@ -205,16 +205,22 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     // Local alias for correlated key/value typing
     type Values = ReturnType<typeof this.getValues>;
 
-    const onChangeControlHandler = (name: string, value: unknown) => {
-      this.onChange?.({ [name]: value } as Partial<Values>);
+    const onChangeControlHandler = (control: CtrlComponent) => {
+      const updatedValues = {} as Partial<Values>;
+      this.updateValuesObject(updatedValues, control);
+
+      this.onChange?.(updatedValues);
 
       if (this.options.storage === "hash") {
         this.setHash();
       }
     };
 
-    const onInputControlHandler = (name: string, value: unknown) => {
-      this.onInput?.({ [name]: value } as Partial<Values>);
+    const onInputControlHandler = (control: CtrlComponent) => {
+      const updatedValues = {} as Partial<Values>;
+      this.updateValuesObject(updatedValues, control);
+
+      this.onInput?.(updatedValues);
     };
 
     configs.map((config) => {
@@ -249,8 +255,8 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
 
   registerControl = (
     config: TypedControlConfig,
-    onChangeControlHandler: (name: string, value: unknown) => void,
-    onInputControlHandler: (name: string, value: unknown) => void,
+    onChangeControlHandler: (control: CtrlComponent) => void,
+    onInputControlHandler: (control: CtrlComponent) => void,
     group: string = "",
   ) => {
     // To make typescript happy
@@ -275,6 +281,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     config.name = toCamelCase(config.name);
 
     if (group) {
+      config.group = group;
       config.id = toCamelCase(`${group}-${config.name}`);
     }
 
@@ -285,8 +292,6 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
       onChangeControlHandler,
       onInputControlHandler,
     );
-
-    control.group = group;
 
     this.controlsMap[control.id] = control;
 
@@ -390,67 +395,69 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
 
     pairs.forEach((pair) => {
       const [kebabCaseName, value] = pair.split(":");
-      const name = toCamelCase(kebabCaseName);
-      const control = this.controlsMap[name];
+      const id = toCamelCase(kebabCaseName);
+      const control = this.controlsMap[id];
 
       if (control) {
         const parsed = control.parse(value);
 
         items.push({
-          name,
+          id,
           value: parsed,
         });
       }
     });
 
     type UpdatedValues = Partial<ReturnType<typeof this.getValues>>;
-    const updatedValues: Record<string, unknown> = {};
+    const updatedValues: UpdatedValues = {};
 
     items.forEach((item) => {
-      const { name, value } = item;
-      const control = this.controlsMap[name];
+      const { id, value } = item;
+      const control = this.controlsMap[id];
 
       if (control && JSON.stringify(value) !== JSON.stringify(control.value)) {
-        updatedValues[name] = value;
+        this.updateValuesObject(updatedValues, control);
         control.update(value as never);
       }
     });
 
     if (Object.keys(updatedValues).length > 0) {
-      this.onChange?.(updatedValues as UpdatedValues);
-      this.onInput?.(updatedValues as UpdatedValues);
+      this.onChange?.(updatedValues);
+      this.onInput?.(updatedValues);
     }
   };
 
-  updateValuesObject(options: any, control: CtrlComponent) {
-    options[control.name] = control.value;
+  updateValuesObject(values: any, control: CtrlComponent) {
+    let objectToUpdate = values;
+
+    if (control.group) {
+      if (!values[control.group]) {
+        values[control.group] = {} as any;
+      }
+      objectToUpdate = values[control.group];
+    }
+
+    objectToUpdate[control.name] = control.value;
 
     if (control.type === "easing") {
-      options[control.name + "Easing"] = BezierEasing(
+      objectToUpdate[control.name + "Easing"] = BezierEasing(
         ...(control as EasingCtrl).value,
       );
     } else if (control.type === "seed") {
-      options[control.name + "Rng"] = Alea(
+      objectToUpdate[control.name + "Rng"] = Alea(
         ...(control as SeedCtrl).value.split("-"),
       );
     }
   }
 
   getValues(): OptionsMap<Configs> {
-    const options = {} as any;
+    const values = {} as any;
 
     this.controls.forEach((control) => {
-      if (control.group) {
-        if (!options[control.group]) {
-          options[control.group] = {} as any;
-        }
-        this.updateValuesObject(options[control.group], control);
-      } else {
-        this.updateValuesObject(options, control);
-      }
+      this.updateValuesObject(values, control);
     });
 
-    return options;
+    return values;
   }
 
   randomize = () => {
@@ -464,7 +471,8 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
 
       control.value = control.getRandomValue();
       control.update(control.value as never);
-      updatedValues[control.name] = control.value;
+
+      this.updateValuesObject(updatedValues, control);
     });
 
     if (Object.keys(updatedValues).length > 0) {
