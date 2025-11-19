@@ -202,12 +202,8 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
       ...options,
     };
 
-    // Local alias for correlated key/value typing
-    type Values = ReturnType<typeof this.getValues>;
-
     const onChangeControlHandler = (control: CtrlComponent) => {
-      const updatedValues = {} as Partial<Values>;
-      this.updateValuesObject(updatedValues, control);
+      const updatedValues = this.updateValuesObject({}, control);
 
       this.onChange?.(updatedValues);
 
@@ -217,8 +213,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     };
 
     const onInputControlHandler = (control: CtrlComponent) => {
-      const updatedValues = {} as Partial<Values>;
-      this.updateValuesObject(updatedValues, control);
+      const updatedValues = this.updateValuesObject({}, control);
 
       this.onInput?.(updatedValues);
     };
@@ -408,8 +403,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
       }
     });
 
-    type UpdatedValues = Partial<ReturnType<typeof this.getValues>>;
-    const updatedValues: UpdatedValues = {};
+    const updatedValues: Partial<ReturnType<typeof this.getValues>> = {};
 
     items.forEach((item) => {
       const { id, value } = item;
@@ -432,7 +426,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
 
     if (control.group) {
       if (!values[control.group]) {
-        values[control.group] = {} as any;
+        values[control.group] = {};
       }
       objectToUpdate = values[control.group];
     }
@@ -448,6 +442,8 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
         ...(control as SeedCtrl).value.split("-"),
       );
     }
+
+    return values as Partial<ReturnType<typeof this.getValues>>;
   }
 
   getValues(): OptionsMap<Configs> {

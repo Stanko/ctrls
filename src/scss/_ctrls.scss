@@ -196,9 +196,6 @@
   }
 }
 
-.ctrls__title {
-}
-
 .ctrls__controls {
   display: grid;
   padding-block: 0.5rem;
@@ -314,7 +311,6 @@
   display: grid;
   grid-template-columns: var(--ctrls-label-width) minmax(0, 1fr);
   align-items: center;
-  border-radius: var(--ctrls-radius);
 }
 
 .ctrls__control-label {
@@ -332,15 +328,6 @@
 .ctrls button:focus-visible {
   outline: 2px solid var(--ctrls-theme);
   outline-offset: 2px;
-}
-
-.ctrls__control--range,
-.ctrls__control--dual-range {
-  .ctrls__control-right {
-    border: 1px solid var(--ctrls-input-border);
-    background: var(--ctrls-input-wrapper-bg);
-    border-radius: var(--ctrls-radius);
-  }
 }
 
 /* ----- Boolean ----- */
@@ -410,7 +397,6 @@ label:hover .ctrls__boolean-input:not(:checked) + .ctrls__boolean-checkmark {
   min-width: var(--dri-thumb-width);
   outline: none;
   border-radius: var(--ctrls-radius);
-  padding: 0.5rem;
 
   &:focus-visible {
     outline: 2px solid var(--ctrls-theme);
@@ -495,9 +481,8 @@ label:hover .ctrls__boolean-input:not(:checked) + .ctrls__boolean-checkmark {
 /* ----- Dual range -----  */
 
 .ctrls__control-right .dual-range-input {
-  // A hack to add 0.5rem on each side
   // https://muffinman.io/blog/native-dual-range-input/#resizing-the-inputs
-  padding-inline: 0.5rem calc(var(--dri-thumb-width) * 2 + 0.5rem);
+  padding-inline: 0 calc(var(--dri-thumb-width) * 2);
 
   &:has(input:focus-visible) {
     border-radius: var(--ctrls-radius);
