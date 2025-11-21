@@ -85,7 +85,7 @@ export const config = [
     defaultValue: 2,
     min: 1,
     max: 3,
-    step: 1,
+    step: 0.5,
   },
   {
     type: "radio",

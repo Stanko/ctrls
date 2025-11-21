@@ -29,8 +29,8 @@
   --ctrls-scrollbar-thumb-bg: var(--ctrls-gray-400);
 
   // Backgrounds and text
-  --ctrls-bg: oklch(0.99 0.005 var(--ctrls-h) / 0.8);
-  --ctrls-text: oklch(0.01 0.3 var(--ctrls-h)); // text
+  --ctrls-bg: oklch(0.99 0.005 var(--ctrls-h) / 0.9);
+  --ctrls-text: oklch(0.01 0.2 var(--ctrls-h)); // text
   --ctrls-text-muted: oklch(0.5 0.005 var(--ctrls-h));
 
   // Borders
@@ -86,8 +86,8 @@
   // Theme colors
   --ctrls-c: 0.3;
 
-  --ctrls-theme-oklch: 0.55 calc(var(--ctrls-c) - 0.1) var(--ctrls-h);
-  --ctrls-theme: oklch(0.55 calc(var(--ctrls-c) - 0.1) var(--ctrls-h));
+  --ctrls-theme-oklch: 0.6 calc(var(--ctrls-c) - 0.1) var(--ctrls-h);
+  --ctrls-theme: oklch(0.6 calc(var(--ctrls-c) - 0.1) var(--ctrls-h));
 
   // Grays
   --ctrls-gray-50: #e1e1e1;
@@ -101,7 +101,7 @@
   --ctrls-scrollbar-thumb-bg: #5f5f5f;
 
   // Backgrounds and text
-  --ctrls-bg: oklch(0.27 0.003 var(--ctrls-h) / 0.8);
+  --ctrls-bg: oklch(0.27 0.003 var(--ctrls-h) / 0.9);
   --ctrls-text: oklch(0.95 0.005 var(--ctrls-h)); // text
   --ctrls-text-muted: oklch(0.75 0.005 var(--ctrls-h));
 
@@ -481,8 +481,10 @@ label:hover .ctrls__boolean-input:not(:checked) + .ctrls__boolean-checkmark {
 /* ----- Dual range -----  */
 
 .ctrls__control-right .dual-range-input {
+  // This padding is already set in the library's code,
+  // but for some reason it isn't applied
   // https://muffinman.io/blog/native-dual-range-input/#resizing-the-inputs
-  padding-inline: 0 calc(var(--dri-thumb-width) * 2);
+  padding-inline-end: calc(var(--dri-thumb-width) * 2);
 
   &:has(input:focus-visible) {
     border-radius: var(--ctrls-radius);
