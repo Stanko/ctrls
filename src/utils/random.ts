@@ -1,4 +1,4 @@
-import type { PRNG } from "../ctrls";
+import type { PRNG } from "../ctrls/types";
 
 export default function random(
   min: number = 0,

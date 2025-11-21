@@ -1,7 +1,7 @@
 import random from "../utils/random";
 import BezierEasing from "bezier-easing";
 
-import type { Ctrl, CtrlChangeHandler, CtrlType, ConfigFor } from ".";
+import type { Ctrl, CtrlChangeHandler, CtrlItemType, ConfigFor } from "./types";
 import { toHtmlId } from "../utils/string-utils";
 
 export type Easing = [number, number, number, number];
@@ -22,7 +22,7 @@ const getPath = (x1: number, y1: number, x2: number, y2: number) => {
 };
 
 export class EasingCtrl implements Ctrl<Easing> {
-  type: CtrlType = "easing";
+  type: CtrlItemType = "easing";
   id: string;
   group?: string;
   name: string;

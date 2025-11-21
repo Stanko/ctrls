@@ -1,6 +1,6 @@
 {
   "name": "@stanko/ctrls",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "type": "module",
   "scripts": {
     "test": "vitest",
@@ -20,13 +20,13 @@
   ],
   "devDependencies": {
     "highlight.js": "^11.11.1",
-    "marked": "^17.0.0",
+    "marked": "^17.0.1",
     "marked-highlight": "^2.2.3",
-    "sass": "^1.94.0",
+    "sass": "^1.94.2",
     "simplex-noise": "^4.0.3",
     "typescript": "~5.9.3",
-    "vite": "^7.2.2",
-    "vitest": "^4.0.10"
+    "vite": "^7.2.4",
+    "vitest": "^4.0.13"
   },
   "dependencies": {
     "@stanko/dual-range-input": "^1.0.1",

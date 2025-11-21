@@ -1,176 +1,26 @@
 import BezierEasing from "bezier-easing";
 import { toCamelCase, toKebabCase, toSpaceCase } from "../utils/string-utils";
 import { BooleanCtrl } from "./ctrl-boolean";
-import { DualRangeCtrl, type DualRangeValue } from "./ctrl-dual-range";
-import { EasingCtrl, type Easing } from "./ctrl-easing";
+import { DualRangeCtrl } from "./ctrl-dual-range";
+import { EasingCtrl } from "./ctrl-easing";
 import { RadioCtrl } from "./ctrl-radio";
 import { RangeCtrl } from "./ctrl-range";
 import { SeedCtrl } from "./ctrl-seed";
 import Alea from "../utils/alea";
 import { diceIcon } from "../utils/icons";
-
-export interface PRNG {
-  (): number;
-}
-
-type HashItem = { id: string; value: unknown };
-
-export type CtrlType =
-  | "boolean"
-  | "range"
-  | "radio"
-  | "seed"
-  | "easing"
-  | "dual-range"
-  | "group";
-
-export type CtrlChangeHandler = (control: CtrlComponent) => void;
-
-export type CtrlConfig<T = unknown> = {
-  type: CtrlType;
-  id?: string;
-  name: string;
-  group?: string;
-  label?: string;
-  defaultValue?: T;
-  isRandomizationDisabled?: boolean;
-};
-
-export interface Ctrl<T> {
-  id: string;
-  group?: string;
-  name: string;
-  label: string;
-  type: CtrlType;
-  isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler;
-  parse: (value: string) => T;
-  getRandomValue: () => T;
-  getDefaultValue: () => T;
-  buildUI: () => unknown;
-  valueToString: (value?: T) => string;
-  update: (value: T) => void;
-  element: HTMLElement;
-}
-
-// Control registry - focus on config -> value mapping
-export interface CtrlTypeMap {
-  boolean: {
-    value: boolean;
-  };
-  range: {
-    value: number;
-    min: number;
-    max: number;
-    step?: number;
-  };
-  radio: {
-    value: string;
-    items: Record<string, string>;
-    columns?: 1 | 2 | 3 | 4 | 5;
-  };
-  seed: {
-    value: string;
-  };
-  easing: {
-    value: Easing;
-    presets?: Record<string, Easing>;
-  };
-  "dual-range": {
-    value: DualRangeValue;
-    min: number;
-    max: number;
-    step?: number;
-  };
-  group: {
-    value: Record<string, unknown>; // Placeholder, real type is recursive
-    controls: readonly ConfigItem[];
-    isRandomizationDisabled?: boolean;
-  };
-}
-
-export type TypedControlConfig = {
-  // Exclude group from leaf types
-  [K in CtrlType]: {
-    type: K;
-    id?: string;
-    name: string;
-    group?: string;
-    label?: string;
-    defaultValue?: CtrlTypeMap[K]["value"];
-    isRandomizationDisabled?: boolean;
-  } & Omit<CtrlTypeMap[K], "value">;
-}[CtrlType];
-
-export type GroupConfig = {
-  type: "group";
-  name: string;
-  label?: string;
-  controls: readonly TypedControlConfig[];
-  isRandomizationDisabled?: boolean;
-};
-
-export type ConfigItem = TypedControlConfig | GroupConfig;
-
-export type ConfigFor<T extends CtrlType> = Extract<
+import type {
+  CtrlItemType,
+  ControlConstructor,
+  CtrlComponent,
+  ConfigItem,
+  ControlsOptions,
   TypedControlConfig,
-  { type: T }
->;
-
-type ExtractValues<Configs extends readonly ConfigItem[]> = {
-  // Handle non-group controls
-  [C in Extract<
-    Configs[number],
-    { type: Exclude<CtrlType, "group"> }
-  > as C["name"]]: CtrlTypeMap[C["type"]]["value"];
-} & {
-  // Handle group controls recursively
-  [C in Extract<Configs[number], { type: "group" }> as C["name"]]: OptionsMap<
-    C["controls"]
-  >;
-};
-
-// Add "rng" and "easing" functions types - Made recursive
-type DerivedProps<Configs extends readonly ConfigItem[]> = {
-  // Handle top-level easing
-  [C in Extract<
-    Configs[number],
-    { type: "easing" }
-  > as `${C["name"]}Easing`]: ReturnType<typeof BezierEasing>;
-} & {
-  // Handle top-level seed
-  [C in Extract<Configs[number], { type: "seed" }> as `${C["name"]}Rng`]: PRNG;
-} & {
-  // Handle groups: recursively call DerivedProps on sub-controls
-  [C in Extract<Configs[number], { type: "group" }> as C["name"]]: DerivedProps<
-    C["controls"]
-  >;
-};
-
-// Combined type - Updated generic constraint
-type OptionsMap<Configs extends readonly ConfigItem[]> =
-  ExtractValues<Configs> & DerivedProps<Configs>;
-
-type ControlsOptions = {
-  showRandomizeButton?: boolean;
-  storage?: "hash" | "none";
-  theme?: "system" | "light" | "dark";
-  parent?: Element;
-  title?: string;
-};
-
-type CtrlComponent =
-  | BooleanCtrl
-  | RangeCtrl
-  | RadioCtrl
-  | SeedCtrl
-  | EasingCtrl
-  | DualRangeCtrl;
-
-type ControlConstructor<T> = new (...args: any[]) => T;
+  HashItem,
+  OptionsMap,
+} from "./types";
 
 const controlMap: Record<
-  Exclude<CtrlType, "group">,
+  Exclude<CtrlItemType, "group">,
   ControlConstructor<CtrlComponent>
 > = {
   boolean: BooleanCtrl,
@@ -202,6 +52,58 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
       ...options,
     };
 
+    // Main element
+    this.element = document.createElement("div");
+    this.element.classList.add("ctrls");
+    this.element.classList.add(`ctrls--${this.options.theme}-theme`);
+
+    // Title
+    if (this.options.title) {
+      const titleButton = document.createElement("button");
+      titleButton.classList.add("ctrls__title");
+      titleButton.innerText = this.options.title;
+      titleButton.addEventListener("click", this.toggleVisibility);
+
+      this.element.appendChild(titleButton);
+    }
+
+    // Controls wrapper
+    const controlsContainer = document.createElement("div");
+    controlsContainer.classList.add("ctrls__controls");
+    this.element.appendChild(controlsContainer);
+
+    // Controls
+    const controlElements = this.processControls(configs);
+    controlsContainer.append(...controlElements);
+
+    // Randomize button
+    if (this.options.showRandomizeButton) {
+      const randomizeButton = document.createElement("button");
+      randomizeButton.classList.add(
+        "ctrls__randomize",
+        "ctrls__btn",
+        "ctrls__btn--lg",
+      );
+      randomizeButton.innerHTML = `Randomize ${diceIcon}`;
+      randomizeButton.addEventListener("click", this.randomize);
+      controlsContainer.appendChild(randomizeButton);
+    }
+
+    // Append the Ctrls element to the provided parent element
+    if (this.options.parent) {
+      this.options.parent.appendChild(this.element);
+    }
+
+    // Hash storage
+    if (this.options.storage === "hash") {
+      this.addHashListeners();
+    }
+  }
+
+  processControls = (configs: Configs) => {
+    const elements: HTMLElement[] = [];
+
+    // Handlers shared by all controls
     const onChangeControlHandler = (control: CtrlComponent) => {
       const updatedValues = this.updateValuesObject({}, control);
 
@@ -218,35 +120,50 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
       this.onInput?.(updatedValues);
     };
 
+    // Processing configs and creating component instances and HTML elements
     configs.map((config) => {
       if (config.type === "group") {
-        config.controls.forEach((groupConfig) => {
-          this.registerControl(
-            groupConfig,
+        // Create group element
+        const groupElement = document.createElement("div");
+        groupElement.classList.add("ctrls__group");
+
+        const groupTitle = document.createElement("button");
+        groupTitle.classList.add("ctrls__group-title");
+        groupTitle.innerText = config.label || toSpaceCase(config.name);
+        groupTitle.addEventListener("click", () => {
+          groupTitle.parentElement?.classList.toggle("ctrls__group--hidden");
+        });
+
+        // Add title
+        groupElement.append(groupTitle);
+
+        config.controls.forEach((itemConfig) => {
+          const control = this.registerControl(
+            itemConfig,
             onChangeControlHandler,
             onInputControlHandler,
             toCamelCase(config.name),
           );
+
+          // Add the control elements to the group element
+          groupElement.append(control?.element);
         });
+
+        // Add the group element
+        elements.push(groupElement);
       } else {
-        this.registerControl(
+        const control = this.registerControl(
           config,
           onChangeControlHandler,
           onInputControlHandler,
         );
+        // Add the control element
+        elements.push(control.element);
       }
     });
 
-    this.element = this.buildUI();
-
-    if (this.options.storage === "hash") {
-      this.addHashListeners();
-    }
-
-    if (this.options.parent) {
-      this.options.parent.appendChild(this.element);
-    }
-  }
+    return elements;
+  };
 
   registerControl = (
     config: TypedControlConfig,
@@ -254,32 +171,21 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     onInputControlHandler: (control: CtrlComponent) => void,
     group: string = "",
   ) => {
-    // To make typescript happy
-    if (config.type === "group") {
-      return;
-    }
-
-    // TODO
-    // Again, document as it is my personal preference
+    // It is my personal preference is to use space case for labels
     if (!config.label) {
       config.label = toSpaceCase(config.name);
     }
 
-    // TODO
-    // Document this behaviour
-    // This might counter-intuitive for some people,
-    // but it is my personal preference to have properties named in camel case
-    // when using them in code
-    //
-    // However, they are going to be converted to kebab case when used in the hash,
-    // because it is nicer that URL be all lowercase
+    // Another personal preference of mine is to have properties named in camel case when using them in code
     config.name = toCamelCase(config.name);
 
+    // Add group properties to the control config
     if (group) {
       config.group = group;
       config.id = toCamelCase(`${group}-${config.name}`);
     }
 
+    // Instantiate the control component
     const ControlComponent = controlMap[config.type];
 
     const control = new ControlComponent(
@@ -289,69 +195,9 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     );
 
     this.controlsMap[control.id] = control;
-
     this.controls.push(control);
-  };
 
-  buildUI = () => {
-    const element = document.createElement("div");
-    element.classList.add("ctrls");
-    element.classList.add(`ctrls--${this.options.theme}-theme`);
-
-    const controlsContainer = document.createElement("div");
-    controlsContainer.classList.add("ctrls__controls");
-
-    let group = "";
-    let groupElement: HTMLDivElement;
-
-    this.controls.forEach((control) => {
-      if (control.group) {
-        if (control.group !== group) {
-          group = control.group;
-          groupElement = document.createElement("div");
-          groupElement.classList.add("ctrls__group");
-
-          const groupTitle = document.createElement("button");
-          groupTitle.classList.add("ctrls__group-title");
-          groupTitle.innerText = control.group;
-          groupTitle.addEventListener("click", () => {
-            groupTitle.parentElement?.classList.toggle("ctrls__group--hidden");
-          });
-
-          groupElement.append(groupTitle);
-          controlsContainer.appendChild(groupElement);
-        }
-
-        groupElement.append(control.element);
-      } else {
-        controlsContainer.appendChild(control.element);
-      }
-    });
-
-    if (this.options.showRandomizeButton) {
-      const randomizeButton = document.createElement("button");
-      randomizeButton.classList.add(
-        "ctrls__randomize",
-        "ctrls__btn",
-        "ctrls__btn--lg",
-      );
-      randomizeButton.innerHTML = `Randomize ${diceIcon}`;
-      randomizeButton.addEventListener("click", this.randomize);
-      controlsContainer.appendChild(randomizeButton);
-    }
-
-    if (this.options.title) {
-      const titleButton = document.createElement("button");
-      titleButton.classList.add("ctrls__title");
-      titleButton.innerText = this.options.title;
-      titleButton.addEventListener("click", this.toggleVisibility);
-
-      element.appendChild(titleButton);
-    }
-
-    element.appendChild(controlsContainer);
-
-    return element;
+    return control;
   };
 
   toggleVisibility = () => {

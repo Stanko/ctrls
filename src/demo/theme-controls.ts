@@ -1,5 +1,5 @@
 import { Ctrls } from "../ctrls";
-import type { TypedControlConfig } from "../ctrls";
+import type { TypedControlConfig } from "../ctrls/types";
 
 export const config = [
   {

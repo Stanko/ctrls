@@ -1,11 +1,11 @@
 import random from "../utils/random";
 import { roundToStep } from "../utils/round-to-step";
 
-import type { Ctrl, CtrlChangeHandler, CtrlType, ConfigFor } from ".";
+import type { Ctrl, CtrlChangeHandler, CtrlItemType, ConfigFor } from "./types";
 import { toHtmlId } from "../utils/string-utils";
 
 export class RangeCtrl implements Ctrl<number> {
-  type: CtrlType = "range";
+  type: CtrlItemType = "range";
   id: string;
   group?: string;
   name: string;

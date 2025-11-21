@@ -1,9 +1,14 @@
 import { checkIcon } from "../utils/icons";
-import type { Ctrl, CtrlType, CtrlChangeHandler, CtrlConfig } from ".";
+import type {
+  Ctrl,
+  CtrlItemType,
+  CtrlChangeHandler,
+  CtrlConfig,
+} from "./types";
 import { toHtmlId } from "../utils/string-utils";
 
 export class BooleanCtrl implements Ctrl<boolean> {
-  type: CtrlType = "boolean";
+  type: CtrlItemType = "boolean";
   id: string;
   group?: string;
   name: string;

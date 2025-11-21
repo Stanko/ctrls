@@ -1,11 +1,16 @@
 import generateSeed from "../utils/generate-seed";
 import { refreshIcon } from "../utils/icons";
 
-import type { Ctrl, CtrlChangeHandler, CtrlConfig, CtrlType } from ".";
+import type {
+  Ctrl,
+  CtrlChangeHandler,
+  CtrlConfig,
+  CtrlItemType,
+} from "./types";
 import { toHtmlId } from "../utils/string-utils";
 
 export class SeedCtrl implements Ctrl<string> {
-  type: CtrlType = "seed";
+  type: CtrlItemType = "seed";
   id: string;
   group?: string;
   name: string;

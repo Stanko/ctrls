@@ -167,11 +167,20 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 </code></pre><h2 id="controls">Controls</h2><p>All controls share the following properties:</p>
 <pre><code class="hljs language-ts">{
   <span class="hljs-comment">// --- Mandatory --- //</span>
-  <span class="hljs-attr">type</span>: <span class="hljs-title class_">CtrlType</span>; <span class="hljs-comment">// &quot;seed&quot; | &quot;easing&quot; | &quot;boolean&quot; | &quot;range&quot; | &quot;dual-range&quot; | &quot;radio&quot;</span>
+  <span class="hljs-attr">type</span>: <span class="hljs-title class_">CtrlType</span>; <span class="hljs-comment">// &quot;seed&quot; | &quot;easing&quot; | &quot;boolean&quot; | &quot;range&quot; | &quot;dual-range&quot; | &quot;radio&quot; | &quot;group&quot;</span>
+  <span class="hljs-comment">// Name of the component.</span>
+  <span class="hljs-comment">// </span>
+  <span class="hljs-comment">// It will be converted to camel case and used in the values object</span>
+  <span class="hljs-comment">// This might counter-intuitive for some people,</span>
+  <span class="hljs-comment">// but it is my personal preference to have properties named in camel case when using them in code</span>
+  <span class="hljs-comment">// </span>
+  <span class="hljs-comment">// However, names are going to be converted to kebab case when used in the hash,</span>
+  <span class="hljs-comment">// because it is nicer that URL be all lowercase</span>
   <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>;
 
   <span class="hljs-comment">// --- Optional --- //</span>
-  <span class="hljs-comment">// If passed, it will be used instead of the name</span>
+  <span class="hljs-comment">// If passed, it will be used instead of the name,</span>
+  <span class="hljs-comment">// if not, name will be be converted to space case and used as a label.</span>
   <span class="hljs-attr">label</span>?: <span class="hljs-built_in">string</span>;
   <span class="hljs-comment">// Depends on the control type, the default value for the control</span>
   <span class="hljs-attr">defaultValue</span>?: T;

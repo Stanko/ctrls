@@ -138,11 +138,20 @@ All controls share the following properties:
 ```ts
 {
   // --- Mandatory --- //
-  type: CtrlType; // "seed" | "easing" | "boolean" | "range" | "dual-range" | "radio"
+  type: CtrlType; // "seed" | "easing" | "boolean" | "range" | "dual-range" | "radio" | "group"
+  // Name of the component.
+  // 
+  // It will be converted to camel case and used in the values object
+  // This might counter-intuitive for some people,
+  // but it is my personal preference to have properties named in camel case when using them in code
+  // 
+  // However, names are going to be converted to kebab case when used in the hash,
+  // because it is nicer that URL be all lowercase
   name: string;
 
   // --- Optional --- //
-  // If passed, it will be used instead of the name
+  // If passed, it will be used instead of the name,
+  // if not, name will be be converted to space case and used as a label.
   label?: string;
   // Depends on the control type, the default value for the control
   defaultValue?: T;

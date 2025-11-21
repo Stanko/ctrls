@@ -1,6 +1,6 @@
 import random from "../utils/random";
 
-import type { Ctrl, CtrlChangeHandler, CtrlType, ConfigFor } from ".";
+import type { Ctrl, CtrlChangeHandler, CtrlItemType, ConfigFor } from "./types";
 import { toKebabCase } from "../utils/string-utils";
 import { getRandomString } from "../utils/get-random-string";
 
@@ -14,7 +14,7 @@ export type RadioControlOptions = {
 };
 
 export class RadioCtrl implements Ctrl<string> {
-  type: CtrlType = "radio";
+  type: CtrlItemType = "radio";
   htmlId: string;
   id: string;
   group?: string;

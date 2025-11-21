@@ -1,7 +1,7 @@
 import random from "../utils/random";
 import DualRangeInput from "@stanko/dual-range-input";
 
-import type { Ctrl, CtrlChangeHandler, CtrlType, ConfigFor } from ".";
+import type { Ctrl, CtrlChangeHandler, CtrlItemType, ConfigFor } from "./types";
 import { roundToStep } from "../utils/round-to-step";
 import { toHtmlId } from "../utils/string-utils";
 
@@ -17,7 +17,7 @@ export type DualRangeValue = {
 };
 
 export class DualRangeCtrl implements Ctrl<DualRangeValue> {
-  type: CtrlType = "dual-range";
+  type: CtrlItemType = "dual-range";
   id: string;
   group?: string;
   name: string;
