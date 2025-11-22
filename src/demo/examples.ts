@@ -1,5 +1,4 @@
 import { Ctrls } from "../ctrls";
-// import { highlightJSON } from "./highlight-json";
 
 export const initExamples = () => {
   const examples = document.querySelectorAll(".example");
@@ -9,8 +8,24 @@ export const initExamples = () => {
       const configElement = example.querySelector("pre") as HTMLPreElement;
 
       const json = configElement.textContent || "";
-      const config = JSON.parse(json);
-      // configElement.innerHTML = highlightJSON(json);
+
+      let config;
+      if (json.includes("downloadButton")) {
+        const downloadButton = document.createElement("button");
+        downloadButton.classList.add("ctrls__btn", "ctrls__btn--lg");
+        downloadButton.style.marginLeft = "0";
+        downloadButton.innerHTML = "PNG";
+        downloadButton.addEventListener("click", () => {
+          alert("Download button clicked");
+        });
+        config = {
+          type: "html",
+          name: "download",
+          html: downloadButton,
+        };
+      } else {
+        config = JSON.parse(json);
+      }
 
       new Ctrls([config], {
         showRandomizeButton: false,

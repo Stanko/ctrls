@@ -9,7 +9,6 @@ import { SeedCtrl } from "./ctrl-seed";
 import Alea from "../utils/alea";
 import { diceIcon } from "../utils/icons";
 import type {
-  CtrlItemType,
   ControlConstructor,
   CtrlComponent,
   ConfigItem,
@@ -17,12 +16,11 @@ import type {
   TypedControlConfig,
   HashItem,
   OptionsMap,
+  CtrlControlType,
 } from "./types";
+import { getHTMLControlElement } from "./ctrl-html";
 
-const controlMap: Record<
-  Exclude<CtrlItemType, "group">,
-  ControlConstructor<CtrlComponent>
-> = {
+const controlMap: Record<CtrlControlType, ControlConstructor<CtrlComponent>> = {
   boolean: BooleanCtrl,
   range: RangeCtrl,
   radio: RadioCtrl,
@@ -127,6 +125,10 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
         const groupElement = document.createElement("div");
         groupElement.classList.add("ctrls__group");
 
+        if (config.isCollapsed) {
+          groupElement.classList.add("ctrls__group--hidden");
+        }
+
         const groupTitle = document.createElement("button");
         groupTitle.classList.add("ctrls__group-title");
         groupTitle.innerText = config.label || toSpaceCase(config.name);
@@ -151,6 +153,9 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
 
         // Add the group element
         elements.push(groupElement);
+      } else if (config.type === "html") {
+        // HTML control isn't saved
+        elements.push(getHTMLControlElement(config));
       } else {
         const control = this.registerControl(
           config,

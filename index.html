@@ -65,6 +65,8 @@
         <a class="nav__link nav__link--light" href="#range">Range</a>
         <a class="nav__link nav__link--light" href="#dual-range">Dual range</a>
         <a class="nav__link nav__link--light" href="#radio">Radio</a>
+        <a class="nav__link nav__link--light" href="#group">Group</a>
+        <a class="nav__link nav__link--light" href="#html">HTML</a>
         <a class="nav__link" href="#theming">Theming</a>
         <a class="nav__link" href="https://github.com/stanko/ctrls">GitHub</a>
       </nav>
@@ -83,7 +85,7 @@
 <pre><code class="hljs language-bash">npm install @stanko/ctrls
 </code></pre><p>Define controls as an array, then instantiate the <code>Ctrls</code> class:</p>
 <pre><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Ctrls</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@stanko/ctrls&quot;</span>;
-<span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">TypedControlConfig</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@stanko/ctrls&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">ConfigItem</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@stanko/ctrls&quot;</span>;
 
 <span class="hljs-comment">// Import CSS</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">&quot;@stanko/ctrls/dist/ctrls.css&quot;</span>;
@@ -112,7 +114,7 @@
   <span class="hljs-comment">// - speed, shape and size</span>
 
   <span class="hljs-comment">// Casting the config to enable editor&#x27;s code completion</span>
-] <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">satisfies</span> <span class="hljs-keyword">readonly</span> <span class="hljs-title class_">TypedControlConfig</span>[];
+] <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">satisfies</span> <span class="hljs-keyword">readonly</span> <span class="hljs-title class_">ConfigItem</span>[];
 
 <span class="hljs-comment">// Create the instance of Ctrls</span>
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> options = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Ctrls</span>(config, {
@@ -309,7 +311,10 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 <h3 id="group">Group</h3><p>Collapsible group of controls. All values are going to be nested in an object using the group&#39;s name.</p>
 <pre><code class="hljs language-ts">{
   <span class="hljs-comment">// Mandatory</span>
-  <span class="hljs-attr">controls</span>: <span class="hljs-title class_">ConfigItem</span>[]
+  <span class="hljs-attr">controls</span>: <span class="hljs-title class_">ConfigItem</span>[];
+  
+  <span class="hljs-comment">// Optional</span>
+  <span class="hljs-attr">isCollapsed</span>?: <span class="hljs-built_in">boolean</span>;
 }
 </code></pre><p>Example:</p>
 <div class="example">
@@ -327,6 +332,28 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
       <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;distribution&quot;</span>
     <span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+
+<h3 id="html">HTML</h3><p>Custom HTML to be rendered. You&#39;ll need to create your element and add it to the config.</p>
+<p>Doesn&#39;t influence the values object as it doesn&#39;t have a value.</p>
+<pre><code class="hljs language-ts">{
+  <span class="hljs-comment">// Mandatory</span>
+  <span class="hljs-attr">html</span>: <span class="hljs-title class_">HTMLElement</span>;
+}
+</code></pre><p>Example:</p>
+<pre><code class="hljs language-ts"><span class="hljs-keyword">const</span> downloadButton = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;button&#x27;</span>);
+downloadButton.<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&quot;PNG&quot;</span>;
+<span class="hljs-comment">// Add your styles</span>
+downloadButton.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;Download button clicked&quot;</span>);
+})
+</code></pre><div class="example">
+
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;html&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;download&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;html&quot;</span><span class="hljs-punctuation">:</span> downloadButton
 <span class="hljs-punctuation">}</span>
 </code></pre></div>
 

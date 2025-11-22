@@ -29,7 +29,7 @@ Define controls as an array, then instantiate the `Ctrls` class:
 
 ```ts
 import { Ctrls } from "@stanko/ctrls";
-import type { TypedControlConfig } from "@stanko/ctrls";
+import type { ConfigItem } from "@stanko/ctrls";
 
 // Import CSS
 import "@stanko/ctrls/dist/ctrls.css";
@@ -58,7 +58,7 @@ const config = [
   // - speed, shape and size
 
   // Casting the config to enable editor's code completion
-] as const satisfies readonly TypedControlConfig[];
+] as const satisfies readonly ConfigItem[];
 
 // Create the instance of Ctrls
 export const options = new Ctrls(config, {
@@ -348,7 +348,10 @@ Collapsible group of controls. All values are going to be nested in an object us
 ```ts
 {
   // Mandatory
-  controls: ConfigItem[]
+  controls: ConfigItem[];
+  
+  // Optional
+  isCollapsed?: boolean;
 }
 ```
 
@@ -370,6 +373,42 @@ Example:
       "name": "distribution"
     }
   ]
+}
+```
+
+</div>
+
+### HTML
+
+Custom HTML to be rendered. You'll need to create your element and add it to the config.
+
+Doesn't influence the values object as it doesn't have a value.
+
+```ts
+{
+  // Mandatory
+  html: HTMLElement;
+}
+```
+
+Example:
+
+```ts
+const downloadButton = document.createElement('button');
+downloadButton.innerHTML = "PNG";
+// Add your styles
+downloadButton.addEventListener('click', () => {
+  alert("Download button clicked");
+})
+```
+
+<div class="example">
+
+```json
+{
+  "type": "html",
+  "name": "download",
+  "html": downloadButton
 }
 ```
 

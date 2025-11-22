@@ -22,7 +22,7 @@ export type CtrlControlType =
   | "dual-range";
 
 // Controls + UI helpers
-export type CtrlItemType = CtrlControlType | "group";
+export type CtrlItemType = CtrlControlType | "group" | "html";
 
 export type CtrlChangeHandler = (control: CtrlComponent) => void;
 
@@ -87,6 +87,9 @@ export interface CtrlTypeMap {
     controls: readonly TypedControlConfig[];
     isRandomizationDisabled?: boolean;
   };
+  html: {
+    html: HTMLElement;
+  };
 }
 
 export type TypedControlConfig = {
@@ -106,10 +109,17 @@ export type GroupConfig = {
   name: string;
   label?: string;
   controls: readonly TypedControlConfig[];
-  isRandomizationDisabled?: boolean;
+  isCollapsed?: boolean;
 };
 
-export type ConfigItem = TypedControlConfig | GroupConfig;
+export type HTMLConfig = {
+  type: "html";
+  name: string;
+  label?: string;
+  html: HTMLElement;
+};
+
+export type ConfigItem = TypedControlConfig | GroupConfig | HTMLConfig;
 
 export type ConfigFor<T extends CtrlItemType> = Extract<
   TypedControlConfig,
@@ -118,7 +128,7 @@ export type ConfigFor<T extends CtrlItemType> = Extract<
 type ExtractValues<Configs extends readonly ConfigItem[]> = {
   [C in Extract<
     Configs[number],
-    { type: Exclude<CtrlItemType, "group"> }
+    { type: CtrlControlType }
   > as C["name"]]: CtrlTypeMap[C["type"]]["value"];
 } & {
   [C in Extract<Configs[number], { type: "group" }> as C["name"]]: OptionsMap<

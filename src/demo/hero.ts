@@ -1,6 +1,9 @@
 import { Ctrls } from "../ctrls";
-import type { TypedControlConfig } from "../ctrls/types";
+import type { ConfigItem } from "../ctrls/types";
 import { Grid } from "./grid";
+
+const customButton = document.createElement("button");
+customButton.textContent = "Hello";
 
 export const config = [
   {
@@ -108,7 +111,7 @@ export const config = [
     max: 1.2,
     step: 0.1,
   },
-] as const satisfies readonly TypedControlConfig[];
+] as const satisfies readonly ConfigItem[];
 
 export const options = new Ctrls(config, {
   // storage: "hash",
