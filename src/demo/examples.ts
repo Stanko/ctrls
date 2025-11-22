@@ -28,6 +28,7 @@ export const initExamples = () => {
       }
 
       new Ctrls([config], {
+        title: "Controls",
         showRandomizeButton: false,
         storage: "none",
         parent: example,

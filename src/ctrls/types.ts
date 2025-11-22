@@ -5,6 +5,7 @@ import type { Easing, EasingCtrl } from "./ctrl-easing";
 import type { RadioCtrl } from "./ctrl-radio";
 import type { RangeCtrl } from "./ctrl-range";
 import type { SeedCtrl } from "./ctrl-seed";
+import type { FileCtrl } from "./ctrl-file";
 
 export interface PRNG {
   (): number;
@@ -19,7 +20,8 @@ export type CtrlControlType =
   | "radio"
   | "seed"
   | "easing"
-  | "dual-range";
+  | "dual-range"
+  | "file";
 
 // Controls + UI helpers
 export type CtrlItemType = CtrlControlType | "group" | "html";
@@ -30,6 +32,7 @@ export type CtrlConfig<T = unknown> = {
   type: CtrlItemType;
   id?: string;
   name: string;
+  accept?: string;
   group?: string;
   label?: string;
   defaultValue?: T;
@@ -40,7 +43,7 @@ export interface Ctrl<T> {
   id: string;
   group?: string;
   name: string;
-  label: string;
+  label?: string;
   type: CtrlItemType;
   isRandomizationDisabled: boolean;
   onChange: CtrlChangeHandler;
@@ -89,6 +92,10 @@ export interface CtrlTypeMap {
   };
   html: {
     html: HTMLElement;
+  };
+  file: {
+    value: File | null;
+    accept?: string;
   };
 }
 
@@ -168,6 +175,7 @@ export type CtrlComponent =
   | RadioCtrl
   | SeedCtrl
   | EasingCtrl
-  | DualRangeCtrl;
+  | DualRangeCtrl
+  | FileCtrl;
 
 export type ControlConstructor<T> = new (...args: any[]) => T;

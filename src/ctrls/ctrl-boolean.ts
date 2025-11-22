@@ -60,7 +60,7 @@ export class BooleanCtrl implements Ctrl<boolean> {
   };
 
   buildUI = () => {
-    const id = toHtmlId(this.name);
+    const id = toHtmlId(this.id);
     const input = document.createElement("input");
     input.classList.add("ctrls__boolean-input");
     input.setAttribute("type", "checkbox");

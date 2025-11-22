@@ -66,7 +66,7 @@ export class SeedCtrl implements Ctrl<string> {
   buildUI = () => {
     const { value } = this;
 
-    const id = toHtmlId(this.name);
+    const id = toHtmlId(this.id);
 
     const input = document.createElement("input");
     input.classList.add("ctrls__seed-input");

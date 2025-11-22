@@ -341,6 +341,31 @@ Example:
 
 </div>
 
+### File
+
+File input.
+
+```ts
+{
+  // Optional
+  accept?: string; // a comma separated list of allowed file types
+}
+```
+
+Example:
+
+<div class="example">
+
+```json
+{
+  "type": "file",
+  "name": "background",
+  "accept": "image/*"
+}
+```
+
+</div>
+
 ### Group
 
 Collapsible group of controls. All values are going to be nested in an object using the group's name.
@@ -459,6 +484,9 @@ Thank you for stopping by! If you end up using Ctrls, please let me know, I woul
 * [ ] Allow users to pass a custom PRNG lib
 * [ ] Hash storage - check if there is an instance using hash storage already
 * [ ] Storage - local storage
+* [ ] Check if `onInput` si triggered when it should
+* [ ] Use dom helpers everywhere
+* [x] `toHtmlId(this.name)` => `toHtmlId(this.id)`
 * [x] Add `name` and `id` to inputs
 * [x] TypeDef bug - easing presets should be optional
 * [x] Add title which collapses the controls

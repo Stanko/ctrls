@@ -95,7 +95,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
 
   buildUI = () => {
     const { min, max, step, value } = this;
-    const id = toHtmlId(this.name);
+    const id = toHtmlId(this.id);
 
     const changeHandler = () => {
       this.value = {

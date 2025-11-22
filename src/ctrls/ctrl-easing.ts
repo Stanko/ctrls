@@ -113,7 +113,7 @@ export class EasingCtrl implements Ctrl<Easing> {
 
   buildUI = () => {
     const { value } = this;
-    const id = toHtmlId(this.name);
+    const id = toHtmlId(this.id);
 
     const line1 = document.createElementNS(
       "http://www.w3.org/2000/svg",

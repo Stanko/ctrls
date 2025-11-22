@@ -6,8 +6,9 @@ import { EasingCtrl } from "./ctrl-easing";
 import { RadioCtrl } from "./ctrl-radio";
 import { RangeCtrl } from "./ctrl-range";
 import { SeedCtrl } from "./ctrl-seed";
+import { FileCtrl } from "./ctrl-file";
 import Alea from "../utils/alea";
-import { diceIcon } from "../utils/icons";
+import { chevronUpIcon, diceIcon } from "../utils/icons";
 import type {
   ControlConstructor,
   CtrlComponent,
@@ -27,6 +28,7 @@ const controlMap: Record<CtrlControlType, ControlConstructor<CtrlComponent>> = {
   seed: SeedCtrl,
   easing: EasingCtrl,
   "dual-range": DualRangeCtrl,
+  file: FileCtrl,
 };
 
 export class Ctrls<Configs extends readonly ConfigItem[]> {
@@ -59,7 +61,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     if (this.options.title) {
       const titleButton = document.createElement("button");
       titleButton.classList.add("ctrls__title");
-      titleButton.innerText = this.options.title;
+      titleButton.innerHTML = this.options.title + chevronUpIcon;
       titleButton.addEventListener("click", this.toggleVisibility);
 
       this.element.appendChild(titleButton);
@@ -131,7 +133,8 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
 
         const groupTitle = document.createElement("button");
         groupTitle.classList.add("ctrls__group-title");
-        groupTitle.innerText = config.label || toSpaceCase(config.name);
+        groupTitle.innerHTML =
+          (config.label || toSpaceCase(config.name)) + chevronUpIcon;
         groupTitle.addEventListener("click", () => {
           groupTitle.parentElement?.classList.toggle("ctrls__group--hidden");
         });
@@ -154,7 +157,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
         // Add the group element
         elements.push(groupElement);
       } else if (config.type === "html") {
-        // HTML control isn't saved
+        // HTML controls are just rendered on their own
         elements.push(getHTMLControlElement(config));
       } else {
         const control = this.registerControl(
@@ -221,6 +224,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
 
   getHash = () => {
     const values = this.controls
+      .filter((control) => control.type !== "file")
       .map((control) => {
         return `${toKebabCase(control.id)}:${control.valueToString()}`;
       })

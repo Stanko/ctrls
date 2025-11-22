@@ -70,7 +70,7 @@ export class RangeCtrl implements Ctrl<number> {
 
   buildUI = () => {
     const { min, max, step, value } = this;
-    const id = toHtmlId(this.name);
+    const id = toHtmlId(this.id);
 
     const input = document.createElement("input");
     input.classList.add("ctrls__range-input");

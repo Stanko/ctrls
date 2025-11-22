@@ -228,6 +228,7 @@ pre {
   display: none;
   font-weight: normal;
   padding-left: 0.75rem;
+  padding-block: 0;
   opacity: 0.75;
 
   @include breakpoints.lg {
