@@ -182,11 +182,19 @@
   }
 }
 
+.ctrls button:focus-visible {
+  outline: 2px solid var(--ctrls-theme);
+  outline-offset: 2px;
+}
+
+// ----- Titles ----- //
+
 .ctrls__title,
 .ctrls__group-title {
   background: none;
   border: none;
   display: flex;
+  gap: 0.5rem;
   justify-content: space-between;
   align-items: center;
   width: 100%;
@@ -202,6 +210,14 @@
   &:hover {
     color: var(--ctrls-theme);
     background: var(--ctrls-hover-bg);
+  }
+
+  // Adding .ctrls to get a higher specificity
+  // to override the default button outline styles
+  .ctrls &:focus-visible {
+    outline: none;
+    background-color: var(--ctrls-theme);
+    color: white;
   }
 
   svg {
@@ -220,6 +236,8 @@
     transform: rotate(180deg);
   }
 }
+
+// ----- Controls wrapper ----- //
 
 .ctrls__controls {
   overflow: auto;
@@ -292,11 +310,6 @@
 .ctrls__control-value {
   font-weight: 400;
   font-size: var(--ctrls-value-font-size);
-}
-
-.ctrls button:focus-visible {
-  outline: 2px solid var(--ctrls-theme);
-  outline-offset: 2px;
 }
 
 // ----- Buttons ----- //
@@ -423,7 +436,6 @@ label:hover .ctrls__boolean-input:checked + .ctrls__boolean-checkmark {
 // Not-checked hover
 label:hover .ctrls__boolean-input:not(:checked) + .ctrls__boolean-checkmark {
   color: var(--ctrls-checkbox-hover-text);
-  border-color: var(--ctrls-hover-border);
 }
 
 // Focus

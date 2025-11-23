@@ -311,6 +311,14 @@ pre {
   fill: var(--hero-fill);
 }
 
+// ----- All controls debug wrapper ----- //
+
+.all-controls {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
 // ----- Content ----- //
 
 .content {

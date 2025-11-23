@@ -5,6 +5,7 @@ import "./demo/hero";
 import { initExamples } from "./demo/examples";
 import "./demo/nav";
 import "./demo/theme-controls";
+import "./demo/all-controls";
 
 initExamples();
 

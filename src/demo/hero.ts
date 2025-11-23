@@ -9,71 +9,9 @@ export const config = [
   {
     type: "boolean",
     name: "animate",
-    defaultValue: true,
+    defaultValue: import.meta.env.PROD,
     isRandomizationDisabled: true,
   },
-  // {
-  //   type: "file",
-  //   name: "image",
-  // },
-  // {
-  //   type: "group",
-  //   name: "demo",
-  //   controls: [
-  //     {
-  //       type: "radio",
-  //       name: "shape",
-  //       defaultValue: "6",
-  //       items: {
-  //         triangle: "3",
-  //         hexagon: "6",
-  //         circle: "32",
-  //       },
-  //     },
-  //     {
-  //       type: "dual-range",
-  //       name: "size",
-  //       defaultValue: {
-  //         min: 0,
-  //         max: 1,
-  //       },
-  //       min: 0,
-  //       max: 1.2,
-  //       step: 0.1,
-  //     },
-  //   ],
-  // },
-  // {
-  //   type: "group",
-  //   name: "elements",
-  //   controls: [
-  //     {
-  //       type: "radio",
-  //       name: "shape",
-  //       defaultValue: "6",
-  //       items: {
-  //         triangle: "3",
-  //         hexagon: "6",
-  //         circle: "32",
-  //       },
-  //     },
-  //     {
-  //       type: "dual-range",
-  //       name: "size",
-  //       defaultValue: {
-  //         min: 0,
-  //         max: 1,
-  //       },
-  //       min: 0,
-  //       max: 1.2,
-  //       step: 0.1,
-  //     },
-  //     {
-  //       type: "easing",
-  //       name: "distribution",
-  //     },
-  //   ],
-  // },
   {
     type: "seed",
     name: "opacitySeed",
@@ -118,8 +56,7 @@ export const config = [
 ] as const satisfies readonly ConfigItem[];
 
 export const options = new Ctrls(config, {
-  // storage: "hash",
-  // theme: "dark",
+  storage: import.meta.env.PROD ? "hash" : "none",
   title: "Ctrls",
 });
 
