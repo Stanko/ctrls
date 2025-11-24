@@ -84,7 +84,7 @@ const config = [
     name: "custom html",
     html: dom.button("", {
       children: ["Hello World"],
-      style: "padding: 0.25rem 0.5rem;",
+      style: "padding: 0.25rem 0.5rem; color: black;",
     }),
   },
 ] as const satisfies readonly ConfigItem[];
