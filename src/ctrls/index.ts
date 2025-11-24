@@ -1,3 +1,5 @@
+export * from "./types";
+
 import BezierEasing from "bezier-easing";
 import { toCamelCase, toKebabCase, toSpaceCase } from "../utils/string-utils";
 import { BooleanCtrl } from "./ctrl-boolean";
