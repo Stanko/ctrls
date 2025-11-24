@@ -229,6 +229,8 @@
 // ----- Controls wrapper ----- //
 
 .ctrls__controls-inner {
+  display: grid;
+  gap: 0.5rem;
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--ctrls-scrollbar-thumb-bg) transparent;
@@ -236,7 +238,7 @@
   // Add a margin to the last child element
   // to balance it with the side padding of the controls wrapper
   > *:last-child:not(:first-child) {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -282,7 +284,7 @@
 // ----- Groups ----- //
 
 .ctrls__group {
-  margin: 0.25rem 0.5rem;
+  margin-inline: 0.5rem;
   border: 1px solid var(--ctrls-border);
   border-radius: var(--ctrls-radius);
   overflow: hidden;
@@ -296,16 +298,30 @@
   grid-template-columns: calc(var(--ctrls-label-width) - 0.5rem) minmax(0, 1fr);
 }
 
+.ctrls__group-controls-inner {
+  display: grid;
+  gap: 0.5rem;
+
+  > *:first-child {
+    margin-top: 0.25rem;
+  }
+
+  > *:last-child {
+    margin-bottom: 0.25rem;
+  }
+}
+
 // ----- Controls ----- //
 
 .ctrls__control {
-  padding: 0.25rem 0.5rem;
+  padding: 0 0.5rem;
   display: grid;
   grid-template-columns: var(--ctrls-label-width) minmax(0, 1fr);
   align-items: center;
 
   &:hover {
     background: var(--ctrls-hover-bg);
+    box-shadow: 0 0 0 0.25rem var(--ctrls-hover-bg);
 
     .ctrls__control-label {
       color: var(--ctrls-theme);
@@ -318,7 +334,7 @@
 }
 
 .ctrls__control-no-label {
-  padding: 0.25rem 0.5rem 0.25rem calc(var(--ctrls-label-width) + 0.5rem);
+  padding: 0 0.5rem 0 calc(var(--ctrls-label-width) + 0.5rem);
 }
 
 .ctrls__control-label {

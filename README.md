@@ -4,16 +4,16 @@ Minimal library for controlling parameters, designed specifically for algorithmi
 
 [![Multiple Ctrls screenshots, on light and dark backgrounds](https://muffinman.io/ctrls/ctrls.png)](https://muffinman.io/ctrls/)
 
-## Made for algorithmic art
+## Made for algorithmic/generative art
 
-I built Ctrls for my [algorithmic art projects](https://muffinman.io/art/). By default, the state is saved in the URL, which lets you navigate history and share links easily. Along with standard components like checkboxes and ranges, it includes two especially useful for generative work: RNG seed and easing. These not only let you adjust parameters but also expose functions (rng and easing) you can call directly.
+I built Ctrls for my [art projects](https://muffinman.io/art/). By default, the state is saved in the URL, which lets you navigate history and share links easily. Along with standard components like checkboxes and ranges, it includes two especially useful for generative work: RNG seed and easing. These not only let you adjust parameters but also expose functions (rng and easing) you can call directly.
 
-Play with the live example above or check the older version in my [Space Invaders generator](https://muffinman.io/invaders/).
+Play with the live example above or check older versions I used for [Space Invaders generator](https://muffinman.io/invaders/) and [Moon Phases](http://muffinman.io/moon/).
 
 ## Features
 
 - Minimal API
-- Six components : RNG seed, easing, boolean, radio, range and dual range
+- Eight components : RNG seed, easing, boolean, radio, range, dual range, file and custom HTML
 - Fully typed, including dynamic typings for controlled properties
 - Light and dark themes included, theming via CSS variables
 
@@ -466,7 +466,7 @@ Check [the source file](https://github.com/Stanko/ctrls/blob/dev/src/scss/_ctrls
 
 ## Why?
 
-You might ask why I made another library when [dat.GUI](https://github.com/dataarts/dat.gui) and [TweakPane](https://tweakpane.github.io/docs/) already exist. Both target general use cases with extensive options and elaborate APIs, while I wanted something smaller and easier to adapt for [my algorithmic drawings](https://muffinman.io/art/).
+You might ask why I made another library when [dat.GUI](https://github.com/dataarts/dat.gui) and [TweakPane](https://tweakpane.github.io/docs/) already exist. Both target general use cases with extensive options and elaborate APIs, while I wanted something smaller and easier to adapt for [my generative drawings](https://muffinman.io/art/).
 
 I first hacked together a crude library with no plans to release it. Over time I polished it, ported it to TypeScript, and realized it could be useful to others. The code is solid, though I would love to add a few more features.
 

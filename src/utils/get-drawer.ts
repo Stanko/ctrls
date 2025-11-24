@@ -10,8 +10,12 @@ export const getDrawer = (
     children,
   });
 
+  console.log(children.length);
+  const duration = Math.min(Math.max(children.length * 75, 300), 750);
+
   const outer = dom.div(`ctrls__drawer ${className}`, {
     children: [inner],
+    style: `transition-duration: ${duration}ms`,
   });
 
   if (isCollapsed) {

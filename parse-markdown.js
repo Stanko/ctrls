@@ -31,7 +31,7 @@ const getHTML = () => {
   const readme = fs.readFileSync("README.md", "utf8");
   const parsed = marked(readme);
 
-  const START_WITH = `<h2 id="made-for-algorithmic-art">`;
+  const START_WITH = `<h2 id="made-for-algorithmicgenerative-art">`;
   const END_BEFORE = `<h2 id="todo">`;
 
   const start = parsed.indexOf(START_WITH);
