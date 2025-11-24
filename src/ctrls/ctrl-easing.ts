@@ -1,8 +1,8 @@
-import random from "../utils/random";
 import BezierEasing from "bezier-easing";
-
-import type { Ctrl, CtrlChangeHandler, CtrlItemType, ConfigFor } from "./types";
+import { dom } from "../utils/dom";
+import random from "../utils/random";
 import { toHtmlId } from "../utils/string-utils";
+import type { ConfigFor, Ctrl, CtrlChangeHandler, CtrlItemType } from "./types";
 
 export type Easing = [number, number, number, number];
 
@@ -115,52 +115,33 @@ export class EasingCtrl implements Ctrl<Easing> {
     const { value } = this;
     const id = toHtmlId(this.id);
 
-    const line1 = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "line",
-    );
-    line1.setAttribute("class", "ctrls__easing-line ctrls__easing-line--1");
-    line1.setAttribute("x1", "0");
-    line1.setAttribute("y1", `${h}`);
+    const line1 = dom.line("ctrls__easing-line ctrls__easing-line--1", {
+      x1: 0,
+      y1: h,
+    });
 
-    const line2 = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "line",
-    );
-    line2.setAttribute("class", "ctrls__easing-line ctrls__easing-line--2");
-    line2.setAttribute("x1", `${w}`);
-    line2.setAttribute("y1", "0");
+    const line2 = dom.line("ctrls__easing-line ctrls__easing-line--2", {
+      x1: w,
+      y1: 0,
+    });
 
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("class", "ctrls__easing-path");
+    const path = dom.path("ctrls__easing-path");
 
-    const borders = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path",
-    );
-    borders.classList.add("easing-borders");
-    borders.setAttribute("d", `M 0 0 h ${w} M 0 ${h} h ${w}`);
+    const borders = dom.path("easing-borders", {
+      d: `M 0 0 h ${w} M 0 ${h} h ${w}`,
+    });
 
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-    svg.appendChild(borders);
-    svg.appendChild(path);
-    svg.appendChild(line1);
-    svg.appendChild(line2);
+    const svg = dom.svg("", {
+      viewBox: `0 0 ${w} ${h}`,
+      children: [borders, path, line1, line2],
+    });
 
-    const handle1 = document.createElement("button");
-    handle1.className = "ctrls__easing-handle ctrls__easing-handle--1";
-    handle1.innerHTML = "";
+    const handle1 = dom.button("ctrls__easing-handle ctrls__easing-handle--1");
+    const handle2 = dom.button("ctrls__easing-handle ctrls__easing-handle--2");
 
-    const handle2 = document.createElement("button");
-    handle2.className = "ctrls__easing-handle ctrls__easing-handle--2";
-    handle2.innerHTML = "";
-
-    const control = document.createElement("div");
-    control.className = "ctrls__easing";
-    control.appendChild(svg);
-    control.appendChild(handle1);
-    control.appendChild(handle2);
+    const control = dom.div("ctrls__easing", {
+      children: [svg, handle1, handle2],
+    });
 
     const addListeners = (handle: HTMLSpanElement, index: number) => {
       let dragging = false;
@@ -302,13 +283,14 @@ export class EasingCtrl implements Ctrl<Easing> {
     // Presets
 
     let presetButtons: HTMLDivElement | null = null;
-    if (Object.keys(this.presets).length > 0) {
-      presetButtons = document.createElement("div");
-      presetButtons.classList.add("ctrls__easing-buttons");
 
-      for (const key of Object.keys(this.presets)) {
-        const button = document.createElement("button");
-        button.textContent = key.toLowerCase().replace("ease_", "");
+    if (Object.keys(this.presets).length > 0) {
+      const buttons = Object.keys(this.presets).map((key) => {
+        const button = dom.button("", {
+          // Remove EASE_ prefix and make it lowercase
+          // EASE_IN -> in
+          children: [key.toLowerCase().replace("ease_", "")],
+        });
 
         button.addEventListener("click", () => {
           this.value = this.presets[key];
@@ -316,51 +298,49 @@ export class EasingCtrl implements Ctrl<Easing> {
           this.update();
         });
 
-        presetButtons.appendChild(button);
-      }
+        return button;
+      });
+
+      presetButtons = dom.div("ctrls__easing-buttons", {
+        children: buttons,
+      });
     }
 
-    const ticks = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    ticks.classList.add("ctrls__easing-ticks");
-    ticks.setAttribute("viewBox", `0 0 ${w} 5`);
-    ticks.setAttribute("preserveAspectRatio", "none");
     const tickCount = 30;
-
     const ticksElements = [];
+
     for (let i = 0; i < tickCount; i++) {
-      const tick = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "line",
-      );
-      tick.setAttribute("y1", "0");
-      tick.setAttribute("y2", "5");
+      const tick = dom.line("", {
+        y1: 0,
+        y2: 5,
+      });
 
       ticksElements.push(tick);
-      ticks.appendChild(tick);
     }
 
-    const controlWrapper = document.createElement("div");
-    controlWrapper.classList.add("ctrls__easing-wrapper");
-    controlWrapper.appendChild(ticks);
-    controlWrapper.appendChild(control);
-    controlWrapper.setAttribute("id", id);
+    const ticks = dom.svg("ctrls__easing-ticks", {
+      viewBox: `0 0 ${w} 5`,
+      preserveAspectRatio: "none",
+      children: ticksElements,
+    });
 
-    const right = document.createElement("div");
-    right.classList.add("ctrls__control-right");
-    right.appendChild(controlWrapper);
-    if (presetButtons) {
-      right.appendChild(presetButtons);
-    }
+    const controlWrapper = dom.div("ctrls__easing-wrapper", {
+      id,
+      children: [ticks, control],
+    });
 
-    const label = document.createElement("span");
-    label.textContent = this.label;
-    label.classList.add("ctrls__control-label");
+    const right = dom.div("ctrls__control-right", {
+      children: [controlWrapper, presetButtons],
+    });
 
-    const element = document.createElement("div");
-    element.classList.add("ctrls__control", "ctrls__control--easing");
-    element.setAttribute("data-value", value.join(","));
-    element.appendChild(label);
-    element.appendChild(right);
+    const label = dom.div("ctrls__control-label", {
+      children: [this.label],
+    });
+
+    const element = dom.div("ctrls__control ctrls__control--easing", {
+      "data-value": value.join(","),
+      children: [label, right],
+    });
 
     return {
       element,

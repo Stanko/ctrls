@@ -1,9 +1,9 @@
-import random from "../utils/random";
 import DualRangeInput from "@stanko/dual-range-input";
-
-import type { Ctrl, CtrlChangeHandler, CtrlItemType, ConfigFor } from "./types";
+import { dom } from "../utils/dom";
+import random from "../utils/random";
 import { roundToStep } from "../utils/round-to-step";
 import { toHtmlId } from "../utils/string-utils";
+import type { ConfigFor, Ctrl, CtrlChangeHandler, CtrlItemType } from "./types";
 
 export type DualRangeControlOptions = {
   min: number;
@@ -115,52 +115,49 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
       this.onInput(this);
     };
 
-    const minInput = document.createElement("input");
-
-    minInput.setAttribute("type", "range");
-    minInput.setAttribute("name", `${id}-min`);
-    minInput.setAttribute("id", `${id}-min`);
-    minInput.setAttribute("min", min.toString());
-    minInput.setAttribute("max", max.toString());
-    minInput.setAttribute("step", step.toString());
-    minInput.setAttribute("value", value.min.toString());
+    const minInput = dom.input("", {
+      type: "range",
+      name: `${id}-min`,
+      id: `${id}-min`,
+      min: min,
+      max: max,
+      step: step,
+      value: value.min,
+    });
 
     minInput.addEventListener("input", inputHandler);
     minInput.addEventListener("change", changeHandler);
 
-    const maxInput = document.createElement("input");
-    maxInput.setAttribute("type", "range");
-    maxInput.setAttribute("name", `${id}-max`);
-    maxInput.setAttribute("id", `${id}-max`);
-    maxInput.setAttribute("min", min.toString());
-    maxInput.setAttribute("max", max.toString());
-    maxInput.setAttribute("step", step.toString());
-    maxInput.setAttribute("value", value.max.toString());
+    const maxInput = dom.input("", {
+      type: "range",
+      name: `${id}-max`,
+      id: `${id}-max`,
+      min: min,
+      max: max,
+      step: step,
+      value: value.min,
+    });
 
     maxInput.addEventListener("input", inputHandler);
     maxInput.addEventListener("change", changeHandler);
 
-    const inputWrapper = document.createElement("div");
-    inputWrapper.classList.add("dual-range-input");
-    inputWrapper.appendChild(minInput);
-    inputWrapper.appendChild(maxInput);
+    const inputWrapper = dom.div("dual-range-input", {
+      children: [minInput, maxInput],
+    });
 
-    const right = document.createElement("div");
-    right.classList.add("ctrls__control-right");
-    right.appendChild(inputWrapper);
+    const right = dom.div("ctrls__control-right", {
+      children: [inputWrapper],
+    });
 
-    const label = document.createElement("span");
-    label.textContent = this.label;
-    label.classList.add("ctrls__control-label");
+    const valueSpan = dom.span("ctrls__control-value");
 
-    const valueSpan = document.createElement("span");
-    valueSpan.classList.add("ctrls__control-value");
-    label.appendChild(valueSpan);
+    const label = dom.span("ctrls__control-label", {
+      children: [this.label, valueSpan],
+    });
 
-    const element = document.createElement("div");
-    element.classList.add("ctrls__control", "ctrls__control--dual-range");
-    element.appendChild(label);
-    element.appendChild(right);
+    const element = dom.div("ctrls__control ctrls__control--dual-range", {
+      children: [label, right],
+    });
 
     return {
       element,

@@ -1,6 +1,6 @@
 {
   "name": "@stanko/ctrls",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "type": "module",
   "scripts": {
     "test": "vitest",
@@ -10,7 +10,8 @@
     "build-lib": "rm -rf ./dist && tsc -p ./tsconfig-lib.json && npm run build-css",
     "parse-markdown": "node ./parse-markdown.js",
     "preview": "vite preview",
-    "prepare": "cp ./pre-commit ./.git/hooks/pre-commit && chmod +x ./.git/hooks/pre-commit"
+    "prepare": "cp ./pre-commit ./.git/hooks/pre-commit && chmod +x ./.git/hooks/pre-commit",
+    "prepublish": "npm run build-lib"
   },
   "types": "./dist/ctrls/index.d.ts",
   "main": "./dist/ctrls/index.js",

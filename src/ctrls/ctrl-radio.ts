@@ -3,6 +3,7 @@ import random from "../utils/random";
 import type { Ctrl, CtrlChangeHandler, CtrlItemType, ConfigFor } from "./types";
 import { toKebabCase } from "../utils/string-utils";
 import { getRandomString } from "../utils/get-random-string";
+import { dom } from "../utils/dom";
 
 type Option = {
   label: string;
@@ -34,10 +35,10 @@ export class RadioCtrl implements Ctrl<string> {
     onInput: CtrlChangeHandler,
   ) {
     this.items = [];
-    Object.keys(config.items).forEach((key) => {
+    Object.entries(config.items).forEach(([label, value]) => {
       this.items.push({
-        label: key,
-        value: config.items[key],
+        label,
+        value,
       });
     });
     this.columns = config.columns || 3;
@@ -82,11 +83,12 @@ export class RadioCtrl implements Ctrl<string> {
     const { items, value } = this;
 
     const inputs = items.map((item) => {
-      const input = document.createElement("input");
-      input.setAttribute("type", "radio");
-      input.setAttribute("name", this.htmlId);
-      input.setAttribute("id", `${this.htmlId}-${toKebabCase(item.value)}`);
-      input.setAttribute("value", item.value);
+      const input = dom.input("", {
+        type: "radio",
+        name: this.htmlId,
+        id: `${this.htmlId}-${toKebabCase(item.value)}`,
+        value: item.value,
+      });
       input.checked = item.value === value;
 
       input.addEventListener("change", () => {
@@ -98,31 +100,29 @@ export class RadioCtrl implements Ctrl<string> {
         this.onInput(this);
       });
 
-      const label = document.createElement("span");
-      label.textContent = item.label;
+      const label = dom.span("", {
+        children: [item.label],
+      });
 
-      const option = document.createElement("label");
-      option.classList.add("ctrls__radio-label");
-
-      option.appendChild(input);
-      option.appendChild(label);
+      const option = dom.label("ctrls__radio-label", {
+        children: [input, label],
+      });
 
       return option;
     });
 
-    const right = document.createElement("div");
-    right.classList.add("ctrls__control-right");
-    right.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
-    right.append(...inputs);
+    const right = dom.div("ctrls__control-right", {
+      children: inputs,
+      style: `grid-template-columns: repeat(${this.columns}, 1fr);`,
+    });
 
-    const label = document.createElement("span");
-    label.textContent = this.label;
-    label.classList.add("ctrls__control-label");
+    const label = dom.span("ctrls__control-label", {
+      children: [this.label],
+    });
 
-    const element = document.createElement("div");
-    element.classList.add("ctrls__control", "ctrls__control--radio");
-    element.appendChild(label);
-    element.appendChild(right);
+    const element = dom.div("ctrls__control ctrls__control--radio", {
+      children: [label, right],
+    });
 
     return element;
   };
@@ -135,6 +135,7 @@ export class RadioCtrl implements Ctrl<string> {
     const prev = this.element.querySelector(
       `input:checked`,
     ) as HTMLInputElement;
+
     if (prev) {
       prev.checked = false;
     }

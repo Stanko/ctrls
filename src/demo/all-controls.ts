@@ -1,5 +1,6 @@
 import { Ctrls } from "../ctrls";
 import type { ConfigItem } from "../ctrls/types";
+import { dom } from "../utils/dom";
 
 const config = [
   {
@@ -47,7 +48,8 @@ const config = [
   },
   {
     type: "group",
-    name: "anotherGroup",
+    name: "collapsedGroup",
+    isCollapsed: true,
     controls: [
       {
         type: "easing",
@@ -66,16 +68,24 @@ const config = [
     type: "radio",
     name: "radio",
     items: {
-      option1: "Option 1",
-      option2: "Option 2",
-      option3: "Option 3",
-      option4: "Option 4",
-      option5: "Option 5",
+      "Option 1": "option1",
+      "Option 2": "option2",
+      "Option 3": "option3",
+      "Option 4": "option4",
+      "Option 5": "option5",
     },
   },
   {
     type: "file",
     name: "file",
+  },
+  {
+    type: "html",
+    name: "custom html",
+    html: dom.button("", {
+      children: ["Hello World"],
+      style: "padding: 0.25rem 0.5rem;",
+    }),
   },
 ] as const satisfies readonly ConfigItem[];
 

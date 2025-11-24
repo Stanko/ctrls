@@ -22,6 +22,7 @@ import type {
   CtrlControlType,
 } from "./types";
 import { getHTMLControlElement } from "./ctrl-html";
+import { dom } from "../utils/dom";
 
 const controlMap: Record<CtrlControlType, ControlConstructor<CtrlComponent>> = {
   boolean: BooleanCtrl,
@@ -54,42 +55,37 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
       ...options,
     };
 
-    // Main element
-    this.element = document.createElement("div");
-    this.element.classList.add("ctrls");
-    this.element.classList.add(`ctrls--${this.options.theme}-theme`);
-
     // Title
+    let titleButton: HTMLButtonElement | null = null;
     if (this.options.title) {
-      const titleButton = document.createElement("button");
-      titleButton.classList.add("ctrls__title");
-      titleButton.innerHTML = this.options.title + chevronUpIcon;
+      titleButton = dom.button("ctrls__title", {
+        innerHTML: this.options.title + chevronUpIcon,
+      });
       titleButton.addEventListener("click", this.toggleVisibility);
-
-      this.element.appendChild(titleButton);
     }
-
-    // Controls wrapper
-    const controlsContainer = document.createElement("div");
-    controlsContainer.classList.add("ctrls__controls");
-    this.element.appendChild(controlsContainer);
-
-    // Controls
-    const controlElements = this.processControls(configs);
-    controlsContainer.append(...controlElements);
 
     // Randomize button
+    let randomizeButton: HTMLButtonElement | null = null;
     if (this.options.showRandomizeButton) {
-      const randomizeButton = document.createElement("button");
-      randomizeButton.classList.add(
-        "ctrls__randomize",
-        "ctrls__btn",
-        "ctrls__btn--lg",
+      randomizeButton = dom.button(
+        "ctrls__randomize ctrls__btn ctrls__btn--lg",
+        { innerHTML: `Randomize ${diceIcon}` },
       );
-      randomizeButton.innerHTML = `Randomize ${diceIcon}`;
       randomizeButton.addEventListener("click", this.randomize);
-      controlsContainer.appendChild(randomizeButton);
     }
+
+    // Control elements
+    const controlElements = this.processControls(configs);
+
+    // Controls wrapper
+    const controlsContainer = dom.div("ctrls__controls", {
+      children: [...controlElements, randomizeButton],
+    });
+
+    // Main element
+    this.element = dom.div(`ctrls ctrls--${this.options.theme}-theme`, {
+      children: [titleButton, controlsContainer],
+    });
 
     // Append the Ctrls element to the provided parent element
     if (this.options.parent) {
@@ -125,26 +121,15 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     // Processing configs and creating component instances and HTML elements
     configs.map((config) => {
       if (config.type === "group") {
-        // Create group element
-        const groupElement = document.createElement("div");
-        groupElement.classList.add("ctrls__group");
-
-        if (config.isCollapsed) {
-          groupElement.classList.add("ctrls__group--hidden");
-        }
-
-        const groupTitle = document.createElement("button");
-        groupTitle.classList.add("ctrls__group-title");
-        groupTitle.innerHTML =
-          (config.label || toSpaceCase(config.name)) + chevronUpIcon;
+        // Group title
+        const groupTitle = dom.button("ctrls__group-title", {
+          innerHTML: (config.label || toSpaceCase(config.name)) + chevronUpIcon,
+        });
         groupTitle.addEventListener("click", () => {
           groupTitle.parentElement?.classList.toggle("ctrls__group--hidden");
         });
 
-        // Add title
-        groupElement.append(groupTitle);
-
-        config.controls.forEach((itemConfig) => {
+        const controlsElements = config.controls.map((itemConfig) => {
           const control = this.registerControl(
             itemConfig,
             onChangeControlHandler,
@@ -152,9 +137,17 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
             toCamelCase(config.name),
           );
 
-          // Add the control elements to the group element
-          groupElement.append(control?.element);
+          return control.element;
         });
+
+        // Create group element
+        const groupElement = dom.div("ctrls__group", {
+          children: [groupTitle, ...controlsElements],
+        });
+
+        if (config.isCollapsed) {
+          groupElement.classList.add("ctrls__group--hidden");
+        }
 
         // Add the group element
         elements.push(groupElement);

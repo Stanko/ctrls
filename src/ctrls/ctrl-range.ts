@@ -3,6 +3,7 @@ import { roundToStep } from "../utils/round-to-step";
 
 import type { Ctrl, CtrlChangeHandler, CtrlItemType, ConfigFor } from "./types";
 import { toHtmlId } from "../utils/string-utils";
+import { dom } from "../utils/dom";
 
 export class RangeCtrl implements Ctrl<number> {
   type: CtrlItemType = "range";
@@ -72,15 +73,15 @@ export class RangeCtrl implements Ctrl<number> {
     const { min, max, step, value } = this;
     const id = toHtmlId(this.id);
 
-    const input = document.createElement("input");
-    input.classList.add("ctrls__range-input");
-    input.setAttribute("type", "range");
-    input.setAttribute("id", id);
-    input.setAttribute("name", id);
-    input.setAttribute("min", min.toString());
-    input.setAttribute("max", max.toString());
-    input.setAttribute("step", step.toString());
-    input.setAttribute("value", value.toString());
+    const input = dom.input("ctrls__range-input", {
+      type: "range",
+      id,
+      name: id,
+      min,
+      max,
+      step,
+      value,
+    });
 
     input.addEventListener("input", () => {
       this.value = this.parse(input.value);
@@ -103,22 +104,19 @@ export class RangeCtrl implements Ctrl<number> {
       );
     });
 
-    const right = document.createElement("div");
-    right.classList.add("ctrls__control-right");
-    right.append(input);
+    const right = dom.div("ctrls__control-right", {
+      children: [input],
+    });
 
-    const label = document.createElement("span");
-    label.textContent = this.label;
-    label.classList.add("ctrls__control-label");
+    const valueSpan = dom.span("ctrls__control-value");
 
-    const valueSpan = document.createElement("span");
-    valueSpan.classList.add("ctrls__control-value");
-    label.appendChild(valueSpan);
+    const label = dom.span("ctrls__control-label", {
+      children: [this.label, valueSpan],
+    });
 
-    const element = document.createElement("label");
-    element.classList.add("ctrls__control", "ctrls__control--range");
-    element.appendChild(label);
-    element.appendChild(right);
+    const element = dom.label("ctrls__control ctrls__control--range", {
+      children: [label, right],
+    });
 
     return {
       element,

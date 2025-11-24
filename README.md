@@ -313,7 +313,7 @@ Grid of radio buttons. Can be set to have between one and five columns.
 ```ts
 {
   // Mandatory
-  items: Record<string, string>; // Map of radio items (key, value)
+  items: Record<string, string>; // Map of radio items (key -> value, value -> label)
 
   // Optional
   columns?: number; // default: 3

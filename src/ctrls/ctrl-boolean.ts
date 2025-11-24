@@ -1,11 +1,12 @@
+import { dom } from "../utils/dom";
 import { checkIcon } from "../utils/icons";
+import { toHtmlId } from "../utils/string-utils";
 import type {
   Ctrl,
-  CtrlItemType,
   CtrlChangeHandler,
   CtrlConfig,
+  CtrlItemType,
 } from "./types";
-import { toHtmlId } from "../utils/string-utils";
 
 export class BooleanCtrl implements Ctrl<boolean> {
   type: CtrlItemType = "boolean";
@@ -61,11 +62,12 @@ export class BooleanCtrl implements Ctrl<boolean> {
 
   buildUI = () => {
     const id = toHtmlId(this.id);
-    const input = document.createElement("input");
-    input.classList.add("ctrls__boolean-input");
-    input.setAttribute("type", "checkbox");
-    input.setAttribute("id", id);
-    input.setAttribute("name", id);
+
+    const input = dom.input("ctrls__boolean-input", {
+      type: "checkbox",
+      id,
+      name: id,
+    });
     input.checked = this.value;
     input.addEventListener("change", () => {
       this.value = input.checked;
@@ -76,23 +78,21 @@ export class BooleanCtrl implements Ctrl<boolean> {
       this.onInput(this);
     });
 
-    const checkmark = document.createElement("span");
-    checkmark.classList.add("ctrls__boolean-checkmark");
-    checkmark.innerHTML = checkIcon;
+    const checkmark = dom.span("ctrls__boolean-checkmark", {
+      innerHTML: checkIcon,
+    });
 
-    const right = document.createElement("div");
-    right.classList.add("ctrls__control-right");
-    right.appendChild(input);
-    right.appendChild(checkmark);
+    const right = dom.div("ctrls__control-right", {
+      children: [input, checkmark],
+    });
 
-    const label = document.createElement("span");
-    label.textContent = this.label;
-    label.classList.add("ctrls__control-label");
+    const label = dom.span("ctrls__control-label", {
+      children: [this.label],
+    });
 
-    const element = document.createElement("label");
-    element.classList.add("ctrls__control", "ctrls__control--boolean");
-    element.appendChild(label);
-    element.appendChild(right);
+    const element = dom.label("ctrls__control ctrls__control--boolean", {
+      children: [label, right],
+    });
 
     return {
       element,

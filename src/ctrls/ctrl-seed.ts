@@ -8,6 +8,7 @@ import type {
   CtrlItemType,
 } from "./types";
 import { toHtmlId } from "../utils/string-utils";
+import { dom } from "../utils/dom";
 
 export class SeedCtrl implements Ctrl<string> {
   type: CtrlItemType = "seed";
@@ -68,12 +69,12 @@ export class SeedCtrl implements Ctrl<string> {
 
     const id = toHtmlId(this.id);
 
-    const input = document.createElement("input");
-    input.classList.add("ctrls__seed-input");
-    input.setAttribute("type", "text");
-    input.setAttribute("value", value.toString());
-    input.setAttribute("id", id);
-    input.setAttribute("name", id);
+    const input = dom.input("ctrls__seed-input", {
+      type: "text",
+      value,
+      id,
+      name: id,
+    });
 
     input.addEventListener("change", () => {
       this.value = this.parse(input.value);
@@ -84,29 +85,27 @@ export class SeedCtrl implements Ctrl<string> {
       this.onInput(this);
     });
 
-    const reload = document.createElement("button");
-    reload.innerHTML = refreshIcon;
-    reload.classList.add("ctrls__seed-new-button", "ctrls__btn");
+    const reload = dom.button("ctrls__seed-new-button ctrls__btn", {
+      innerHTML: refreshIcon,
+    });
     reload.addEventListener("click", () => {
       this.value = this.getRandomValue();
       this.update();
       this.onChange(this);
     });
 
-    const right = document.createElement("div");
-    right.classList.add("ctrls__control-right");
-    right.append(input);
-    right.append(reload);
+    const right = dom.div("ctrls__control-right", {
+      children: [input, reload],
+    });
 
-    const label = document.createElement("label");
-    label.textContent = this.label;
-    label.setAttribute("for", id);
-    label.classList.add("ctrls__control-label");
+    const label = dom.label("ctrls__control-label", {
+      for: id,
+      children: [this.label],
+    });
 
-    const element = document.createElement("div");
-    element.classList.add("ctrls__control", "ctrls__control--seed");
-    element.appendChild(label);
-    element.appendChild(right);
+    const element = dom.div("ctrls__control ctrls__control--seed", {
+      children: [label, right],
+    });
 
     return {
       element,

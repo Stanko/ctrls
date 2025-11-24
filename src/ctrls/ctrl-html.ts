@@ -1,18 +1,18 @@
+import { dom } from "../utils/dom";
 import type { HTMLConfig } from "./types";
 
 export const getHTMLControlElement = (config: HTMLConfig) => {
-  const right = document.createElement("div");
-  right.classList.add("ctrls__control-right");
-  right.append(config.html);
+  const right = dom.div("ctrls__control-right", {
+    children: [config.html],
+  });
 
-  const label = document.createElement("label");
-  label.textContent = config.label || config.name;
-  label.classList.add("ctrls__control-label");
+  const label = dom.label("ctrls__control-label", {
+    children: [config.label || config.name],
+  });
 
-  const element = document.createElement("div");
-  element.classList.add("ctrls__control", "ctrls__control--seed");
-  element.appendChild(label);
-  element.appendChild(right);
+  const element = dom.div("ctrls__control ctrls__control--seed", {
+    children: [label, right],
+  });
 
   return element;
 };

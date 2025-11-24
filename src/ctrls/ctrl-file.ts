@@ -1,12 +1,12 @@
+import { dom } from "../utils/dom";
+import { deleteIcon } from "../utils/icons";
+import { toHtmlId } from "../utils/string-utils";
 import type {
   Ctrl,
   CtrlChangeHandler,
   CtrlConfig,
   CtrlItemType,
 } from "./types";
-import { toHtmlId } from "../utils/string-utils";
-import { dom } from "./dom";
-import { closeIcon } from "../utils/icons";
 
 const IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp", "svg+xml"];
 
@@ -61,15 +61,21 @@ export class FileCtrl implements Ctrl<File | null> {
 
     const fakeInput = dom.label(
       "ctrls__file-fake-input ctrls__btn ctrls__btn--sm",
-      { for: id },
+      {
+        for: id,
+        children: ["select file"],
+      },
     );
-    fakeInput.innerHTML = "select file";
+
     if (this.accept) {
-      fakeInput.innerHTML += `<span>${this.accept}</span>`;
+      const acceptSpan = dom.span("", { children: [this.accept] });
+      fakeInput.append(acceptSpan);
     }
 
-    const clearButton = dom.button("ctrls__file-clear ctrls__btn");
-    clearButton.innerHTML = closeIcon;
+    const clearButton = dom.button("ctrls__file-clear ctrls__btn", {
+      innerHTML: deleteIcon,
+      "aria-label": "Clear file",
+    });
     clearButton.addEventListener("click", () => {
       if (input.files) {
         this.update(null);
@@ -78,25 +84,24 @@ export class FileCtrl implements Ctrl<File | null> {
       }
     });
 
-    const top = dom.div("ctrls__file-top");
-    top.append(input);
-    top.append(fakeInput);
-    top.append(clearButton);
+    const top = dom.div("ctrls__file-top", {
+      children: [input, fakeInput, clearButton],
+    });
 
     const preview = dom.div("ctrls__file-preview");
 
-    const right = dom.div("ctrls__control-right");
-    right.append(top);
-    right.append(preview);
+    const right = dom.div("ctrls__control-right", {
+      children: [top, preview],
+    });
 
     const label = dom.label("ctrls__control-label", {
       for: id,
+      children: [this.label],
     });
-    label.textContent = this.label;
 
-    const element = dom.div("ctrls__control ctrls__control--file");
-    element.appendChild(label);
-    element.appendChild(right);
+    const element = dom.div("ctrls__control ctrls__control--file", {
+      children: [label, right],
+    });
 
     return {
       element,
@@ -109,23 +114,22 @@ export class FileCtrl implements Ctrl<File | null> {
     this.value = file;
 
     if (file) {
-      const item = document.createElement("figure");
-      item.classList.add("ctrls__file-preview-item");
+      const isImage = IMAGE_EXTENSIONS.includes(file.type.split("/")[1]);
 
-      if (IMAGE_EXTENSIONS.includes(file.type.split("/")[1])) {
-        console.log(URL.createObjectURL(file), file);
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(file);
-        img.alt = file.name;
-        img.classList.add("ctrls__file-image");
+      const img = isImage
+        ? dom.img("ctrls__file-image", {
+            src: URL.createObjectURL(file),
+            alt: file.name,
+          })
+        : "";
 
-        item.appendChild(img);
-      }
+      const label = dom.figcaption("ctrls__file-label", {
+        children: [file.name],
+      });
 
-      const label = document.createElement("figcaption");
-      label.classList.add("ctrls__file-label");
-      label.textContent = file.name;
-      item.appendChild(label);
+      const item = dom.figure("ctrls__file-preview-item", {
+        children: [img, label],
+      });
 
       this.preview.replaceChildren(item);
     } else {
