@@ -23,6 +23,7 @@ import type {
 } from "./types";
 import { getHTMLControlElement } from "./ctrl-html";
 import { dom } from "../utils/dom";
+import { getDrawer } from "../utils/get-drawer";
 
 const controlMap: Record<CtrlControlType, ControlConstructor<CtrlComponent>> = {
   boolean: BooleanCtrl,
@@ -56,31 +57,36 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     };
 
     // Title
-    let titleButton: HTMLButtonElement | null = null;
-    if (this.options.title) {
-      titleButton = dom.button("ctrls__title", {
-        innerHTML: this.options.title + chevronUpIcon,
-      });
-      titleButton.addEventListener("click", this.toggleVisibility);
-    }
+    let titleButton = this.options.title
+      ? dom.button("ctrls__title", {
+          innerHTML: this.options.title + chevronUpIcon,
+        })
+      : null;
 
     // Randomize button
-    let randomizeButton: HTMLButtonElement | null = null;
+    let randomizeRow: HTMLElement | null = null;
+
     if (this.options.showRandomizeButton) {
-      randomizeButton = dom.button(
+      const randomizeButton = dom.button(
         "ctrls__randomize ctrls__btn ctrls__btn--lg",
         { innerHTML: `Randomize ${diceIcon}` },
       );
       randomizeButton.addEventListener("click", this.randomize);
+
+      randomizeRow = dom.div("ctrls__control-no-label", {
+        children: [randomizeButton],
+      });
     }
 
     // Control elements
     const controlElements = this.processControls(configs);
 
     // Controls wrapper
-    const controlsContainer = dom.div("ctrls__controls", {
-      children: [...controlElements, randomizeButton],
-    });
+    const controlsContainer = getDrawer(
+      "ctrls__controls",
+      [...controlElements, randomizeRow],
+      titleButton,
+    );
 
     // Main element
     this.element = dom.div(`ctrls ctrls--${this.options.theme}-theme`, {
@@ -125,9 +131,6 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
         const groupTitle = dom.button("ctrls__group-title", {
           innerHTML: (config.label || toSpaceCase(config.name)) + chevronUpIcon,
         });
-        groupTitle.addEventListener("click", () => {
-          groupTitle.parentElement?.classList.toggle("ctrls__group--hidden");
-        });
 
         const controlsElements = config.controls.map((itemConfig) => {
           const control = this.registerControl(
@@ -140,14 +143,17 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
           return control.element;
         });
 
+        const groupControls = getDrawer(
+          "ctrls__group-controls",
+          controlsElements,
+          groupTitle,
+          config.isCollapsed,
+        );
+
         // Create group element
         const groupElement = dom.div("ctrls__group", {
-          children: [groupTitle, ...controlsElements],
+          children: [groupTitle, groupControls],
         });
-
-        if (config.isCollapsed) {
-          groupElement.classList.add("ctrls__group--hidden");
-        }
 
         // Add the group element
         elements.push(groupElement);
@@ -201,10 +207,6 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     this.controls.push(control);
 
     return control;
-  };
-
-  toggleVisibility = () => {
-    this.element.classList.toggle("ctrls--hidden");
   };
 
   addHashListeners = () => {

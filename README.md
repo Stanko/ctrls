@@ -481,11 +481,12 @@ Thank you for stopping by! If you end up using Ctrls, please let me know, I woul
 ## TODO
 
 * [ ] Add `add/removeEventListener` instead of direct update of `onInput` and `onChange`
+* [ ] Check if `onInput` is triggered when it should
 * [ ] Allow users to pass a custom PRNG lib
 * [ ] Hash storage - check if there is an instance using hash storage already
 * [ ] Storage - local storage
-* [ ] Check if `onInput` si triggered when it should
-* [ ] Use dom helpers everywhere
+* [*] Collapsing animation for the main element and groups
+* [x] Use dom helpers everywhere
 * [x] `toHtmlId(this.name)` => `toHtmlId(this.id)`
 * [x] Add `name` and `id` to inputs
 * [x] TypeDef bug - easing presets should be optional
