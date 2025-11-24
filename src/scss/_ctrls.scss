@@ -242,6 +242,7 @@
 .ctrls__controls {
   overflow: auto;
   display: grid;
+  padding: 0.25rem 0;
   scrollbar-width: thin;
   scrollbar-color: var(--ctrls-scrollbar-thumb-bg) transparent;
 }
@@ -257,14 +258,6 @@
   border: 1px solid var(--ctrls-border);
   border-radius: var(--ctrls-radius);
   overflow: hidden;
-
-  &:only-child {
-    margin: 0.5rem;
-  }
-}
-
-.ctrls__group + .ctrls__group {
-  margin-top: 0.5rem;
 }
 
 .ctrls__group .ctrls__control {
@@ -286,10 +279,6 @@
   display: grid;
   grid-template-columns: var(--ctrls-label-width) minmax(0, 1fr);
   align-items: center;
-
-  &:only-child {
-    padding: 0.5rem;
-  }
 
   &:hover {
     background: var(--ctrls-hover-bg);
@@ -379,7 +368,7 @@
 }
 
 .ctrls__randomize {
-  margin-block: 0.5rem;
+  margin-block: 0.25rem;
 
   &:focus-visible,
   &:hover {
