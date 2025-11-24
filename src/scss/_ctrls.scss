@@ -240,6 +240,10 @@
   > *:last-child:not(:first-child) {
     margin-bottom: 0.5rem;
   }
+
+  > *:first-child:not(:last-child) {
+    margin-top: 0.25rem;
+  }
 }
 
 // ----- Drawer ----- //

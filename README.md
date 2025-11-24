@@ -429,7 +429,7 @@ downloadButton.addEventListener('click', () => {
 
 <div class="example">
 
-```json
+```js
 {
   "type": "html",
   "name": "download",
