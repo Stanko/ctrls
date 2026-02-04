@@ -35,7 +35,9 @@ const Alea = (...seeds: string[]): (() => number) => {
   const s = [mash(" "), mash(" "), mash(" ")];
   let c = 1;
 
-  (seeds || getRandomSeeds()).forEach((seed) => {
+  seeds = seeds.length > 0 ? seeds : getRandomSeeds();
+
+  seeds.forEach((seed) => {
     s.forEach((_, i) => {
       s[i] -= mash(seed);
 
