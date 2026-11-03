@@ -9,6 +9,7 @@ import { RadioCtrl } from "./ctrl-radio";
 import { RangeCtrl } from "./ctrl-range";
 import { SeedCtrl } from "./ctrl-seed";
 import { FileCtrl } from "./ctrl-file";
+import { VectorCtrl } from "./ctrl-vector";
 import Alea from "../utils/alea";
 import { chevronUpIcon, diceIcon } from "../utils/icons";
 import type {
@@ -33,6 +34,7 @@ const controlMap: Record<CtrlControlType, ControlConstructor<CtrlComponent>> = {
   easing: EasingCtrl,
   "dual-range": DualRangeCtrl,
   file: FileCtrl,
+  vector: VectorCtrl,
 };
 
 export class Ctrls<Configs extends readonly ConfigItem[]> {

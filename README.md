@@ -13,7 +13,7 @@ Play with the live example above or check older versions I used for [Space Invad
 ## Features
 
 - Minimal API
-- Eight components : RNG seed, easing, boolean, radio, range, dual range, file and custom HTML
+- Nine components : RNG seed, easing, boolean, radio, range, dual range, vector, file and custom HTML
 - Fully typed, including dynamic typings for controlled properties
 - Light and dark themes included, theming via CSS variables
 
@@ -23,7 +23,7 @@ Install the library:
 
 ```bash
 npm install @stanko/ctrls
-````
+```
 
 Define controls as an array, then instantiate the `Ctrls` class:
 
@@ -130,7 +130,6 @@ Public API:
 .randomize()
 ```
 
-
 ## Controls
 
 All controls share the following properties:
@@ -138,13 +137,13 @@ All controls share the following properties:
 ```ts
 {
   // --- Mandatory --- //
-  type: CtrlType; // "seed" | "easing" | "boolean" | "range" | "dual-range" | "radio" | "group"
+  type: CtrlType; // "seed" | "easing" | "boolean" | "range" | "dual-range" | "vector" | "radio" | "group"
   // Name of the component.
-  // 
+  //
   // It will be converted to camel case and used in the values object
   // This might counter-intuitive for some people,
   // but it is my personal preference to have properties named in camel case when using them in code
-  // 
+  //
   // However, names are going to be converted to kebab case when used in the hash,
   // because it is nicer that URL be all lowercase
   name: string;
@@ -306,6 +305,32 @@ Example:
 
 </div>
 
+### Vector
+
+2D vector control with a draggable handle. Both `x` and `y` are in the range from `-size` to `size`. Handle can also be moved using arrow keys.
+
+```ts
+{
+  // Optional
+  size?: number; // default: 1
+}
+```
+
+Example:
+
+<div class="example">
+
+```json
+{
+  "type": "vector",
+  "name": "offset",
+  "size": 10,
+  "defaultValue": { "x": 2, "y": -3 }
+}
+```
+
+</div>
+
 ### Radio
 
 Grid of radio buttons. Can be set to have between one and five columns.
@@ -374,7 +399,7 @@ Collapsible group of controls. All values are going to be nested in an object us
 {
   // Mandatory
   controls: ConfigItem[];
-  
+
   // Optional
   isCollapsed?: boolean;
 }
@@ -419,12 +444,12 @@ Doesn't influence the values object as it doesn't have a value.
 Example:
 
 ```ts
-const downloadButton = document.createElement('button');
+const downloadButton = document.createElement("button");
 downloadButton.innerHTML = "PNG";
 // Add your styles
-downloadButton.addEventListener('click', () => {
+downloadButton.addEventListener("click", () => {
   alert("Download button clicked");
-})
+});
 ```
 
 <div class="example">
@@ -480,31 +505,31 @@ Thank you for stopping by! If you end up using Ctrls, please let me know, I woul
 
 ## TODO
 
-* [ ] Add `add/removeEventListener` instead of direct update of `onInput` and `onChange`
-* [ ] Check if `onInput` is triggered when it should
-* [ ] Allow users to pass a custom PRNG lib
-* [ ] Hash storage - check if there is an instance using hash storage already
-* [ ] Storage - local storage
-* [*] Collapsing animation for the main element and groups
-* [x] Use dom helpers everywhere
-* [x] `toHtmlId(this.name)` => `toHtmlId(this.id)`
-* [x] Add `name` and `id` to inputs
-* [x] TypeDef bug - easing presets should be optional
-* [x] Add title which collapses the controls
-* [x] Prefix input names' with `ctrl_${id}_${name}` to avoid collisions
-* [x] Demo - stop animation when not in viewport
-* [x] Demo - favicon and metadata
-* [x] Readme - screenshots
-* [x] Use web safe / system fonts by default
-* [x] Experiment with chroma for light and dark shades of the main color
-* [x] On input event / handler
-* [x] Revisit naming `controls` vs `options` vs `values`
-* [x] Remove lucide as a dependency, swap with local SVGs
-* [x] Add Alea PRNG instead of seedrandom
-* [x] Storage options - none
-* [x] Fix get random value float point error in dual range (modulo with floats)
-* [x] Easing - fix handles jumping to previous positions after selecting preset (no storage)
-* [x] Scope the CSS
-* [x] Controls -> Ctrls
-* [x] Easing - option to pass custom presets (or an empty array to disable them)
-* [x] onChange - maybe add current options (?) - decided not to do
+- [ ] Add `add/removeEventListener` instead of direct update of `onInput` and `onChange`
+- [ ] Check if `onInput` is triggered when it should
+- [ ] Allow users to pass a custom PRNG lib
+- [ ] Hash storage - check if there is an instance using hash storage already
+- [ ] Storage - local storage
+- [*] Collapsing animation for the main element and groups
+- [x] Use dom helpers everywhere
+- [x] `toHtmlId(this.name)` => `toHtmlId(this.id)`
+- [x] Add `name` and `id` to inputs
+- [x] TypeDef bug - easing presets should be optional
+- [x] Add title which collapses the controls
+- [x] Prefix input names' with `ctrl_${id}_${name}` to avoid collisions
+- [x] Demo - stop animation when not in viewport
+- [x] Demo - favicon and metadata
+- [x] Readme - screenshots
+- [x] Use web safe / system fonts by default
+- [x] Experiment with chroma for light and dark shades of the main color
+- [x] On input event / handler
+- [x] Revisit naming `controls` vs `options` vs `values`
+- [x] Remove lucide as a dependency, swap with local SVGs
+- [x] Add Alea PRNG instead of seedrandom
+- [x] Storage options - none
+- [x] Fix get random value float point error in dual range (modulo with floats)
+- [x] Easing - fix handles jumping to previous positions after selecting preset (no storage)
+- [x] Scope the CSS
+- [x] Controls -> Ctrls
+- [x] Easing - option to pass custom presets (or an empty array to disable them)
+- [x] onChange - maybe add current options (?) - decided not to do

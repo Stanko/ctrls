@@ -30,12 +30,21 @@ const config = [
     defaultValue: { min: 25, max: 75 },
   },
   {
+    type: "vector",
+    name: "vector",
+  },
+  {
     type: "group",
     name: "group",
     controls: [
       {
         type: "boolean",
         name: "boolean",
+      },
+      {
+        type: "vector",
+        name: "vector",
+        size: 10,
       },
       {
         type: "range",

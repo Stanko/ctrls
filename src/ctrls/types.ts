@@ -6,6 +6,7 @@ import type { RadioCtrl } from "./ctrl-radio";
 import type { RangeCtrl } from "./ctrl-range";
 import type { SeedCtrl } from "./ctrl-seed";
 import type { FileCtrl } from "./ctrl-file";
+import type { Vector, VectorCtrl } from "./ctrl-vector";
 
 export interface PRNG {
   (): number;
@@ -21,7 +22,8 @@ export type CtrlControlType =
   | "seed"
   | "easing"
   | "dual-range"
-  | "file";
+  | "file"
+  | "vector";
 
 // Controls + UI helpers
 export type CtrlItemType = CtrlControlType | "group" | "html";
@@ -96,6 +98,10 @@ export interface CtrlTypeMap {
   file: {
     value: File | null;
     accept?: string;
+  };
+  vector: {
+    value: Vector;
+    size?: number;
   };
 }
 
@@ -176,6 +182,7 @@ export type CtrlComponent =
   | SeedCtrl
   | EasingCtrl
   | DualRangeCtrl
-  | FileCtrl;
+  | FileCtrl
+  | VectorCtrl;
 
 export type ControlConstructor<T> = new (...args: any[]) => T;

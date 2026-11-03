@@ -37,8 +37,8 @@
       href="https://muffinman.io/favicon/blue/manifest.webmanifest"
       rel="manifest"
     />
-    <script type="module" crossorigin src="./assets/index-Dxv3cY0Q.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-azJcZVDO.css">
+    <script type="module" crossorigin src="./assets/index-DhgbR909.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-B3TiwhMd.css">
   </head>
 
   <body id="top">
@@ -66,6 +66,7 @@
         <a class="nav__link nav__link--light" href="#easing">Easing</a>
         <a class="nav__link nav__link--light" href="#range">Range</a>
         <a class="nav__link nav__link--light" href="#dual-range">Dual range</a>
+        <a class="nav__link nav__link--light" href="#vector">Vector</a>
         <a class="nav__link nav__link--light" href="#radio">Radio</a>
         <a class="nav__link nav__link--light" href="#file">File</a>
         <a class="nav__link nav__link--light" href="#group">Group</a>
@@ -80,7 +81,7 @@
 <p>Play with the live example above or check older versions I used for <a href="https://muffinman.io/invaders/">Space Invaders generator</a> and <a href="http://muffinman.io/moon/">Moon Phases</a>.</p>
 <h2 id="features">Features</h2><ul>
 <li>Minimal API</li>
-<li>Eight components : RNG seed, easing, boolean, radio, range, dual range, file and custom HTML</li>
+<li>Nine components : RNG seed, easing, boolean, radio, range, dual range, vector, file and custom HTML</li>
 <li>Fully typed, including dynamic typings for controlled properties</li>
 <li>Light and dark themes included, theming via CSS variables</li>
 </ul>
@@ -172,13 +173,13 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 </code></pre><h2 id="controls">Controls</h2><p>All controls share the following properties:</p>
 <pre><code class="hljs language-ts">{
   <span class="hljs-comment">// --- Mandatory --- //</span>
-  <span class="hljs-attr">type</span>: <span class="hljs-title class_">CtrlType</span>; <span class="hljs-comment">// &quot;seed&quot; | &quot;easing&quot; | &quot;boolean&quot; | &quot;range&quot; | &quot;dual-range&quot; | &quot;radio&quot; | &quot;group&quot;</span>
+  <span class="hljs-attr">type</span>: <span class="hljs-title class_">CtrlType</span>; <span class="hljs-comment">// &quot;seed&quot; | &quot;easing&quot; | &quot;boolean&quot; | &quot;range&quot; | &quot;dual-range&quot; | &quot;vector&quot; | &quot;radio&quot; | &quot;group&quot;</span>
   <span class="hljs-comment">// Name of the component.</span>
-  <span class="hljs-comment">// </span>
+  <span class="hljs-comment">//</span>
   <span class="hljs-comment">// It will be converted to camel case and used in the values object</span>
   <span class="hljs-comment">// This might counter-intuitive for some people,</span>
   <span class="hljs-comment">// but it is my personal preference to have properties named in camel case when using them in code</span>
-  <span class="hljs-comment">// </span>
+  <span class="hljs-comment">//</span>
   <span class="hljs-comment">// However, names are going to be converted to kebab case when used in the hash,</span>
   <span class="hljs-comment">// because it is nicer that URL be all lowercase</span>
   <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>;
@@ -286,6 +287,22 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 <span class="hljs-punctuation">}</span>
 </code></pre></div>
 
+<h3 id="vector">Vector</h3><p>2D vector control with a draggable handle. Both <code>x</code> and <code>y</code> are in the range from <code>-size</code> to <code>size</code>. Handle can also be moved using arrow keys.</p>
+<pre><code class="hljs language-ts">{
+  <span class="hljs-comment">// Optional</span>
+  <span class="hljs-attr">size</span>?: <span class="hljs-built_in">number</span>; <span class="hljs-comment">// default: 1</span>
+}
+</code></pre><p>Example:</p>
+<div class="example">
+
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vector&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;offset&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;size&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;defaultValue&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;x&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;y&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">-3</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+
 <h3 id="radio">Radio</h3><p>Grid of radio buttons. Can be set to have between one and five columns.</p>
 <pre><code class="hljs language-ts">{
   <span class="hljs-comment">// Mandatory</span>
@@ -330,7 +347,7 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 <pre><code class="hljs language-ts">{
   <span class="hljs-comment">// Mandatory</span>
   <span class="hljs-attr">controls</span>: <span class="hljs-title class_">ConfigItem</span>[];
-  
+
   <span class="hljs-comment">// Optional</span>
   <span class="hljs-attr">isCollapsed</span>?: <span class="hljs-built_in">boolean</span>;
 }
@@ -360,12 +377,12 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
   <span class="hljs-attr">html</span>: <span class="hljs-title class_">HTMLElement</span>;
 }
 </code></pre><p>Example:</p>
-<pre><code class="hljs language-ts"><span class="hljs-keyword">const</span> downloadButton = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;button&#x27;</span>);
+<pre><code class="hljs language-ts"><span class="hljs-keyword">const</span> downloadButton = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;button&quot;</span>);
 downloadButton.<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&quot;PNG&quot;</span>;
 <span class="hljs-comment">// Add your styles</span>
-downloadButton.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+downloadButton.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;click&quot;</span>, <span class="hljs-function">() =&gt;</span> {
   <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;Download button clicked&quot;</span>);
-})
+});
 </code></pre><div class="example">
 
 <pre><code class="hljs language-js">{
