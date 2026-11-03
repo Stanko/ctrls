@@ -195,10 +195,9 @@ export class EasingCtrl implements Ctrl<Easing> {
 
       document.addEventListener("mousemove", (e) => {
         if (dragging) {
-          const newValue = getNewValue(e.clientX, e.clientY);
-
+          this.value = getNewValue(e.clientX, e.clientY);
+          this.updateUI();
           this.onInput(this);
-          this.updateUI(newValue);
         }
       });
 
@@ -221,13 +220,9 @@ export class EasingCtrl implements Ctrl<Easing> {
       document.addEventListener("touchmove", (e) => {
         if (dragging) {
           e.preventDefault();
-          const newValue = getNewValue(
-            e.touches[0].clientX,
-            e.touches[0].clientY,
-          );
-
+          this.value = getNewValue(e.touches[0].clientX, e.touches[0].clientY);
+          this.updateUI();
           this.onInput(this);
-          this.updateUI(newValue);
         }
       });
 
@@ -272,6 +267,7 @@ export class EasingCtrl implements Ctrl<Easing> {
 
           this.value = newValue;
           this.onChange(this);
+          this.onInput(this);
           this.update();
         }
       });
@@ -295,6 +291,7 @@ export class EasingCtrl implements Ctrl<Easing> {
         button.addEventListener("click", () => {
           this.value = this.presets[key];
           this.onChange(this);
+          this.onInput(this);
           this.update();
         });
 

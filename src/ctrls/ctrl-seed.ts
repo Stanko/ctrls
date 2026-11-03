@@ -92,6 +92,7 @@ export class SeedCtrl implements Ctrl<string> {
       this.value = this.getRandomValue();
       this.update();
       this.onChange(this);
+      this.onInput(this);
     });
 
     const right = dom.div("ctrls__control-right", {

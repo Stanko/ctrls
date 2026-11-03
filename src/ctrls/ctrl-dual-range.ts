@@ -77,8 +77,8 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
     const max = random(min + step, this.max);
 
     return {
-      min: roundToStep(min, step),
-      max: roundToStep(max, step),
+      min: roundToStep(min, step, this.min),
+      max: roundToStep(max, step, this.min),
     };
   };
 

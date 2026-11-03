@@ -138,15 +138,29 @@ export type ConfigFor<T extends CtrlItemType> = Extract<
   TypedControlConfig,
   { type: T }
 >;
+
+// Names are converted to camel case at runtime, "main shape" -> "mainShape"
+// Mirrors toCamelCase (utils/string-utils.ts), going character by character:
+// separators are dropped and the character after them is capitalized.
+// Result accumulates the output, which keeps the recursion shallow for long names
+type CamelCase<S extends string, Result extends string = ""> =
+  string extends S
+    ? S // Not a literal type, nothing to convert
+    : S extends `${infer Char}${infer Rest}`
+      ? Char extends "-" | "_" | " "
+        ? CamelCase<Capitalize<Rest>, Result>
+        : CamelCase<Rest, `${Result}${Char}`>
+      : Result;
+
 type ExtractValues<Configs extends readonly ConfigItem[]> = {
   [C in Extract<
     Configs[number],
     { type: CtrlControlType }
-  > as C["name"]]: CtrlTypeMap[C["type"]]["value"];
+  > as CamelCase<C["name"]>]: CtrlTypeMap[C["type"]]["value"];
 } & {
-  [C in Extract<Configs[number], { type: "group" }> as C["name"]]: OptionsMap<
-    C["controls"]
-  >;
+  [C in Extract<Configs[number], { type: "group" }> as CamelCase<
+    C["name"]
+  >]: OptionsMap<C["controls"]>;
 };
 
 // Add "rng" and "easing" functions types
@@ -154,13 +168,16 @@ type DerivedProps<Configs extends readonly ConfigItem[]> = {
   [C in Extract<
     Configs[number],
     { type: "easing" }
-  > as `${C["name"]}Easing`]: ReturnType<typeof BezierEasing>;
+  > as `${CamelCase<C["name"]>}Easing`]: ReturnType<typeof BezierEasing>;
 } & {
-  [C in Extract<Configs[number], { type: "seed" }> as `${C["name"]}Rng`]: PRNG;
+  [C in Extract<
+    Configs[number],
+    { type: "seed" }
+  > as `${CamelCase<C["name"]>}Rng`]: PRNG;
 } & {
-  [C in Extract<Configs[number], { type: "group" }> as C["name"]]: DerivedProps<
-    C["controls"]
-  >;
+  [C in Extract<Configs[number], { type: "group" }> as CamelCase<
+    C["name"]
+  >]: DerivedProps<C["controls"]>;
 };
 
 // Combined type

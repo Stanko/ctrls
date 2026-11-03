@@ -177,11 +177,14 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
   };
 
   registerControl = (
-    config: TypedControlConfig,
+    userConfig: TypedControlConfig,
     onChangeControlHandler: (control: CtrlComponent) => void,
     onInputControlHandler: (control: CtrlComponent) => void,
     group: string = "",
   ) => {
+    // Copy the config to avoid mutating the user's object
+    const config = { ...userConfig };
+
     // It is my personal preference is to use space case for labels
     if (!config.label) {
       config.label = toSpaceCase(config.name);
@@ -225,6 +228,9 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     const values = this.controls
       .filter((control) => control.type !== "file")
       .map((control) => {
+        // Known issue (won't fix for now): values are not URI encoded,
+        // so values containing "/" or ":" break parsing,
+        // and the browser escapes others, e.g. seed "my seed" is read back as "my%20seed"
         return `${toKebabCase(control.id)}:${control.valueToString()}`;
       })
       .join("/");
@@ -244,6 +250,8 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
 
     pairs.forEach((pair) => {
       const [kebabCaseName, value] = pair.split(":");
+      // Known issue (won't fix for now): kebab to camel case is lossy,
+      // so names like "line2Width" or "strokeRGB" are not restored from the hash
       const id = toCamelCase(kebabCaseName);
       const control = this.controlsMap[id];
 

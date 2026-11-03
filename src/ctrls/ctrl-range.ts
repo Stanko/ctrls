@@ -58,7 +58,7 @@ export class RangeCtrl implements Ctrl<number> {
     const { min, max, step } = this;
     const value = random(min, max);
 
-    return roundToStep(value, step);
+    return roundToStep(value, step, min);
   };
 
   getDefaultValue = () => {

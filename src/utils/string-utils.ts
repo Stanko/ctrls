@@ -6,10 +6,9 @@ export const toKebabCase = (str: string): string => {
   return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
 };
 
+// Mirrors the CamelCase type (ctrls/types.ts)
 export const toCamelCase = (str: string): string => {
-  return str.replace(/([-_ ][a-z])/g, (group) =>
-    group.toUpperCase().replace(/[-_ ]/, ""),
-  );
+  return str.replace(/[-_ ]+(.)/g, (_, char: string) => char.toUpperCase());
 };
 
 export const toSpaceCase = (str: string): string => {

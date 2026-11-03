@@ -66,7 +66,7 @@ export class RadioCtrl implements Ctrl<string> {
   };
 
   getRandomValue = () => {
-    const index = random(0, this.items.length - 1, null, 0);
+    const index = Math.floor(random(0, this.items.length, null));
 
     return this.items[index].value;
   };

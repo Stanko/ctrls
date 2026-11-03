@@ -229,6 +229,7 @@ export class VectorCtrl implements Ctrl<Vector> {
           y: parseFloat((this.value.y + offsets[e.key][1]).toFixed(2)),
         });
         this.onChange(this);
+        this.onInput(this);
         this.update();
       }
     });

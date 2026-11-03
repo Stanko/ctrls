@@ -10,7 +10,7 @@ export const getHTMLControlElement = (config: HTMLConfig) => {
     children: [config.label || config.name],
   });
 
-  const element = dom.div("ctrls__control ctrls__control--seed", {
+  const element = dom.div("ctrls__control ctrls__control--html", {
     children: [label, right],
   });
 
