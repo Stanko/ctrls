@@ -80,8 +80,8 @@
   // Easing
   --ctrls-easing-border: var(--ctrls-gray-200);
 
-  --ctrls-ctrls__easing-handle-bg: var(--ctrls-gray-50);
-  --ctrls-ctrls__easing-handle-border: var(--ctrls-gray-300);
+  --ctrls-easing-handle-bg: var(--ctrls-gray-50);
+  --ctrls-easing-handle-border: var(--ctrls-gray-300);
 
   // Vector
   --ctrls-vector-border: var(--ctrls-gray-200);
@@ -548,10 +548,6 @@ label:hover .ctrls__boolean-input:not(:checked) + .ctrls__boolean-checkmark {
   @include range-track;
 }
 
-.ctrls__range-input::-moz-range-track {
-  @include range-track;
-}
-
 .ctrls__range-input::-moz-range-thumb {
   @include range-thumb;
   // In Firefox, thumb jumps above the track if the input is the same width as the thumb.
@@ -817,7 +813,7 @@ label:hover .ctrls__boolean-input:not(:checked) + .ctrls__boolean-checkmark {
   vector-effect: non-scaling-stroke;
 }
 
-.easing-borders {
+.ctrls__easing-borders {
   stroke: var(--ctrls-easing-border);
   stroke-dasharray: 1 3;
 }
@@ -862,12 +858,6 @@ label:hover .ctrls__boolean-input:not(:checked) + .ctrls__boolean-checkmark {
   }
 }
 
-.ctrls__control--radio .ctrls__control-right {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0.25rem;
-}
-
 .ctrls__easing-handle,
 .ctrls__vector-handle {
   background: none;
@@ -887,8 +877,8 @@ label:hover .ctrls__boolean-input:not(:checked) + .ctrls__boolean-checkmark {
   &::after {
     content: "";
     display: block;
-    background-color: var(--ctrls-ctrls__easing-handle-bg);
-    border: 1px solid var(--ctrls-ctrls__easing-handle-border);
+    background-color: var(--ctrls-easing-handle-bg);
+    border: 1px solid var(--ctrls-easing-handle-border);
     height: 100%;
     width: 100%;
     border-radius: 50%;

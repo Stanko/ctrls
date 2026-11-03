@@ -11,13 +11,19 @@
     "parse-markdown": "node ./parse-markdown.js",
     "preview": "vite preview",
     "prepare": "cp ./pre-commit ./.git/hooks/pre-commit && chmod +x ./.git/hooks/pre-commit",
-    "prepublish": "npm run build-lib"
+    "prepublishOnly": "npm run build-lib"
   },
   "types": "./dist/ctrls/index.d.ts",
   "main": "./dist/ctrls/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/ctrls/index.d.ts",
+      "default": "./dist/ctrls/index.js"
+    },
+    "./dist/ctrls.css": "./dist/ctrls.css"
+  },
   "files": [
-    "./dist",
-    "./public"
+    "./dist"
   ],
   "devDependencies": {
     "highlight.js": "^11.11.1",

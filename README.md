@@ -13,7 +13,7 @@ Play with the live example above or check older versions I used for [Space Invad
 ## Features
 
 - Minimal API
-- Nine components : RNG seed, easing, boolean, radio, range, dual range, vector, file and custom HTML
+- Nine components: RNG seed, easing, boolean, radio, range, dual range, vector, file and custom HTML
 - Fully typed, including dynamic typings for controlled properties
 - Light and dark themes included, theming via CSS variables
 
@@ -66,10 +66,10 @@ export const options = new Ctrls(config, {
 });
 
 // Render Ctrls elements on the page
-document.querySelector('.my-controls').appendChild(options.element);
+document.querySelector(".my-controls").appendChild(options.element);
 
 // If you need to pass values you can export a type for them for convenience
-export type Options = ReturnValue<options.getValues()>;
+export type Options = ReturnType<typeof options.getValues>;
 ```
 
 Add `onChange` or `onInput` handlers. If you need to get the current values, use `.getValues()`.
@@ -83,14 +83,14 @@ options.onChange = (updatedValues: Partial<Options>) => {
 options.onInput = (updatedValues: Partial<Options>) => {
   // Example: update a CSS variable
   if (updatedValues.hue) {
-    document.body.style.setProperty("--hue", updatedValues.hue);
+    document.body.style.setProperty("--hue", String(updatedValues.hue));
   }
 };
 ```
 
 ## API
 
-Constructor accepts two parameters - an array of control config object (see below for details) and an options object.
+Constructor accepts two parameters - an array of control config objects (see below for details) and an options object.
 
 ```ts
 constructor(controls: Configs, options?: ControlsOptions)
@@ -115,7 +115,7 @@ Public API:
 .element: HTMLDivElement
 
 // Change handler called whenever any of the values is changed.
-// It's only parameter is an object containing the updated values.
+// Its only parameter is an object containing the updated values.
 // This object can have multiple attributes when values are updated from the hash,
 // or using `.randomize()` and `.setValues()`.
 .onChange(updatedValues)
@@ -143,7 +143,7 @@ All controls share the following properties:
 ```ts
 {
   // --- Mandatory --- //
-  type: CtrlType; // "seed" | "easing" | "boolean" | "range" | "dual-range" | "vector" | "radio" | "group"
+  type: ConfigItem["type"]; // "seed" | "easing" | "boolean" | "range" | "dual-range" | "vector" | "radio" | "file" | "group" | "html"
   // Name of the component.
   //
   // It is used as the key in the values object exactly as written,
@@ -155,11 +155,11 @@ All controls share the following properties:
 
   // --- Optional --- //
   // If passed, it will be used instead of the name,
-  // if not, name will be be converted to space case and used as a label.
+  // if not, name will be converted to space case and used as a label.
   label?: string;
   // Depends on the control type, the default value for the control
   defaultValue?: T;
-  // Disabled the value randomization (via randomize method or button)
+  // Disables value randomization (via randomize method or button)
   isRandomizationDisabled?: boolean; // default: false
 }
 ```
@@ -207,12 +207,12 @@ A seeded RNG will be created and included in the values. For the example above `
 
 ### Easing
 
-Cubic-bezier easing control that also generates an easing function. Includes five presets (configurable via the `presets` property). Pass an empty array to disable presets.
+Cubic-bezier easing control that also generates an easing function. Includes five presets (configurable via the `presets` property). Pass an empty object `{}` to disable presets.
 
 ```ts
 {
   // Optional
-  presets?: Record<string, [number, number, number, number]>; // default: 1
+  presets?: Record<string, [number, number, number, number]>; // default: ease, linear, ease_in, ease_out and ease_in_out
 }
 ```
 
@@ -343,7 +343,7 @@ Grid of radio buttons. Can be set to have between one and five columns.
 ```ts
 {
   // Mandatory
-  items: Record<string, string>; // Map of radio items (key -> value, value -> label)
+  items: Record<string, string>; // Map of radio items (label -> value)
 
   // Optional
   columns?: number; // default: 3
@@ -536,5 +536,5 @@ Thank you for stopping by! If you end up using Ctrls, please let me know, I woul
 - [x] Easing - fix handles jumping to previous positions after selecting preset (no storage)
 - [x] Scope the CSS
 - [x] Controls -> Ctrls
-- [x] Easing - option to pass custom presets (or an empty array to disable them)
+- [x] Easing - option to pass custom presets (or an empty object to disable them)
 - [x] onChange - maybe add current options (?) - decided not to do

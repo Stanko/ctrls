@@ -111,7 +111,7 @@ export class EasingCtrl extends BaseCtrl<Easing> {
 
     const path = dom.path("ctrls__easing-path");
 
-    const borders = dom.path("easing-borders", {
+    const borders = dom.path("ctrls__easing-borders", {
       d: `M 0 0 h ${w} M 0 ${h} h ${w}`,
     });
 
