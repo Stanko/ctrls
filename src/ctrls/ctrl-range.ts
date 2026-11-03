@@ -111,7 +111,7 @@ export class RangeCtrl implements Ctrl<number> {
     const valueSpan = dom.span("ctrls__control-value");
 
     const label = dom.span("ctrls__control-label", {
-      children: [this.label, valueSpan],
+      children: [this.label, " ", valueSpan],
     });
 
     const element = dom.label("ctrls__control ctrls__control--range", {
@@ -130,7 +130,7 @@ export class RangeCtrl implements Ctrl<number> {
     this.value = value;
 
     this.input.value = value.toString();
-    this.valueSpan.textContent = ` (${value})`;
+    this.valueSpan.textContent = `(${value})`;
 
     const percentage = ((this.value - min) / (max - min)) * 100;
     this.element.style.setProperty(

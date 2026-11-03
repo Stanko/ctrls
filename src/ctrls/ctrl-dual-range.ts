@@ -152,7 +152,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
     const valueSpan = dom.span("ctrls__control-value");
 
     const label = dom.span("ctrls__control-label", {
-      children: [this.label, valueSpan],
+      children: [this.label, " ", valueSpan],
     });
 
     const element = dom.div("ctrls__control ctrls__control--dual-range", {
@@ -173,7 +173,7 @@ export class DualRangeCtrl implements Ctrl<DualRangeValue> {
 
     this.minInput.setAttribute("max", max.toString());
     this.maxInput.setAttribute("min", min.toString());
-    this.valueSpan.textContent = ` (${min}, ${max})`;
+    this.valueSpan.textContent = `(${min}, ${max})`;
 
     this.minInput.value = value.min.toString();
     this.maxInput.value = value.max.toString();

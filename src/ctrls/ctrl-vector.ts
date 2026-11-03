@@ -245,7 +245,7 @@ export class VectorCtrl implements Ctrl<Vector> {
     const valueSpan = dom.span("ctrls__control-value");
 
     const label = dom.span("ctrls__control-label", {
-      children: [this.label, valueSpan],
+      children: [this.label, " ", valueSpan],
     });
 
     const element = dom.div("ctrls__control ctrls__control--vector", {
@@ -273,7 +273,7 @@ export class VectorCtrl implements Ctrl<Vector> {
     handle.style.left = `${left}%`;
     handle.style.top = `${top}%`;
 
-    valueSpan.textContent = ` (${value.x}, ${value.y})`;
+    valueSpan.textContent = `(${value.x}, ${value.y})`;
   };
 
   update = (value: Vector = this.value) => {

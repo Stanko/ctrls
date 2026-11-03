@@ -352,6 +352,8 @@
 }
 
 .ctrls__control-value {
+  display: inline-block;
+  white-space: pre;
   font-weight: 400;
   font-size: var(--ctrls-value-font-size);
 }
