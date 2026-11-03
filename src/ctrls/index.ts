@@ -136,6 +136,10 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
         });
 
         const controlsElements = config.controls.map((itemConfig) => {
+          if (itemConfig.type === "html") {
+            return getHTMLControlElement(itemConfig);
+          }
+
           const control = this.registerControl(
             itemConfig,
             onChangeControlHandler,

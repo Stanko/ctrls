@@ -400,10 +400,12 @@ Example:
 
 Collapsible group of controls. All values are going to be nested in an object using the group's name.
 
+Groups can hold any control, including HTML, but can't be nested.
+
 ```ts
 {
   // Mandatory
-  controls: ConfigItem[];
+  controls: ConfigItem[]; // Excluding "group"
 
   // Optional
   isCollapsed?: boolean;

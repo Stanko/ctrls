@@ -74,7 +74,8 @@ export type GroupConfig = {
   type: "group";
   name: string;
   label?: string;
-  controls: readonly TypedControlConfig[];
+  // Groups can't be nested
+  controls: readonly (TypedControlConfig | HTMLConfig)[];
   isCollapsed?: boolean;
 };
 

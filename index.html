@@ -347,9 +347,10 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 </code></pre></div>
 
 <h3 id="group">Group</h3><p>Collapsible group of controls. All values are going to be nested in an object using the group&#39;s name.</p>
+<p>Groups can hold any control, including HTML, but can&#39;t be nested.</p>
 <pre><code class="hljs language-ts">{
   <span class="hljs-comment">// Mandatory</span>
-  <span class="hljs-attr">controls</span>: <span class="hljs-title class_">ConfigItem</span>[];
+  <span class="hljs-attr">controls</span>: <span class="hljs-title class_">ConfigItem</span>[]; <span class="hljs-comment">// Excluding &quot;group&quot;</span>
 
   <span class="hljs-comment">// Optional</span>
   <span class="hljs-attr">isCollapsed</span>?: <span class="hljs-built_in">boolean</span>;
