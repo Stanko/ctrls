@@ -3,57 +3,30 @@ import { dom } from "../utils/dom";
 import random from "../utils/random";
 import { roundToStep } from "../utils/round-to-step";
 import { toHtmlId } from "../utils/string-utils";
-import type { ConfigFor, Ctrl, CtrlChangeHandler, CtrlItemType } from "./types";
-
-export type DualRangeControlOptions = {
-  min: number;
-  max: number;
-  step?: number;
-};
+import { BaseCtrl, type BaseCtrlArgs } from "./ctrl-base";
+import type { ConfigFor } from "./types";
 
 export type DualRangeValue = {
   min: number;
   max: number;
 };
 
-export class DualRangeCtrl implements Ctrl<DualRangeValue> {
-  type: CtrlItemType = "dual-range";
-  id: string;
-  group?: string;
-  name: string;
-  label: string;
-  value: DualRangeValue;
-  isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler;
-  onInput: CtrlChangeHandler;
+export class DualRangeCtrl extends BaseCtrl<DualRangeValue> {
+  type = "dual-range" as const;
   min: number;
   max: number;
   step: number;
-  element: HTMLElement;
   minInput: HTMLInputElement;
   maxInput: HTMLInputElement;
   dualRange: DualRangeInput;
   valueSpan: HTMLSpanElement;
 
-  constructor(
-    config: ConfigFor<"dual-range">,
-    onChange: CtrlChangeHandler,
-    onInput: CtrlChangeHandler,
-  ) {
-    this.name = config.name;
-    this.id = config.id || config.name;
-    this.group = config.group || "";
-    this.label = config.label || config.name;
+  constructor(config: ConfigFor<"dual-range">, ...args: BaseCtrlArgs) {
+    super(config, ...args);
     this.min = config.min;
     this.max = config.max;
     this.step = config.step || 1;
-    this.value =
-      config.defaultValue === undefined
-        ? this.getDefaultValue()
-        : config.defaultValue;
-    this.isRandomizationDisabled = config.isRandomizationDisabled || false;
-    this.onChange = onChange;
-    this.onInput = onInput;
+    this.value = config.defaultValue ?? this.getDefaultValue();
 
     const { minInput, maxInput, element, valueSpan } = this.buildUI();
     this.minInput = minInput;

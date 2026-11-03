@@ -3,12 +3,10 @@ export const toHtmlId = (str: string): string => {
 };
 
 export const toKebabCase = (str: string): string => {
-  return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
-};
-
-// Mirrors the CamelCase type (ctrls/types.ts)
-export const toCamelCase = (str: string): string => {
-  return str.replace(/[-_ ]+(.)/g, (_, char: string) => char.toUpperCase());
+  return str
+    .replace(/([a-z])([A-Z])/g, "$1-$2")
+    .replace(/[\s_]+/g, "-")
+    .toLowerCase();
 };
 
 export const toSpaceCase = (str: string): string => {

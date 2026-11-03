@@ -37,7 +37,7 @@
       href="https://muffinman.io/favicon/blue/manifest.webmanifest"
       rel="manifest"
     />
-    <script type="module" crossorigin src="./assets/index-CeI7Sna8.js"></script>
+    <script type="module" crossorigin src="./assets/index-CuwbFp0O.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-DaV2fnBn.css">
   </head>
 
@@ -158,7 +158,8 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 
 <span class="hljs-comment">// Change handler called whenever any of the values is changed.</span>
 <span class="hljs-comment">// It&#x27;s only parameter is an object containing the updated values.</span>
-<span class="hljs-comment">// The only way this object can have multiple attributes is when using the hash storage.</span>
+<span class="hljs-comment">// This object can have multiple attributes when values are updated from the hash,</span>
+<span class="hljs-comment">// or using `.randomize()` and `.setValues()`.</span>
 .<span class="hljs-title function_">onChange</span>(updatedValues)
 
 <span class="hljs-comment">// Input handler called while user is inputting values (while dragging a slider for example).</span>
@@ -170,15 +171,19 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 
 <span class="hljs-comment">// Randomizes values for all controls that don&#x27;t have randomization disabled.</span>
 .<span class="hljs-title function_">randomize</span>()
+
+<span class="hljs-comment">// Updates the passed values, all of them are optional, including the ones in groups.</span>
+<span class="hljs-comment">// It updates the UI and the hash, and calls the handlers with the values that actually changed.</span>
+<span class="hljs-comment">// Values are not validated, e.g. range values outside of min/max are not clamped.</span>
+.<span class="hljs-title function_">setValues</span>(values)
 </code></pre><h2 id="controls">Controls</h2><p>All controls share the following properties:</p>
 <pre><code class="hljs language-ts">{
   <span class="hljs-comment">// --- Mandatory --- //</span>
   <span class="hljs-attr">type</span>: <span class="hljs-title class_">CtrlType</span>; <span class="hljs-comment">// &quot;seed&quot; | &quot;easing&quot; | &quot;boolean&quot; | &quot;range&quot; | &quot;dual-range&quot; | &quot;vector&quot; | &quot;radio&quot; | &quot;group&quot;</span>
   <span class="hljs-comment">// Name of the component.</span>
   <span class="hljs-comment">//</span>
-  <span class="hljs-comment">// It will be converted to camel case and used in the values object</span>
-  <span class="hljs-comment">// This might counter-intuitive for some people,</span>
-  <span class="hljs-comment">// but it is my personal preference to have properties named in camel case when using them in code</span>
+  <span class="hljs-comment">// It is used as the key in the values object exactly as written,</span>
+  <span class="hljs-comment">// so I recommend using camel case names, e.g. &quot;opacitySeed&quot;</span>
   <span class="hljs-comment">//</span>
   <span class="hljs-comment">// However, names are going to be converted to kebab case when used in the hash,</span>
   <span class="hljs-comment">// because it is nicer that URL be all lowercase</span>
@@ -316,7 +321,7 @@ options.<span class="hljs-property">onInput</span> = <span class="hljs-function"
 
 <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;radio&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;main shape&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mainShape&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;items&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">&quot;triangle&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;3&quot;</span><span class="hljs-punctuation">,</span>
     <span class="hljs-attr">&quot;rectangle&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;4&quot;</span><span class="hljs-punctuation">,</span>

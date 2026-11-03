@@ -1,43 +1,16 @@
 import { dom } from "../utils/dom";
 import { checkIcon } from "../utils/icons";
 import { toHtmlId } from "../utils/string-utils";
-import type {
-  Ctrl,
-  CtrlChangeHandler,
-  CtrlConfig,
-  CtrlItemType,
-} from "./types";
+import { BaseCtrl, type BaseCtrlArgs } from "./ctrl-base";
+import type { ConfigFor } from "./types";
 
-export class BooleanCtrl implements Ctrl<boolean> {
-  type: CtrlItemType = "boolean";
-  id: string;
-  group?: string;
-  name: string;
-  label: string;
-  value: boolean;
-  isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler;
-  onInput: CtrlChangeHandler;
-  element: HTMLElement;
+export class BooleanCtrl extends BaseCtrl<boolean> {
+  type = "boolean" as const;
   input: HTMLInputElement;
 
-  constructor(
-    config: CtrlConfig<boolean>,
-    onChange: CtrlChangeHandler,
-    onInput: CtrlChangeHandler,
-  ) {
-    this.type = "boolean";
-    this.name = config.name;
-    this.id = config.id || config.name;
-    this.group = config.group || "";
-    this.label = config.label || config.name;
-    this.value =
-      config.defaultValue === undefined
-        ? this.getDefaultValue()
-        : config.defaultValue;
-    this.isRandomizationDisabled = config.isRandomizationDisabled || false;
-    this.onChange = onChange;
-    this.onInput = onInput;
+  constructor(config: ConfigFor<"boolean">, ...args: BaseCtrlArgs) {
+    super(config, ...args);
+    this.value = config.defaultValue ?? this.getDefaultValue();
 
     const { input, element } = this.buildUI();
     this.input = input;
@@ -72,10 +45,6 @@ export class BooleanCtrl implements Ctrl<boolean> {
     input.addEventListener("change", () => {
       this.value = input.checked;
       this.onChange(this);
-    });
-    input.addEventListener("input", () => {
-      this.value = input.checked;
-      this.onInput(this);
     });
 
     const checkmark = dom.span("ctrls__boolean-checkmark", {

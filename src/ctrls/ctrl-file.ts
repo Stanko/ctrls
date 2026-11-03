@@ -1,44 +1,21 @@
 import { dom } from "../utils/dom";
 import { deleteIcon } from "../utils/icons";
 import { toHtmlId } from "../utils/string-utils";
-import type {
-  Ctrl,
-  CtrlChangeHandler,
-  CtrlConfig,
-  CtrlItemType,
-} from "./types";
+import type { ConfigFor } from "./types";
+import { BaseCtrl, type BaseCtrlArgs } from "./ctrl-base";
 
 const IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp", "svg+xml"];
 
-export class FileCtrl implements Ctrl<File | null> {
-  id: string;
-  type: CtrlItemType = "file";
-  name: string;
-  label: string;
-  group: string;
-  value: File | null;
-  isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler;
-  onInput: CtrlChangeHandler;
-  element: HTMLElement;
+export class FileCtrl extends BaseCtrl<File | null> {
+  type = "file" as const;
   input: HTMLInputElement;
   preview: HTMLDivElement;
   accept: string;
 
-  constructor(
-    config: CtrlConfig<File | null>,
-    onChange: CtrlChangeHandler,
-    onInput: CtrlChangeHandler,
-  ) {
-    this.name = config.name;
-    this.id = config.id || config.name;
-    this.label = config.label || config.name;
-    this.group = config.group || "";
+  constructor(config: ConfigFor<"file">, ...args: BaseCtrlArgs) {
+    super(config, ...args);
     this.value = null;
     this.accept = config.accept || "";
-    this.isRandomizationDisabled = config.isRandomizationDisabled || false;
-    this.onChange = onChange;
-    this.onInput = onInput;
 
     const { input, element, preview } = this.buildUI();
     this.input = input;
@@ -56,7 +33,6 @@ export class FileCtrl implements Ctrl<File | null> {
     input.addEventListener("change", () => {
       this.update(input.files ? input.files[0] : null);
       this.onChange(this);
-      this.onInput(this);
     });
 
     const fakeInput = dom.label(
@@ -80,7 +56,6 @@ export class FileCtrl implements Ctrl<File | null> {
       if (input.files) {
         this.update(null);
         this.onChange(this);
-        this.onInput(this);
       }
     });
 

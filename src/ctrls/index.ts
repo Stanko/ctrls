@@ -1,7 +1,6 @@
 export * from "./types";
 
-import BezierEasing from "bezier-easing";
-import { toCamelCase, toKebabCase, toSpaceCase } from "../utils/string-utils";
+import { toSpaceCase } from "../utils/string-utils";
 import { BooleanCtrl } from "./ctrl-boolean";
 import { DualRangeCtrl } from "./ctrl-dual-range";
 import { EasingCtrl } from "./ctrl-easing";
@@ -10,16 +9,16 @@ import { RangeCtrl } from "./ctrl-range";
 import { SeedCtrl } from "./ctrl-seed";
 import { FileCtrl } from "./ctrl-file";
 import { VectorCtrl } from "./ctrl-vector";
-import Alea from "../utils/alea";
 import { chevronUpIcon, diceIcon } from "../utils/icons";
 import type {
   ControlConstructor,
+  CtrlChangeHandler,
   CtrlComponent,
   ConfigItem,
   ControlsOptions,
   TypedControlConfig,
-  HashItem,
   OptionsMap,
+  PartialValues,
   CtrlControlType,
 } from "./types";
 import { getHTMLControlElement } from "./ctrl-html";
@@ -109,11 +108,13 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
   processControls = (configs: Configs) => {
     const elements: HTMLElement[] = [];
 
-    // Handlers shared by all controls
+    // Handlers shared by all controls.
+    // A change is also an input, so controls only need to report one of them.
     const onChangeControlHandler = (control: CtrlComponent) => {
       const updatedValues = this.updateValuesObject({}, control);
 
       this.onChange?.(updatedValues);
+      this.onInput?.(updatedValues);
 
       if (this.options.storage === "hash") {
         this.setHash();
@@ -139,7 +140,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
             itemConfig,
             onChangeControlHandler,
             onInputControlHandler,
-            toCamelCase(config.name),
+            config.name,
           );
 
           return control.element;
@@ -177,28 +178,11 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
   };
 
   registerControl = (
-    userConfig: TypedControlConfig,
-    onChangeControlHandler: (control: CtrlComponent) => void,
-    onInputControlHandler: (control: CtrlComponent) => void,
+    config: TypedControlConfig,
+    onChangeControlHandler: CtrlChangeHandler,
+    onInputControlHandler: CtrlChangeHandler,
     group: string = "",
   ) => {
-    // Copy the config to avoid mutating the user's object
-    const config = { ...userConfig };
-
-    // It is my personal preference is to use space case for labels
-    if (!config.label) {
-      config.label = toSpaceCase(config.name);
-    }
-
-    // Another personal preference of mine is to have properties named in camel case when using them in code
-    config.name = toCamelCase(config.name);
-
-    // Add group properties to the control config
-    if (group) {
-      config.group = group;
-      config.id = toCamelCase(`${group}-${config.name}`);
-    }
-
     // Instantiate the control component
     const ControlComponent = controlMap[config.type];
 
@@ -206,6 +190,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
       config,
       onChangeControlHandler,
       onInputControlHandler,
+      group,
     );
 
     this.controlsMap[control.id] = control;
@@ -231,7 +216,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
         // Known issue (won't fix for now): values are not URI encoded,
         // so values containing "/" or ":" break parsing,
         // and the browser escapes others, e.g. seed "my seed" is read back as "my%20seed"
-        return `${toKebabCase(control.id)}:${control.valueToString()}`;
+        return `${control.id}:${control.valueToString()}`;
       })
       .join("/");
 
@@ -244,36 +229,21 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
 
   updateFromHash = () => {
     const hash = window.location.hash.slice(2); // Remove the leading '#/'
-    const pairs = hash.split("/");
-
-    const items: HashItem[] = [];
-
-    pairs.forEach((pair) => {
-      const [kebabCaseName, value] = pair.split(":");
-      // Known issue (won't fix for now): kebab to camel case is lossy,
-      // so names like "line2Width" or "strokeRGB" are not restored from the hash
-      const id = toCamelCase(kebabCaseName);
-      const control = this.controlsMap[id];
-
-      if (control) {
-        const parsed = control.parse(value);
-
-        items.push({
-          id,
-          value: parsed,
-        });
-      }
-    });
-
     const updatedValues: Partial<ReturnType<typeof this.getValues>> = {};
 
-    items.forEach((item) => {
-      const { id, value } = item;
+    hash.split("/").forEach((pair) => {
+      const [id, value] = pair.split(":");
       const control = this.controlsMap[id];
 
-      if (control && JSON.stringify(value) !== JSON.stringify(control.value)) {
+      if (!control) {
+        return;
+      }
+
+      const parsed = control.parse(value);
+
+      if (JSON.stringify(parsed) !== JSON.stringify(control.value)) {
+        control.update(parsed);
         this.updateValuesObject(updatedValues, control);
-        control.update(value as never);
       }
     });
 
@@ -294,16 +264,7 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
     }
 
     objectToUpdate[control.name] = control.value;
-
-    if (control.type === "easing") {
-      objectToUpdate[control.name + "Easing"] = BezierEasing(
-        ...(control as EasingCtrl).value,
-      );
-    } else if (control.type === "seed") {
-      objectToUpdate[control.name + "Rng"] = Alea(
-        ...(control as SeedCtrl).value.split("-"),
-      );
-    }
+    Object.assign(objectToUpdate, control.getDerived());
 
     return values as Partial<ReturnType<typeof this.getValues>>;
   }
@@ -327,8 +288,46 @@ export class Ctrls<Configs extends readonly ConfigItem[]> {
         return;
       }
 
-      control.value = control.getRandomValue();
-      control.update(control.value as never);
+      control.update(control.getRandomValue());
+
+      this.updateValuesObject(updatedValues, control);
+    });
+
+    if (Object.keys(updatedValues).length > 0) {
+      this.onChange?.(updatedValues as UpdatedValues);
+      this.onInput?.(updatedValues as UpdatedValues);
+    }
+
+    if (this.options.storage === "hash") {
+      this.setHash();
+    }
+  };
+
+  setValues = (values: PartialValues<Configs>) => {
+    type UpdatedValues = Partial<ReturnType<typeof this.getValues>>;
+    const updatedValues: Record<string, unknown> = {};
+    const newValues = values as Record<string, any>;
+
+    this.controls.forEach((control) => {
+      const source = control.group ? newValues[control.group] : newValues;
+      const value = source?.[control.name];
+
+      if (value === undefined) {
+        return;
+      }
+
+      // Skipping unchanged values prevents loops when setValues is called from the event handlers.
+      // Files can't be serialized, so they are compared by reference
+      const isUnchanged =
+        control.type === "file"
+          ? value === control.value
+          : JSON.stringify(value) === JSON.stringify(control.value);
+
+      if (isUnchanged) {
+        return;
+      }
+
+      control.update(value);
 
       this.updateValuesObject(updatedValues, control);
     });

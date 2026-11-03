@@ -1,18 +1,12 @@
 import type BezierEasing from "bezier-easing";
-import type { BooleanCtrl } from "./ctrl-boolean";
-import type { DualRangeValue, DualRangeCtrl } from "./ctrl-dual-range";
-import type { Easing, EasingCtrl } from "./ctrl-easing";
-import type { RadioCtrl } from "./ctrl-radio";
-import type { RangeCtrl } from "./ctrl-range";
-import type { SeedCtrl } from "./ctrl-seed";
-import type { FileCtrl } from "./ctrl-file";
-import type { Vector, VectorCtrl } from "./ctrl-vector";
+import type { BaseCtrl } from "./ctrl-base";
+import type { DualRangeValue } from "./ctrl-dual-range";
+import type { Easing } from "./ctrl-easing";
+import type { Vector } from "./ctrl-vector";
 
 export interface PRNG {
   (): number;
 }
-
-export type HashItem = { id: string; value: unknown };
 
 // Active controls
 export type CtrlControlType =
@@ -25,38 +19,7 @@ export type CtrlControlType =
   | "file"
   | "vector";
 
-// Controls + UI helpers
-export type CtrlItemType = CtrlControlType | "group" | "html";
-
 export type CtrlChangeHandler = (control: CtrlComponent) => void;
-
-export type CtrlConfig<T = unknown> = {
-  type: CtrlItemType;
-  id?: string;
-  name: string;
-  accept?: string;
-  group?: string;
-  label?: string;
-  defaultValue?: T;
-  isRandomizationDisabled?: boolean;
-};
-
-export interface Ctrl<T> {
-  id: string;
-  group?: string;
-  name: string;
-  label?: string;
-  type: CtrlItemType;
-  isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler;
-  parse: (value: string) => T;
-  getRandomValue: () => T;
-  getDefaultValue: () => T;
-  buildUI: () => unknown;
-  valueToString: (value?: T) => string;
-  update: (value: T) => void;
-  element: HTMLElement;
-}
 
 // Control registry - focus on config -> value mapping
 export interface CtrlTypeMap {
@@ -87,14 +50,6 @@ export interface CtrlTypeMap {
     max: number;
     step?: number;
   };
-  group: {
-    value: Record<string, unknown>; // Placeholder, real type is recursive
-    controls: readonly TypedControlConfig[];
-    isRandomizationDisabled?: boolean;
-  };
-  html: {
-    html: HTMLElement;
-  };
   file: {
     value: File | null;
     accept?: string;
@@ -108,9 +63,7 @@ export interface CtrlTypeMap {
 export type TypedControlConfig = {
   [K in CtrlControlType]: {
     type: K;
-    id?: string;
     name: string;
-    group?: string;
     label?: string;
     defaultValue?: CtrlTypeMap[K]["value"];
     isRandomizationDisabled?: boolean;
@@ -134,33 +87,20 @@ export type HTMLConfig = {
 
 export type ConfigItem = TypedControlConfig | GroupConfig | HTMLConfig;
 
-export type ConfigFor<T extends CtrlItemType> = Extract<
+export type ConfigFor<T extends CtrlControlType> = Extract<
   TypedControlConfig,
   { type: T }
 >;
-
-// Names are converted to camel case at runtime, "main shape" -> "mainShape"
-// Mirrors toCamelCase (utils/string-utils.ts), going character by character:
-// separators are dropped and the character after them is capitalized.
-// Result accumulates the output, which keeps the recursion shallow for long names
-type CamelCase<S extends string, Result extends string = ""> =
-  string extends S
-    ? S // Not a literal type, nothing to convert
-    : S extends `${infer Char}${infer Rest}`
-      ? Char extends "-" | "_" | " "
-        ? CamelCase<Capitalize<Rest>, Result>
-        : CamelCase<Rest, `${Result}${Char}`>
-      : Result;
 
 type ExtractValues<Configs extends readonly ConfigItem[]> = {
   [C in Extract<
     Configs[number],
     { type: CtrlControlType }
-  > as CamelCase<C["name"]>]: CtrlTypeMap[C["type"]]["value"];
+  > as C["name"]]: CtrlTypeMap[C["type"]]["value"];
 } & {
-  [C in Extract<Configs[number], { type: "group" }> as CamelCase<
-    C["name"]
-  >]: OptionsMap<C["controls"]>;
+  [C in Extract<Configs[number], { type: "group" }> as C["name"]]: OptionsMap<
+    C["controls"]
+  >;
 };
 
 // Add "rng" and "easing" functions types
@@ -168,21 +108,31 @@ type DerivedProps<Configs extends readonly ConfigItem[]> = {
   [C in Extract<
     Configs[number],
     { type: "easing" }
-  > as `${CamelCase<C["name"]>}Easing`]: ReturnType<typeof BezierEasing>;
+  > as `${C["name"]}Easing`]: ReturnType<typeof BezierEasing>;
 } & {
-  [C in Extract<
-    Configs[number],
-    { type: "seed" }
-  > as `${CamelCase<C["name"]>}Rng`]: PRNG;
+  [C in Extract<Configs[number], { type: "seed" }> as `${C["name"]}Rng`]: PRNG;
 } & {
-  [C in Extract<Configs[number], { type: "group" }> as CamelCase<
-    C["name"]
-  >]: DerivedProps<C["controls"]>;
+  [C in Extract<Configs[number], { type: "group" }> as C["name"]]: DerivedProps<
+    C["controls"]
+  >;
 };
 
 // Combined type
 export type OptionsMap<Configs extends readonly ConfigItem[]> =
   ExtractValues<Configs> & DerivedProps<Configs>;
+
+// Values accepted by setValues, every key is optional, including the ones inside groups
+export type PartialValues<Configs extends readonly ConfigItem[]> = {
+  [C in Extract<
+    Configs[number],
+    { type: CtrlControlType }
+  > as C["name"]]?: CtrlTypeMap[C["type"]]["value"];
+} & {
+  [C in Extract<
+    Configs[number],
+    { type: "group" }
+  > as C["name"]]?: PartialValues<C["controls"]>;
+};
 
 export type ControlsOptions = {
   showRandomizeButton?: boolean;
@@ -192,14 +142,6 @@ export type ControlsOptions = {
   title?: string;
 };
 
-export type CtrlComponent =
-  | BooleanCtrl
-  | RangeCtrl
-  | RadioCtrl
-  | SeedCtrl
-  | EasingCtrl
-  | DualRangeCtrl
-  | FileCtrl
-  | VectorCtrl;
+export type CtrlComponent = BaseCtrl<unknown>;
 
 export type ControlConstructor<T> = new (...args: any[]) => T;

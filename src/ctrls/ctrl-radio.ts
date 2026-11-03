@@ -1,6 +1,7 @@
 import random from "../utils/random";
 
-import type { Ctrl, CtrlChangeHandler, CtrlItemType, ConfigFor } from "./types";
+import type { ConfigFor } from "./types";
+import { BaseCtrl, type BaseCtrlArgs } from "./ctrl-base";
 import { toKebabCase } from "../utils/string-utils";
 import { getRandomString } from "../utils/get-random-string";
 import { dom } from "../utils/dom";
@@ -10,30 +11,14 @@ type Option = {
   value: string;
 };
 
-export type RadioControlOptions = {
-  items: Option[];
-};
-
-export class RadioCtrl implements Ctrl<string> {
-  type: CtrlItemType = "radio";
+export class RadioCtrl extends BaseCtrl<string> {
+  type = "radio" as const;
   htmlId: string;
-  id: string;
-  group?: string;
-  name: string;
-  label: string;
-  value: string;
-  isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler;
-  onInput: CtrlChangeHandler;
   items: Option[];
-  element: HTMLElement;
   columns: 1 | 2 | 3 | 4 | 5;
 
-  constructor(
-    config: ConfigFor<"radio">,
-    onChange: CtrlChangeHandler,
-    onInput: CtrlChangeHandler,
-  ) {
+  constructor(config: ConfigFor<"radio">, ...args: BaseCtrlArgs) {
+    super(config, ...args);
     this.items = [];
     Object.entries(config.items).forEach(([label, value]) => {
       this.items.push({
@@ -42,20 +27,12 @@ export class RadioCtrl implements Ctrl<string> {
       });
     });
     this.columns = config.columns || 3;
-
-    this.name = config.name;
-    this.id = config.id || config.name;
-    this.group = config.group || "";
-    this.label = config.label || config.name;
     this.htmlId = `ctrls__${toKebabCase(config.name)}-${getRandomString()}`;
 
     const defaultValue = this.items.find(
       (item) => item.value === config.defaultValue,
     );
     this.value = defaultValue?.value || this.getDefaultValue();
-    this.isRandomizationDisabled = config.isRandomizationDisabled || false;
-    this.onChange = onChange;
-    this.onInput = onInput;
 
     this.element = this.buildUI();
   }
@@ -94,10 +71,6 @@ export class RadioCtrl implements Ctrl<string> {
       input.addEventListener("change", () => {
         this.value = this.parse(input.value);
         this.onChange(this);
-      });
-      input.addEventListener("input", () => {
-        this.value = this.parse(input.value);
-        this.onInput(this);
       });
 
       const label = dom.span("", {

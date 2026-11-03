@@ -116,7 +116,8 @@ Public API:
 
 // Change handler called whenever any of the values is changed.
 // It's only parameter is an object containing the updated values.
-// The only way this object can have multiple attributes is when using the hash storage.
+// This object can have multiple attributes when values are updated from the hash,
+// or using `.randomize()` and `.setValues()`.
 .onChange(updatedValues)
 
 // Input handler called while user is inputting values (while dragging a slider for example).
@@ -128,6 +129,11 @@ Public API:
 
 // Randomizes values for all controls that don't have randomization disabled.
 .randomize()
+
+// Updates the passed values, all of them are optional, including the ones in groups.
+// It updates the UI and the hash, and calls the handlers with the values that actually changed.
+// Values are not validated, e.g. range values outside of min/max are not clamped.
+.setValues(values)
 ```
 
 ## Controls
@@ -140,9 +146,8 @@ All controls share the following properties:
   type: CtrlType; // "seed" | "easing" | "boolean" | "range" | "dual-range" | "vector" | "radio" | "group"
   // Name of the component.
   //
-  // It will be converted to camel case and used in the values object
-  // This might counter-intuitive for some people,
-  // but it is my personal preference to have properties named in camel case when using them in code
+  // It is used as the key in the values object exactly as written,
+  // so I recommend using camel case names, e.g. "opacitySeed"
   //
   // However, names are going to be converted to kebab case when used in the hash,
   // because it is nicer that URL be all lowercase
@@ -352,7 +357,7 @@ Example:
 ```json
 {
   "type": "radio",
-  "name": "main shape",
+  "name": "mainShape",
   "items": {
     "triangle": "3",
     "rectangle": "4",

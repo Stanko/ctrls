@@ -1,49 +1,28 @@
+import Alea from "../utils/alea";
 import generateSeed from "../utils/generate-seed";
 import { refreshIcon } from "../utils/icons";
 
-import type {
-  Ctrl,
-  CtrlChangeHandler,
-  CtrlConfig,
-  CtrlItemType,
-} from "./types";
+import type { ConfigFor } from "./types";
+import { BaseCtrl, type BaseCtrlArgs } from "./ctrl-base";
 import { toHtmlId } from "../utils/string-utils";
 import { dom } from "../utils/dom";
 
-export class SeedCtrl implements Ctrl<string> {
-  type: CtrlItemType = "seed";
-  id: string;
-  group?: string;
-  name: string;
-  label: string;
-  value: string;
-  isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler;
-  onInput: CtrlChangeHandler;
-  element: HTMLElement;
+export class SeedCtrl extends BaseCtrl<string> {
+  type = "seed" as const;
   input: HTMLInputElement;
 
-  constructor(
-    config: CtrlConfig<string>,
-    onChange: CtrlChangeHandler,
-    onInput: CtrlChangeHandler,
-  ) {
-    this.name = config.name;
-    this.id = config.id || config.name;
-    this.group = config.group || "";
-    this.label = config.label || config.name;
-    this.value =
-      config.defaultValue === undefined
-        ? this.getDefaultValue()
-        : config.defaultValue;
-    this.isRandomizationDisabled = config.isRandomizationDisabled || false;
-    this.onChange = onChange;
-    this.onInput = onInput;
+  constructor(config: ConfigFor<"seed">, ...args: BaseCtrlArgs) {
+    super(config, ...args);
+    this.value = config.defaultValue ?? this.getDefaultValue();
 
     const { input, element } = this.buildUI();
     this.input = input;
     this.element = element;
   }
+
+  getDerived = () => ({
+    [`${this.name}Rng`]: Alea(...this.value.split("-")),
+  });
 
   parse = (string: string) => {
     return string;
@@ -92,7 +71,6 @@ export class SeedCtrl implements Ctrl<string> {
       this.value = this.getRandomValue();
       this.update();
       this.onChange(this);
-      this.onInput(this);
     });
 
     const right = dom.div("ctrls__control-right", {

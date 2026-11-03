@@ -3,7 +3,8 @@ import { addDragListeners } from "../utils/add-drag-listeners";
 import { dom } from "../utils/dom";
 import random from "../utils/random";
 import { toHtmlId } from "../utils/string-utils";
-import type { ConfigFor, Ctrl, CtrlChangeHandler, CtrlItemType } from "./types";
+import { BaseCtrl, type BaseCtrlArgs } from "./ctrl-base";
+import type { ConfigFor } from "./types";
 
 export type Easing = [number, number, number, number];
 
@@ -22,17 +23,8 @@ const getPath = (x1: number, y1: number, x2: number, y2: number) => {
   return `M 0 ${h} C ${x1} ${y1} ${x2} ${y2} ${w} 0`;
 };
 
-export class EasingCtrl implements Ctrl<Easing> {
-  type: CtrlItemType = "easing";
-  id: string;
-  group?: string;
-  name: string;
-  label: string;
-  value: Easing;
-  isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler;
-  onInput: CtrlChangeHandler;
-  element: HTMLElement;
+export class EasingCtrl extends BaseCtrl<Easing> {
+  type = "easing" as const;
   ticks: SVGLineElement[];
   control: HTMLDivElement;
   handles: HTMLButtonElement[];
@@ -40,22 +32,9 @@ export class EasingCtrl implements Ctrl<Easing> {
   path: SVGPathElement;
   presets: Record<string, Easing>;
 
-  constructor(
-    config: ConfigFor<"easing">,
-    onChange: CtrlChangeHandler,
-    onInput: CtrlChangeHandler,
-  ) {
-    this.name = config.name;
-    this.id = config.id || config.name;
-    this.group = config.group || "";
-    this.label = config.label || config.name;
-    this.value =
-      config.defaultValue === undefined
-        ? this.getDefaultValue()
-        : config.defaultValue;
-    this.isRandomizationDisabled = config.isRandomizationDisabled || false;
-    this.onChange = onChange;
-    this.onInput = onInput;
+  constructor(config: ConfigFor<"easing">, ...args: BaseCtrlArgs) {
+    super(config, ...args);
+    this.value = config.defaultValue ?? this.getDefaultValue();
     this.presets = config.presets || easings;
 
     const { element, ticks, control, handles, lines, path } = this.buildUI();
@@ -68,6 +47,10 @@ export class EasingCtrl implements Ctrl<Easing> {
 
     this.updateUI();
   }
+
+  getDerived = () => ({
+    [`${this.name}Easing`]: BezierEasing(...this.value),
+  });
 
   parse = (string: string) => {
     return string.split(",").map(Number) as Easing;
@@ -208,7 +191,6 @@ export class EasingCtrl implements Ctrl<Easing> {
 
           this.value = newValue;
           this.onChange(this);
-          this.onInput(this);
           this.update();
         }
       });
@@ -232,7 +214,6 @@ export class EasingCtrl implements Ctrl<Easing> {
         button.addEventListener("click", () => {
           this.value = this.presets[key];
           this.onChange(this);
-          this.onInput(this);
           this.update();
         });
 

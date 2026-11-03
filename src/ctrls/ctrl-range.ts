@@ -1,46 +1,25 @@
 import random from "../utils/random";
 import { roundToStep } from "../utils/round-to-step";
 
-import type { Ctrl, CtrlChangeHandler, CtrlItemType, ConfigFor } from "./types";
+import type { ConfigFor } from "./types";
+import { BaseCtrl, type BaseCtrlArgs } from "./ctrl-base";
 import { toHtmlId } from "../utils/string-utils";
 import { dom } from "../utils/dom";
 
-export class RangeCtrl implements Ctrl<number> {
-  type: CtrlItemType = "range";
-  id: string;
-  group?: string;
-  name: string;
-  label: string;
-  value: number;
-  isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler;
-  onInput: CtrlChangeHandler;
+export class RangeCtrl extends BaseCtrl<number> {
+  type = "range" as const;
   min: number;
   max: number;
   step: number;
-  element: HTMLElement;
   input: HTMLInputElement;
   valueSpan: HTMLSpanElement;
 
-  constructor(
-    config: ConfigFor<"range">,
-    onChange: CtrlChangeHandler,
-    onInput: CtrlChangeHandler,
-  ) {
-    this.name = config.name;
-    this.id = config.id || config.name;
-    this.group = config.group || "";
-    this.label = config.label || config.name;
-    this.isRandomizationDisabled = config.isRandomizationDisabled || false;
-    this.onChange = onChange;
-    this.onInput = onInput;
+  constructor(config: ConfigFor<"range">, ...args: BaseCtrlArgs) {
+    super(config, ...args);
     this.min = config.min;
     this.max = config.max;
     this.step = config.step || 1;
-    this.value =
-      config.defaultValue === undefined
-        ? this.getDefaultValue()
-        : config.defaultValue;
+    this.value = config.defaultValue ?? this.getDefaultValue();
 
     const { input, element, valueSpan } = this.buildUI();
     this.input = input;
@@ -93,15 +72,6 @@ export class RangeCtrl implements Ctrl<number> {
       this.value = this.parse(input.value);
       this.update(this.value);
       this.onChange(this);
-    });
-
-    input.addEventListener("input", () => {
-      const value = this.parse(input.value);
-      const percentage = ((value - min) / (max - min)) * 100;
-      this.element.style.setProperty(
-        "--gradient-position",
-        `${percentage.toFixed(2)}%`,
-      );
     });
 
     const right = dom.div("ctrls__control-right", {

@@ -2,7 +2,8 @@ import { addDragListeners } from "../utils/add-drag-listeners";
 import { dom } from "../utils/dom";
 import random from "../utils/random";
 import { toHtmlId } from "../utils/string-utils";
-import type { ConfigFor, Ctrl, CtrlChangeHandler, CtrlItemType } from "./types";
+import { BaseCtrl, type BaseCtrlArgs } from "./ctrl-base";
+import type { ConfigFor } from "./types";
 
 export type Vector = {
   x: number;
@@ -12,40 +13,18 @@ export type Vector = {
 // Pad is a square, so the same size is used for both axes
 const w = 100;
 
-export class VectorCtrl implements Ctrl<Vector> {
-  type: CtrlItemType = "vector";
-  id: string;
-  group?: string;
-  name: string;
-  label: string;
-  value: Vector;
-  isRandomizationDisabled: boolean;
-  onChange: CtrlChangeHandler;
-  onInput: CtrlChangeHandler;
+export class VectorCtrl extends BaseCtrl<Vector> {
+  type = "vector" as const;
   size: number;
-  element: HTMLElement;
   control: HTMLDivElement;
   handle: HTMLButtonElement;
   line: SVGLineElement;
   valueSpan: HTMLSpanElement;
 
-  constructor(
-    config: ConfigFor<"vector">,
-    onChange: CtrlChangeHandler,
-    onInput: CtrlChangeHandler,
-  ) {
-    this.name = config.name;
-    this.id = config.id || config.name;
-    this.group = config.group || "";
-    this.label = config.label || config.name;
+  constructor(config: ConfigFor<"vector">, ...args: BaseCtrlArgs) {
+    super(config, ...args);
     this.size = config.size || 1;
-    this.value =
-      config.defaultValue === undefined
-        ? this.getDefaultValue()
-        : config.defaultValue;
-    this.isRandomizationDisabled = config.isRandomizationDisabled || false;
-    this.onChange = onChange;
-    this.onInput = onInput;
+    this.value = config.defaultValue ?? this.getDefaultValue();
 
     const { element, control, handle, line, valueSpan } = this.buildUI();
     this.element = element;
@@ -176,7 +155,6 @@ export class VectorCtrl implements Ctrl<Vector> {
           y: parseFloat((this.value.y + offsets[e.key][1]).toFixed(2)),
         });
         this.onChange(this);
-        this.onInput(this);
         this.update();
       }
     });
