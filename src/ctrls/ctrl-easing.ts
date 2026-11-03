@@ -1,4 +1,5 @@
 import BezierEasing from "bezier-easing";
+import { addDragListeners } from "../utils/add-drag-listeners";
 import { dom } from "../utils/dom";
 import random from "../utils/random";
 import { toHtmlId } from "../utils/string-utils";
@@ -144,18 +145,13 @@ export class EasingCtrl implements Ctrl<Easing> {
     });
 
     const addListeners = (handle: HTMLSpanElement, index: number) => {
-      let dragging = false;
-      let dragStart = { x: 0, y: 0 };
       let positionStart = { x: 0, y: 0 };
 
-      const getNewValue = (clientX: number, clientY: number) => {
+      const getNewValue = (dx: number, dy: number) => {
         const ratio = w / this.control.clientWidth;
 
-        const leftOffset = clientX - dragStart.x;
-        const topOffset = clientY - dragStart.y;
-
-        const x = positionStart.x + leftOffset * ratio;
-        const y = positionStart.y + topOffset * ratio;
+        const x = positionStart.x + dx * ratio;
+        const y = positionStart.y + dy * ratio;
 
         const attr = (element.getAttribute("data-value") as string).split(",");
         const newValue = attr.map(Number) as Easing;
@@ -168,78 +164,23 @@ export class EasingCtrl implements Ctrl<Easing> {
         return newValue;
       };
 
-      // Mouse dragging
-      handle.addEventListener("mousedown", (e: MouseEvent) => {
-        dragStart = { x: e.clientX, y: e.clientY };
-        positionStart = {
-          x: (parseFloat(handle.style.left) * w) / 100,
-          y: (parseFloat(handle.style.top) * h) / 100,
-        };
-
-        dragging = true;
-        document.body.style.userSelect = "none";
-      });
-
-      document.addEventListener("mouseup", (e) => {
-        if (dragging) {
-          document.body.style.userSelect = "";
-          dragging = false;
-
-          const newValue = getNewValue(e.clientX, e.clientY);
-
-          this.value = newValue;
-          this.onChange(this);
-          this.update();
-        }
-      });
-
-      document.addEventListener("mousemove", (e) => {
-        if (dragging) {
-          this.value = getNewValue(e.clientX, e.clientY);
+      // Mouse and touch dragging
+      addDragListeners(handle, {
+        onStart: () => {
+          positionStart = {
+            x: (parseFloat(handle.style.left) * w) / 100,
+            y: (parseFloat(handle.style.top) * h) / 100,
+          };
+        },
+        onMove: (dx, dy) => {
+          this.value = getNewValue(dx, dy);
           this.updateUI();
           this.onInput(this);
-        }
-      });
-
-      // Touch dragging
-      handle.addEventListener("touchstart", (e) => {
-        if (e.touches.length > 1) {
-          return;
-        }
-
-        dragStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        positionStart = {
-          x: (parseFloat(handle.style.left) * w) / 100,
-          y: (parseFloat(handle.style.top) * h) / 100,
-        };
-
-        dragging = true;
-        document.body.style.userSelect = "none";
-      });
-
-      document.addEventListener("touchmove", (e) => {
-        if (dragging) {
-          e.preventDefault();
-          this.value = getNewValue(e.touches[0].clientX, e.touches[0].clientY);
-          this.updateUI();
-          this.onInput(this);
-        }
-      });
-
-      document.addEventListener("touchend", (e) => {
-        if (dragging) {
-          document.body.style.userSelect = "";
-          dragging = false;
-
-          const newValue = getNewValue(
-            e.changedTouches[0].clientX,
-            e.changedTouches[0].clientY,
-          );
-
-          this.value = newValue;
+        },
+        onEnd: () => {
           this.onChange(this);
           this.update();
-        }
+        },
       });
 
       // Arrow keys
